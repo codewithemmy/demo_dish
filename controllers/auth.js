@@ -4,7 +4,6 @@ const {
   BadRequestError,
   UnauthenticatedError,
   NotFoundError,
-  StatusError,
 } = require("../errors");
 const crypto = require("crypto");
 const createHash = require("../utils/createHash");
@@ -17,7 +16,9 @@ const register = async (req, res) => {
 
   const emailAlreadyExists = await Sellar.findOne({ email });
   if (emailAlreadyExists) {
-    throw new BadRequestError("Email already exists");
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Email already exist" });
   }
 
   crypto.randomBytes(2);
@@ -56,17 +57,21 @@ const verifyEmail = async (req, res) => {
   const sellar = await Sellar.findOne({ _id: id });
 
   if (!verificationToken) {
-    throw new NotFoundError("kindly input verification token");
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ msg: "Kindly input your token" });
   }
 
   if (!sellar) {
-    throw new NotFoundError("Sellar not found");
+    return res.status(StatusCodes.NOT_FOUND).json({ msg: "Sellar not found" });
   }
 
   const hastToken = createHash(verificationToken);
 
   if (sellar.verificationToken !== hastToken) {
-    throw new BadRequestError("Verification Failed");
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Verification Failed" });
   }
 
   (sellar.isVerified = true), (sellar.verified = Date.now());
@@ -90,7 +95,9 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    throw new BadRequestError(`Please provide username or password`);
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ msg: "Please provide username or password" });
   }
   const sellar = await Sellar.findOne({ email });
 
@@ -143,7 +150,9 @@ const login = async (req, res) => {
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
-    throw new BadRequestError("Please provide valid email");
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Please provide valid email" });
   }
 
   const sellar = await Sellar.findOne({ email });
@@ -176,7 +185,9 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   const { token, email, newPassword } = req.body;
   if (!token || !email || !newPassword) {
-    throw new BadRequestError("Please provide all values");
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Please provide all values" });
   }
   const sellar = await Sellar.findOne({ email });
 
