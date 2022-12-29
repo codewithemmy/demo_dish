@@ -4,6 +4,7 @@ const {
   BadRequestError,
   UnauthenticatedError,
   NotFoundError,
+  StatusError,
 } = require("../errors");
 const crypto = require("crypto");
 const createHash = require("../utils/createHash");
@@ -94,12 +95,16 @@ const login = async (req, res) => {
   const sellar = await Sellar.findOne({ email });
 
   if (!sellar) {
-    throw new BadRequestError(`Invalid username or password`);
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Invalid username or password" });
   }
 
   const isPasswordCorrect = await sellar.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw new BadRequestError(`Invalid username/password`);
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Password is not valid" });
   }
 
   if (!sellar.isVerified) {
@@ -188,7 +193,9 @@ const resetPassword = async (req, res) => {
       await sellar.save();
     }
   }
-  res.status(StatusCodes.OK).json({ msg: "your password is sucessfully reset" });
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: "your password is sucessfully reset" });
 };
 
 //export modules
