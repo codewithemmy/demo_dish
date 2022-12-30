@@ -2,7 +2,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 
 const GOOGLE_CLIENT_ID =
-  "764318071938-1ihr52ldfttj2evsih7iiqqmk5fab7bf.apps.googleusercontent.com";
+  "764318071938-otluemiqpa2hoodo2kn0uqrk1kfu3i7d.apps.googleusercontent.com";
 
 const GOOGLE_CLIENT_SECRET = "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";
 
