@@ -1,3 +1,5 @@
+const express = require("express");
+const app = express();
 const Sellar = require("../models/Sellar");
 const { StatusCodes } = require("http-status-codes");
 const {
