@@ -1,5 +1,3 @@
-const express = require("express");
-const app = express();
 const Sellar = require("../models/Sellar");
 const { StatusCodes } = require("http-status-codes");
 const {
@@ -23,8 +21,6 @@ const register = async (req, res) => {
       .json({ msg: "Email already exist" });
   }
 
-  crypto.randomBytes(2);
-
   const verificationToken = crypto.randomBytes(2).toString("hex");
   const hastToken = createHash(verificationToken);
   const sellar = await Sellar.create({
@@ -46,7 +42,7 @@ const register = async (req, res) => {
     html: `Hello, ${firstName}, kindly verify your account with this token:<h4>${verificationToken}</h4>`, // html body
   });
 
-  res.status(StatusCodes.CREATED).json({
+  return res.status(StatusCodes.CREATED).json({
     msg: "Success! Please check your email to verify account",
     sellar,
   });
@@ -89,7 +85,7 @@ const verifyEmail = async (req, res) => {
     html: `<h4> Hello, ${sellar.firstName}</h4> <h2>Congrats</h2> you are now verified,you can login now`, // html body
   });
 
-  res.status(StatusCodes.OK).json({ msg: "Email Verified" });
+  return res.status(StatusCodes.OK).json({ msg: "Email Verified" });
 };
 
 //user login
@@ -117,7 +113,9 @@ const login = async (req, res) => {
   }
 
   if (!sellar.isVerified) {
-    throw new UnauthenticatedError("Please verify your email");
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "please verify you mail" });
   }
 
   let token = sellar.createJWT({
@@ -134,7 +132,7 @@ const login = async (req, res) => {
   //   expires: new Date(Date.now() + oneDay),
   // });
 
-  res
+  return res
     .status(StatusCodes.OK)
     .json({ msg: "Login Successful", userId: sellar._id, token: token });
 };
@@ -178,7 +176,7 @@ const forgotPassword = async (req, res) => {
     await sellar.save();
   }
 
-  res.status(StatusCodes.OK).json({
+  return eres.status(StatusCodes.OK).json({
     msg: "Please check your email to reset password",
   });
 };
@@ -206,7 +204,7 @@ const resetPassword = async (req, res) => {
       await sellar.save();
     }
   }
-  res
+  return res
     .status(StatusCodes.OK)
     .json({ msg: "your password is sucessfully reset" });
 };

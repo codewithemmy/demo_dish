@@ -1,27 +1,31 @@
-const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const { UnauthenticatedError } = require("../errors");
+const { StatusCodes } = require("http-status-codes");
 
 const auth = async (req, res, next) => {
   // check header
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
-    throw new UnauthenticatedError("Authentication invalid");
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ msg: "Authentication invalid" });
   }
   const token = authHeader.split(" ")[1];
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    // attach the user to the job routes
+    // attach the user to the routes
     req.user = {
-      userId: this._id,
-      firstName: this.firstName,
-      surname: this.surname,
-      email: this.email,
+      userId: payload.userId,
+      fisrtname: payload.firstName,
+      surname: payload.surname,
+      email: payload.email,
     };
     next();
   } catch (error) {
-    throw new UnauthenticatedError("Authentication invalid");
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ msg: "Authentication invalid" });
   }
 };
 

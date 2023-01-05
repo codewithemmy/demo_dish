@@ -29,6 +29,9 @@ const connectDB = require("./db/connect");
 // routers
 const authRouter = require("./routes/auth");
 const passportRouter = require("./routes/passportRoutes");
+const partnerRouter = require("./routes/partner");
+const businessInfoRouter = require("./routes/businessInfoRoute");
+const storeDetailsRouter = require("./routes/storeDetailsRoute");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -43,14 +46,20 @@ app.use(cors());
 //   res.send("hello");
 // });
 
-app.use("/api/v1/auth", authRouter);
 app.use("", passportRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1", partnerRouter);
+app.use("/api/v1", businessInfoRouter);
+app.use("/api/v1", storeDetailsRouter);
 
 //serve exprss json
 app.use(express.json());
 app.use(cors());
 
 const port = process.env.PORT || 5000;
+
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 const start = async () => {
   try {
