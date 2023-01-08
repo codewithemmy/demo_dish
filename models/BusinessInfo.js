@@ -10,7 +10,7 @@ const BusinessInfoSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide legal business name"],
     },
-    StoreOwner: {
+    storeOwner: {
       type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },

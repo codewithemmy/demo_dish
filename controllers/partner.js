@@ -13,7 +13,7 @@ const createPartner = async (req, res) => {
   if (store) {
     const partner = await Partner.create({
       delivery: delivery,
-      StoreOwner: store,
+      storeOwner: store,
     });
 
     return res
@@ -45,7 +45,7 @@ const editPartner = async (req, res) => {
   const editPartner = await Partner.findByIdAndUpdate(
     {
       _id: partnerId,
-      StoreOwner: store,
+      storeOwner: store,
     },
     { delivery: delivery },
     { new: true, runValidators: true }

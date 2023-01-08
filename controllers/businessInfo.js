@@ -21,7 +21,7 @@ const createBusiness = async (req, res) => {
     const businessInfo = await BusinessInfo.create({
       legalEntityName: legalEntityName,
       legalBusinessAddress: legalBusinessAddress,
-      StoreOwner: sellar,
+      storeOwner: sellar,
     });
 
     return res
@@ -42,7 +42,7 @@ const editBusiness = async (req, res) => {
     const editBusinessInfo = await BusinessInfo.findByIdAndUpdate(
       {
         _id: businessId,
-        StoreOwner: sellar,
+        storeOwner: sellar,
       },
       req.body,
       { new: true, runValidators: true }

@@ -11,7 +11,7 @@ const StoreDetailsSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide your cuisines"],
     },
-    StoreOwner: {
+    storeOwner: {
       type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },

@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
 const express = require("express");
 const app = express();
+const fileUpload = require("express-fileupload");
 const passport = require("passport");
 
 const session = require("express-session");
@@ -16,6 +17,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(fileUpload({ useTempFiles: true }));
 
 // extra security packages
 // const helmet = require('helmet');
@@ -32,6 +34,7 @@ const passportRouter = require("./routes/passportRoutes");
 const partnerRouter = require("./routes/partner");
 const businessInfoRouter = require("./routes/businessInfoRoute");
 const storeDetailsRouter = require("./routes/storeDetailsRoute");
+const documentsUploadRouter = require("./routes/documentsRoutes");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -51,6 +54,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1", partnerRouter);
 app.use("/api/v1", businessInfoRouter);
 app.use("/api/v1", storeDetailsRouter);
+app.use("/api/v1", documentsUploadRouter);
 
 //serve exprss json
 app.use(express.json());

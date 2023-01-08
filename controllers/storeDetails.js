@@ -14,7 +14,7 @@ const createStoreDetails = async (req, res) => {
     const storeDetails = await StoreDetails.create({
       phonenumber: phonenumber,
       cuisineType: cuisineType,
-      StoreOwner: sellar,
+      storeOwner: sellar,
     });
 
     return res
@@ -35,7 +35,7 @@ const editStoreDetails = async (req, res) => {
     const editStoreDetails = await StoreDetails.findByIdAndUpdate(
       {
         _id: storeDetailsId,
-        StoreOwner: sellar,
+        storeOwner: sellar,
       },
       req.body,
       { new: true, runValidators: true }
