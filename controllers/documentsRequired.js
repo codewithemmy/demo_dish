@@ -19,28 +19,6 @@ const bufferToStream = (buffer) => {
   return readable;
 };
 
-// const documentsUpload = async (req, res) => {
-//   const photos = req.files.photo;
-
-//   await photos.forEach((photo) => {
-//     cloudinary.uploader.upload(
-//       photo.tempFilePath,
-//       {
-//         use_filename: true,
-//         folder: "file-upload",
-//       },
-//       (error, result) => {
-//         if (error) {
-//           console.error(error);
-//           return res.status(500).send("Error uploading to Cloudinary");
-//         }
-//         console.log(result.secure_url);
-//       }
-//     );
-//   });
-//   return res.json({ msg: "upload is successful" });
-// };
-
 const compRegCert = async (req, res) => {
   let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
   const buffer = Buffer.from(converts, "base64");
