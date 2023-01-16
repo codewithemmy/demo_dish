@@ -1,8 +1,9 @@
 const { StatusCodes } = require("http-status-codes");
+const Food = require("../models/Food");
+const Menu = require("../models/Menu");
 const fs = require("fs");
 const { Readable } = require("stream");
 const sharp = require("sharp");
-const StoreDetails = require("../models/StoreDetails");
 require("../utils/cloudinary");
 
 //require cloudinary version 2
@@ -19,20 +20,24 @@ const bufferToStream = (buffer) => {
   return readable;
 };
 
-//create store details
-const createStoreDetails = async (req, res) => {
-  const {
-    storeName,
-    location,
-    cuisineType,
-    openHours,
-    deliveryFee,
-    minimumOrder,
-    description,
-  } = req.body;
+//create menu
+const createFood = async (req, res) => {
+  const { id: menuId } = req.params;
+  const { foodName, price, nutritionalFacts } = req.body;
   const sellar = req.user.userId;
-  if (!storeName || !cuisineType || !openHours) {
-    return res.status(400).json({ msg: `all fields should be filled` });
+
+  if (!foodName || !price || !nutritionalFacts) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: `all inputs should be filled` });
+  }
+
+  const menu = await Menu.findOne({ _id: menuId });
+
+  if (!menu) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: `menu with id ${menuId} is not recognized` });
   }
 
   let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
@@ -62,33 +67,33 @@ const createStoreDetails = async (req, res) => {
   fs.unlinkSync(req.files.image.tempFilePath);
 
   if (sellar) {
-    const storeDetails = await StoreDetails.create({
-      storeName: storeName,
-      cuisineType: cuisineType,
-      location: location,
-      openHours: openHours,
-      deliveryFee: deliveryFee,
-      minimumOrder: minimumOrder,
-      description: description,
-      serviceAvalaible: false,
-      storeImage: uri.secure_url,
+    const food = await Food.create({
+      foodImage: uri.secure_url,
+      foodName: foodName,
+      price: price,
+      nutritionalFacts: nutritionalFacts,
+      menu: menuId,
       storeOwner: sellar,
     });
 
-    //storeName, cuisineType, openHours
     return res
       .status(StatusCodes.CREATED)
-      .json({ msg: "store details created successfully", storeDetails });
+      .json({ msg: "food successfully added", food });
   }
   return res
     .status(StatusCodes.BAD_REQUEST)
-    .json({ msg: "error in creating store details" });
+    .json({ msg: "error while adding food details" });
 };
 
-//edit store details
-const editStoreDetails = async (req, res) => {
-  const { id: storeDetailsId } = req.params;
+//edit food
+const editFood = async (req, res) => {
+  const { id: foodId } = req.params;
   const sellar = req.user.userId;
+  const { foodName, price, nutritionalFacts } = req.body;
+
+  if (!foodId) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ msg: `Insert food Id` });
+  }
 
   let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
   const buffer = Buffer.from(converts, "base64");
@@ -117,71 +122,63 @@ const editStoreDetails = async (req, res) => {
   fs.unlinkSync(req.files.image.tempFilePath);
 
   if (sellar) {
-    const {
-      storeName,
-      cuisineType,
-      location,
-      openHours,
-      deliveryFee,
-      minimumOrder,
-      description,
-    } = req.body;
-    const editedStore = await StoreDetails.findById(storeDetailsId);
-    editedStore.storeName = storeName;
-    editStore.location = location;
-    editedStore.cuisineType = cuisineType;
-    editedStore.minimumOrder = minimumOrder;
-    editedStore.deliveryFee = deliveryFee;
-    editedStore.description = description;
-    editedStore.serviceAvalaible = false;
-    editedStore.openHours = openHours;
-    editedStore.storeImage = uri.secure_url;
+    const food = await Food.findByIdAndUpdate(
+      { _id: foodId },
+      {
+        foodImage: uri.secure_url,
+        foodName: foodName,
+        price: price,
+        nutritionalFacts: nutritionalFacts,
+      },
+      {
+        runValidators: true,
+        new: true,
+      }
+    );
 
-    const result = await editedStore.save();
-
-    return res.status(StatusCodes.CREATED).json({
-      msg: "Store has been created successfully",
-      result,
-    });
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ msg: "Food has been Successfully updated", food });
   }
   return res
     .status(StatusCodes.BAD_REQUEST)
-    .json({ msg: "error in creating business information" });
+    .json({ msg: "error while updating food" });
 };
 
-//delete store details
-const deleteStoreDetails = async (req, res) => {
-  const { id: storeId } = req.params;
+//delete menu
+const deleteFood = async (req, res) => {
+  const { id: deleteId } = req.params;
   const sellar = req.user.userId;
 
-  if (sellar) {
-    const store = await StoreDetails.findByIdAndRemove({
-      _id: storeId,
-    });
+  if (!deleteId) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: `Invalid / No Id input` });
+  }
 
-    return res.status(StatusCodes.CREATED).json({
-      msg: "Store has been deleted",
-    });
+  if (sellar) {
+    const food = await Food.findByIdAndDelete({ _id: deleteId });
+
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ msg: "Food Successfully deleted" });
   }
   return res
     .status(StatusCodes.BAD_REQUEST)
-    .json({ msg: "error in deleting store" });
+    .json({ msg: "error while deleting food" });
 };
 
-const getStoreDetails = async (req, res) => {
+//get menu
+const getFood = async (req, res) => {
   const sellar = req.user.userId;
   if (sellar) {
-    const getStore = await StoreDetails.find({ storeOwner: sellar });
-    return res.status(StatusCodes.OK).json(getStore);
+    const food = await Food.find({ storeOwner: sellar });
+
+    return res.status(StatusCodes.CREATED).json(food);
   }
   return res
     .status(StatusCodes.BAD_REQUEST)
-    .json({ msg: "error getting store details" });
+    .json({ msg: "error while getting food" });
 };
 
-module.exports = {
-  createStoreDetails,
-  editStoreDetails,
-  deleteStoreDetails,
-  getStoreDetails,
-};
+module.exports = { createFood, editFood, deleteFood, getFood };

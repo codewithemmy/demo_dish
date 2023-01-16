@@ -1,10 +1,5 @@
 const Sellar = require("../models/Sellar");
 const { StatusCodes } = require("http-status-codes");
-const {
-  BadRequestError,
-  UnauthenticatedError,
-  NotFoundError,
-} = require("../errors");
 const crypto = require("crypto");
 const createHash = require("../utils/createHash");
 const { mailTransport } = require("../utils/sendEmail");
@@ -125,13 +120,6 @@ const login = async (req, res) => {
     email: sellar.email,
   });
 
-  // const oneDay = 1000 * 60 * 60 * 24;
-
-  // res.cookie("token", token, {
-  //   httpOnly: true,
-  //   expires: new Date(Date.now() + oneDay),
-  // });
-
   return res
     .status(StatusCodes.OK)
     .json({ msg: "Login Successful", userId: sellar._id, token: token });
@@ -176,7 +164,7 @@ const forgotPassword = async (req, res) => {
     await sellar.save();
   }
 
-  return eres.status(StatusCodes.OK).json({
+  return res.status(StatusCodes.OK).json({
     msg: "Please check your email to reset password",
   });
 };

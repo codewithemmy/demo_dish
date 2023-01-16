@@ -8,10 +8,22 @@ const BusinessInfo = require("../models/BusinessInfo");
 
 //create business information
 const createBusiness = async (req, res) => {
-  const { legalEntityName, legalBusinessAddress } = req.body;
+  const {
+    legalEntityName,
+    legalBusinessAddress,
+    bankName,
+    bankAcountName,
+    bankAccountNumber,
+  } = req.body;
   const sellar = req.user.userId;
 
-  if (!legalEntityName || !legalBusinessAddress) {
+  if (
+    !legalEntityName ||
+    !legalBusinessAddress ||
+    !bankName ||
+    !bankAcountName ||
+    !bankAccountNumber
+  ) {
     return res
       .status(400)
       .json({ msg: `provide legal entity name or legal business name` });
@@ -21,6 +33,9 @@ const createBusiness = async (req, res) => {
     const businessInfo = await BusinessInfo.create({
       legalEntityName: legalEntityName,
       legalBusinessAddress: legalBusinessAddress,
+      bankName: bankName,
+      bankAcountName: bankAcountName,
+      bankAccountNumber: bankAccountNumber,
       storeOwner: sellar,
     });
 
@@ -37,7 +52,7 @@ const createBusiness = async (req, res) => {
 const editBusiness = async (req, res) => {
   const { id: businessId } = req.params;
   const sellar = req.user.userId;
-  
+
   if (sellar) {
     const editBusinessInfo = await BusinessInfo.findByIdAndUpdate(
       {

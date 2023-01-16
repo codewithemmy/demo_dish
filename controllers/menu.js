@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const Menu = require("../models/Menu");
-const BusinessInfo = require("../models/Menu");
+const Food = require("../models/Food");
 
 //create menu
 const createMenu = async (req, res) => {
@@ -16,7 +16,6 @@ const createMenu = async (req, res) => {
   if (sellar) {
     const menu = await Menu.create({
       menuName: menuName,
-      food: "",
       storeOwner: sellar,
     });
 
@@ -71,7 +70,7 @@ const deleteMenu = async (req, res) => {
   }
 
   if (sellar) {
-    const menu = await Menu.findByIdAndDelete({ _id: deleteId });
+    await Menu.findByIdAndDelete({ _id: deleteId });
 
     return res
       .status(StatusCodes.CREATED)
@@ -95,4 +94,23 @@ const getMenu = async (req, res) => {
     .json({ msg: "error while getting menu" });
 };
 
-module.exports = { createMenu, editMenu, deleteMenu, getMenu };
+//get menu with food
+const getMenuFood = async (req, res) => {
+  const { id: menuId } = req.params;
+  const sellar = req.user.userId;
+  if (sellar) {
+    const food = await Food.find({ menu: menuId, storeOwner: sellar });
+    if (!food) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: `cannot find id: ${menuId} in params` });
+    }
+
+    return res.status(StatusCodes.OK).json(food);
+  }
+  return res
+    .status(StatusCodes.BAD_REQUEST)
+    .json({ msg: "error while getting menu with food" });
+};
+
+module.exports = { createMenu, editMenu, deleteMenu, getMenu, getMenuFood };

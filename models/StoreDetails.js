@@ -9,9 +9,25 @@ const StoreDetailsSchema = new mongoose.Schema(
     storeImage: {
       type: String,
     },
+    location: {
+      type: String,
+      required: [true, "provide your location"],
+    },
     cuisineType: {
       type: String,
       required: [true, "provide your cuisines"],
+    },
+    deliveryFee: {
+      type: String,
+      required: [true, "provide your delivery fee"],
+    },
+    minimumOrder: {
+      type: String,
+      required: [true, "provide your minimum order"],
+    },
+    description: {
+      type: String,
+      required: [true, "description must not be empty"],
     },
     openHours: {
       type: String,

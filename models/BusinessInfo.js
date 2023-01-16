@@ -10,6 +10,18 @@ const BusinessInfoSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide legal business name"],
     },
+    bankName: {
+      type: String,
+      required: [true, "provide Bank name"],
+    },
+    bankAcountName: {
+      type: String,
+      required: [true, "provide bank account name"],
+    },
+    bankAccountNumber: {
+      type: String,
+      required: [true, "provide your account number"],
+    },
     storeOwner: {
       type: mongoose.Types.ObjectId,
       ref: "Sellar",
