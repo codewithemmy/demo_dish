@@ -8,6 +8,11 @@ const MenuSchema = new mongoose.Schema(
       ref: "Sellar",
       required: [true, "Please provide sellar"],
     },
+    store: {
+      type: mongoose.Types.ObjectId,
+      ref: "StoreDetails",
+      required: [true, "Please provide sellar"],
+    },
   },
   { timestamps: true }
 );

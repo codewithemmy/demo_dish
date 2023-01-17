@@ -4,6 +4,7 @@ const Food = require("../models/Food");
 
 //create menu
 const createMenu = async (req, res) => {
+  const { id: storeId } = req.params;
   const { menuName } = req.body;
   const sellar = req.user.userId;
 
@@ -17,6 +18,7 @@ const createMenu = async (req, res) => {
     const menu = await Menu.create({
       menuName: menuName,
       storeOwner: sellar,
+      store: storeId,
     });
 
     return res

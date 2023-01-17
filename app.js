@@ -29,7 +29,9 @@ const connectDB = require("./db/connect");
 // const authenticateUser = require("./middleware/authentication");
 
 // routers
-const customerAuthRouter = require("./routes/customerAuth");
+const customerAuthRouter = require("./customerRoutes/customerAuth");
+const customerMenuRouter = require("./customerRoutes/customerMenu");
+const customerStoreRouter = require("./customerRoutes/customerStore");
 const authRouter = require("./routes/auth");
 const passportRouter = require("./routes/passportRoutes");
 const partnerRouter = require("./routes/partner");
@@ -56,6 +58,8 @@ app.get("/", (req, res) => {
 app.use("", passportRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/customerAuth", customerAuthRouter);
+app.use("/api/v1/customerAuth", customerMenuRouter);
+app.use("/api/v1/customerAuth", customerStoreRouter);
 app.use("/api/v1", partnerRouter);
 app.use("/api/v1", businessInfoRouter);
 app.use("/api/v1", storeDetailsRouter);

@@ -1,4 +1,4 @@
-const Customer = require("../models/customer");
+const Customer = require("../customerModels/customer");
 const { StatusCodes } = require("http-status-codes");
 const crypto = require("crypto");
 const createHash = require("../utils/createHash");

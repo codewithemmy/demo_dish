@@ -31,7 +31,7 @@ const register = async (req, res) => {
 
   //send Mail
   mailTransport.sendMail({
-    from: '"Dish-Out" <dishout@gmail.com>', // sender address
+    from: '"Dish-Out" <Afrilish@gmail.com>', // sender address
     to: email, // list of receivers
     subject: "VERIFY YOUR EMAIL ACCOUNT", // Subject line
     html: `Hello, ${firstName}, kindly verify your account with this token:<h4>${verificationToken}</h4>`, // html body
@@ -74,7 +74,7 @@ const verifyEmail = async (req, res) => {
 
   //send Mail
   mailTransport.sendMail({
-    from: '"Dish-Out" <dishout@gmail.com>', // sender address
+    from: '"Afrilish" <Afrilish@gmail.com>', // sender address
     to: sellar.email, // list of receivers
     subject: "MAIL IS VERIFIED", // Subject line
     html: `<h4> Hello, ${sellar.firstName}</h4> <h2>Congrats</h2> you are now verified,you can login now`, // html body
@@ -150,7 +150,7 @@ const forgotPassword = async (req, res) => {
 
     // send email
     mailTransport.sendMail({
-      from: '"Dish-Out" <dishout@gmail.com>', // sender address
+      from: '"Afrilish" <Afrilish@gmail.com>', // sender address
       to: email,
       subject: "Reset you account",
       html: `Hi, kindly reset your password with this token: <h4>${passwordToken}</h4>`,

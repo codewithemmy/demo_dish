@@ -29,6 +29,7 @@ const StoreDetailsSchema = new mongoose.Schema(
       type: String,
       required: [true, "description must not be empty"],
     },
+    rating: { type: Number },
     openHours: {
       type: String,
       trim: true,
