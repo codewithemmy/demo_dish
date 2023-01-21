@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const FoodSchema = new mongoose.Schema(
   {
     foodImage: {
@@ -9,7 +10,7 @@ const FoodSchema = new mongoose.Schema(
       required: [true, "provide food name"],
     },
     price: {
-      type: String,
+      type: Number,
       required: [true, "provide food price"],
     },
     nutritionalFacts: {
@@ -21,7 +22,7 @@ const FoodSchema = new mongoose.Schema(
       required: [true, "provide menu id"],
     },
     storeOwner: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "Sellar",
     },
   },

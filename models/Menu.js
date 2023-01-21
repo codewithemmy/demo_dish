@@ -4,12 +4,12 @@ const MenuSchema = new mongoose.Schema(
   {
     menuName: { type: String, required: [true, "provide menu name"] },
     storeOwner: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "Sellar",
       required: [true, "Please provide sellar"],
     },
     store: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "StoreDetails",
       required: [true, "Please provide sellar"],
     },

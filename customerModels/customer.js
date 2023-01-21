@@ -42,17 +42,14 @@ const CustomerSchema = new mongoose.Schema(
     passwordTokenExpirationDate: {
       type: Date,
     },
+    orders: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Order",
+      },
+    ],
   },
   {
-    toJSON: {
-      transform(doc, ret) {
-        delete ret.password,
-          delete ret.__v,
-          delete ret.createdAt,
-          delete ret.updatedAt;
-        delete ret.verificationToken;
-      },
-    },
     timestamps: true,
   }
 );

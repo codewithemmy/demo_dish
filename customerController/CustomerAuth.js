@@ -1,4 +1,4 @@
-const Customer = require("../customerModels/customer");
+const Customer = require("../customerModels/Customer");
 const { StatusCodes } = require("http-status-codes");
 const crypto = require("crypto");
 const createHash = require("../utils/createHash");
@@ -21,6 +21,7 @@ const register = async (req, res) => {
     email,
     phonenumber,
     password,
+    orders: []
   });
 
   //send Mail

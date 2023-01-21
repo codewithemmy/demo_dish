@@ -7,7 +7,7 @@ const PartnerSchema = new mongoose.Schema(
       required: [true, "provide delivery option"],
     },
     storeOwner: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "Sellar",
     },
   },

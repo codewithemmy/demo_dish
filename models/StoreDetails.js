@@ -37,7 +37,7 @@ const StoreDetailsSchema = new mongoose.Schema(
     },
     serviceAvalaible: { type: Boolean },
     storeOwner: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       ref: "Sellar",
     },
   },
@@ -45,3 +45,4 @@ const StoreDetailsSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("StoreDetails", StoreDetailsSchema);
+

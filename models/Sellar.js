@@ -47,7 +47,7 @@ const SellarSchema = new mongoose.Schema(
     verificationToken: String,
     isVerified: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     verified: Date,
     passwordToken: {

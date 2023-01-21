@@ -17,19 +17,20 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(fileUpload({ useTempFiles: true }));
 
 // extra security packages
 // const helmet = require('helmet');
 const cors = require("cors");
 // const xss = require('xss-clean');
 // const rateLimiter = require('express-rate-limit');
+app.use(fileUpload({ useTempFiles: true }));
 
 const connectDB = require("./db/connect");
-// const authenticateUser = require("./middleware/authentication");
+const authenticateUser = require("./middleware/authentication");
 
 // routers
 const customerAuthRouter = require("./customerRoutes/customerAuth");
+const customerOrderRouter = require("./customerRoutes/customerOrderRoute");
 const customerMenuRouter = require("./customerRoutes/customerMenu");
 const customerStoreRouter = require("./customerRoutes/customerStore");
 const authRouter = require("./routes/auth");
@@ -57,9 +58,10 @@ app.get("/", (req, res) => {
 
 app.use("", passportRouter);
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/customerAuth", customerAuthRouter);
-app.use("/api/v1/customerAuth", customerMenuRouter);
-app.use("/api/v1/customerAuth", customerStoreRouter);
+app.use("/api/v1/customer", customerAuthRouter);
+app.use("/api/v1/customer", customerOrderRouter);
+app.use("/api/v1/customer", customerMenuRouter);
+app.use("/api/v1/customer", customerStoreRouter);
 app.use("/api/v1", partnerRouter);
 app.use("/api/v1", businessInfoRouter);
 app.use("/api/v1", storeDetailsRouter);
@@ -71,7 +73,7 @@ app.use("/api/v1", foodRouter);
 app.use(express.json());
 app.use(cors());
 
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
@@ -79,8 +81,8 @@ app.use(errorHandlerMiddleware);
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
-    app.listen(port, () =>
-      console.log(`Server is listening on port ${port}...`)
+    app.listen(PORT, () =>
+      console.log(`Server is listening on port ${PORT}...`)
     );
   } catch (error) {
     console.log(error);
