@@ -5,7 +5,6 @@ const { StatusCodes } = require("http-status-codes");
 
 //create order
 const CreateOrder = async (req, res) => {
-
   //grab the login customer
   const customer = req.user;
   if (customer) {
@@ -13,6 +12,7 @@ const CreateOrder = async (req, res) => {
     const orderId = `${Math.floor(Math.random() * 89999) + 1000}`;
 
     const profile = await Customer.findById(customer.userId);
+
     //grab order items from request [{id: xx, unit: xx}]
     const cart = req.body; //[{ id: xx, quantity: xx }];
     let cartItems = Array();
@@ -53,7 +53,7 @@ const CreateOrder = async (req, res) => {
         return res.status(200).json(currentOrder);
       }
     }
-    //finally update orders to user account
+    //finally update orders to user accout
   }
   return res.status(400).json({ msg: "error with creating order" });
 };

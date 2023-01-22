@@ -18,7 +18,14 @@ const OrderSchema = new mongoose.Schema(
     paymentResponse: { type: String },
     orderStatus: { type: String, enum: ["pending", "paid", "success"] },
   },
-  { timestamps: true }
+  {
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.__v, delete ret.createdAt, delete ret.updatedAt;
+      },
+    },
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("Order", OrderSchema);

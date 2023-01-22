@@ -17,16 +17,16 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(fileUpload({ useTempFiles: true }));
 
 // extra security packages
 // const helmet = require('helmet');
 const cors = require("cors");
 // const xss = require('xss-clean');
 // const rateLimiter = require('express-rate-limit');
-app.use(fileUpload({ useTempFiles: true }));
 
 const connectDB = require("./db/connect");
-const authenticateUser = require("./middleware/authentication");
+// const authenticateUser = require("./middleware/authentication");
 
 // routers
 const customerAuthRouter = require("./customerRoutes/customerAuth");
@@ -77,24 +77,6 @@ const port = process.env.PORT || 5000;
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
-
-// const start = async () => {
-//   try {
-//     await mongoose
-//       .connect(process.env.MONGO_URI)
-//       .then((result) => console.log(`db is connectded`))
-//       .catch((err) => console.log(`error ${err}`));
-
-//     app.listen(PORT, () => {
-//       console.log(`listening at render port ${PORT}`);
-//     });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// start();
-
 
 const start = async () => {
   try {

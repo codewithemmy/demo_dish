@@ -21,7 +21,6 @@ const register = async (req, res) => {
     email,
     phonenumber,
     password,
-    orders: []
   });
 
   //send Mail

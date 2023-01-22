@@ -68,7 +68,6 @@ const createStoreDetails = async (req, res) => {
       location: location,
       openHours: openHours,
       deliveryFee: deliveryFee,
-      rating: 0,
       minimumOrder: minimumOrder,
       description: description,
       serviceAvalaible: false,
