@@ -73,16 +73,34 @@ app.use("/api/v1", foodRouter);
 app.use(express.json());
 app.use(cors());
 
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
+// const start = async () => {
+//   try {
+//     await mongoose
+//       .connect(process.env.MONGO_URI)
+//       .then((result) => console.log(`db is connectded`))
+//       .catch((err) => console.log(`error ${err}`));
+
+//     app.listen(PORT, () => {
+//       console.log(`listening at render port ${PORT}`);
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// start();
+
+
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
-    app.listen(PORT, () =>
-      console.log(`Server is listening on port ${PORT}...`)
+    app.listen(port, () =>
+      console.log(`Server is listening on port ${port}...`)
     );
   } catch (error) {
     console.log(error);
