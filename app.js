@@ -53,7 +53,7 @@ app.use(cors());
 
 app.get("/", (req, res) => {
   res.send(
-    '<h1>Afrlish</h1><a href="https://documenter.getpostman.com/view/23195379/2s8Z73xWKH#2e837a54-f4af-4e6d-8ea7-ff81fd8acf7b">Documentation</a>'
+    '<h1>Afrlish</h1><a href="https://documenter.getpostman.com/view/23195379/2s8Z73xWKH">Documentation</a>'
   );
 });
 
