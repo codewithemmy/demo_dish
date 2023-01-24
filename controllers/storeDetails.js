@@ -129,7 +129,7 @@ const editStoreDetails = async (req, res) => {
     } = req.body;
     const editedStore = await StoreDetails.findById(storeDetailsId);
     editedStore.storeName = storeName;
-    editStore.location = location;
+    editedStore.location = location;
     editedStore.cuisineType = cuisineType;
     editedStore.minimumOrder = minimumOrder;
     editedStore.deliveryFee = deliveryFee;
