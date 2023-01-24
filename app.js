@@ -32,6 +32,7 @@ const authenticateUser = require("./middleware/authentication");
 const customerAuthRouter = require("./routes/customerAuth");
 const customerOrderRouter = require("./routes/customerOrderRoute");
 const customerMenuRouter = require("./routes/customerMenu");
+const customerDeliveryRouter = require("./routes/customerDelivery");
 const customerStoreRouter = require("./routes/customerStore");
 const authRouter = require("./routes/auth");
 const passportRouter = require("./routes/passportRoutes");
@@ -61,6 +62,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/customer", customerAuthRouter);
 app.use("/api/v1/customer", customerOrderRouter);
 app.use("/api/v1/customer", customerMenuRouter);
+app.use("/api/v1/customer", customerDeliveryRouter);
 app.use("/api/v1/customer", customerStoreRouter);
 app.use("/api/v1", partnerRouter);
 app.use("/api/v1", businessInfoRouter);
@@ -94,7 +96,6 @@ app.use(errorHandlerMiddleware);
 // };
 
 // start();
-
 
 const start = async () => {
   try {

@@ -4,7 +4,6 @@ const Food = require("../models/Food");
 
 //create order
 const CreateOrder = async (req, res) => {
-
   //grab the login customer
   const customer = req.user;
   if (customer) {
@@ -35,7 +34,6 @@ const CreateOrder = async (req, res) => {
     //create order with item description
     if (cartItems) {
       //create order
-
       const currentOrder = await Order.create({
         orderID: orderId,
         items: cartItems,
@@ -52,9 +50,39 @@ const CreateOrder = async (req, res) => {
         return res.status(200).json(currentOrder);
       }
     }
+    return res.status(400).json({ msg: "Your cart is empty" });
     //finally update orders to user account
   }
   return res.status(400).json({ msg: "error with creating order" });
 };
 
-module.exports = { CreateOrder };
+//get customers order
+const getOrders = async (req, res) => {
+  const customer = req.user.userId;
+  if (customer) {
+    const customerOrders = await Customer.findOne({ _id: customer }).populate(
+      "orders"
+    );
+    if (!customerOrders) {
+      return res.status(404).json({ msg: `customer order not found` });
+    }
+    return res.status(200).json(customerOrders.orders);
+  }
+  return res.status(400).json({ msg: `error getting customer orders` });
+};
+
+//get customers order by id
+const getOrderById = async (req, res) => {
+  const { id: orderId } = req.params;
+  const customer = req.user.userId;
+  if (customer) {
+    const customerOrder = await Order.findOne({ _id: orderId });
+    if (!customerOrder) {
+      return res.status(404).json({ msg: `customer order not found` });
+    }
+    return res.status(200).json(customerOrder);
+  }
+  return res.status(400).json({ msg: `error getting customer order` });
+};
+
+module.exports = { CreateOrder, getOrders, getOrderById };
