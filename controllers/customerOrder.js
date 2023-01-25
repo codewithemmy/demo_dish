@@ -1,6 +1,7 @@
 const Order = require("../models/CustomerOrder");
 const Customer = require("../models/Customer");
 const Food = require("../models/Food");
+const { StatusCodes } = require("http-status-codes");
 
 //create order
 const CreateOrder = async (req, res) => {
@@ -85,4 +86,26 @@ const getOrderById = async (req, res) => {
   return res.status(400).json({ msg: `error getting customer order` });
 };
 
-module.exports = { CreateOrder, getOrders, getOrderById };
+//delete order
+const deleteOrder = async (req, res) => {
+  const { id: deleteId } = req.params;
+  const customer = req.user.userId;
+  if (customer) {
+    const customerOrderDelete = await Customer.findOne({ _id: customer });
+    if (!customerOrderDelete) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: `this is not your order` });
+    }
+
+    const orderDeleted = await Order.findByIdAndDelete({ _id: deleteId });
+    return res
+      .status(StatusCodes.OK)
+      .json({ msg: `order successfully deleted` });
+  }
+  return res
+    .status(StatusCodes.BAD_REQUEST)
+    .json({ msg: `error deleting order` });
+};
+
+module.exports = { CreateOrder, getOrders, getOrderById, deleteOrder };
