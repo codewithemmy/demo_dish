@@ -180,9 +180,34 @@ const getStoreDetails = async (req, res) => {
     .json({ msg: "error getting store details" });
 };
 
+
+const isAvailable = async (req, res) => {
+  const sellar = req.user.userId;
+  if (sellar) {
+    const verifySellar = await await StoreDetails.findOne({
+      storeOwner: sellar,
+    });
+    if (!verifySellar) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: `not a verified sellar` });
+    }
+    verifySellar.serviceAvalaible = !verifySellar.serviceAvalaible;
+    const result = await verifySellar.save();
+    return res
+      .status(StatusCodes.OK)
+      .json({ msg: `Sellar is now available`, result });
+  }
+
+  return res
+    .status(StatusCodes.OK)
+    .json({ msg: `unable to verify the availability of sellar` });
+};
+
 module.exports = {
   createStoreDetails,
   editStoreDetails,
   deleteStoreDetails,
   getStoreDetails,
+  isAvailable,
 };
