@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 
 const MenuSchema = new mongoose.Schema(
   {
-    menuName: { type: String, required: [true, "provide menu name"] },
+    menuTitle: { type: String, required: [true, "provide menu name"] },
+    description: { type: String, required: [true, "provide menu description"] },
+    menuImage: { type: String },
     storeOwner: {
       type: mongoose.Schema.ObjectId,
       ref: "Sellar",
