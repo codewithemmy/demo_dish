@@ -13,7 +13,7 @@ const router = express.Router();
 router.route("/editStoreDetails/:id").patch(authMiddleware, editStoreDetails);
 router.route("/createStoreDetails").post(authMiddleware, createStoreDetails);
 router.route("/getStoreDetails").get(authMiddleware, getStoreDetails);
-router.route("/isAvailable").get(authMiddleware, isAvailable);
+router.route("/isAvailable").post(authMiddleware, isAvailable);
 router
   .route("/deleteStoreDetails/:id")
   .delete(authMiddleware, deleteStoreDetails);
