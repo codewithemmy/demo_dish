@@ -45,4 +45,3 @@ const StoreDetailsSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("StoreDetails", StoreDetailsSchema);
-

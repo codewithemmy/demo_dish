@@ -180,7 +180,6 @@ const getStoreDetails = async (req, res) => {
     .json({ msg: "error getting store details" });
 };
 
-
 const isAvailable = async (req, res) => {
   const sellar = req.user.userId;
   if (sellar) {

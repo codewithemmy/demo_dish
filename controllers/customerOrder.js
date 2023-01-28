@@ -3,6 +3,12 @@ const Customer = require("../models/Customer");
 const Food = require("../models/Food");
 const { StatusCodes } = require("http-status-codes");
 
+//sample for stripe api
+const fakeStripeAPI = async ({ amount, currency }) => {
+  const client_secret = "someRandomValue";
+  return { client_secret, amount };
+};
+
 //create order
 const CreateOrder = async (req, res) => {
   //grab the login customer
@@ -32,23 +38,38 @@ const CreateOrder = async (req, res) => {
       });
     });
 
+    const deliveryFee = 2;
+    const marketPlace = 2.99;
+
+    const totalPrice = netAmount + deliveryFee + marketPlace;
+
+    // get client secret
+
     //create order with item description
     if (cartItems) {
+      const paymentIntent = await fakeStripeAPI({
+        amount: totalPrice,
+        currency: "usd",
+      });
       //create order
       const currentOrder = await Order.create({
         orderID: orderId,
         items: cartItems,
-        totalAmount: netAmount,
+        orderedBy: customer.userId,
+        totalAmount: totalPrice,
         orderDate: new Date(),
         paymentResponse: "",
         orderStatus: "pending",
+        clientSecret: paymentIntent.client_secret,
       });
 
       if (currentOrder) {
         profile.orders.push(currentOrder);
         const profileResponse = await profile.save();
 
-        return res.status(200).json(currentOrder);
+        return res
+          .status(200)
+          .json({ currentOrder, clientSecret: currentOrder.clientSecret });
       }
     }
     return res.status(400).json({ msg: "Your cart is empty" });
@@ -57,7 +78,7 @@ const CreateOrder = async (req, res) => {
   return res.status(400).json({ msg: "error with creating order" });
 };
 
-//get customers order
+//get customers order /cart
 const getOrders = async (req, res) => {
   const customer = req.user.userId;
   if (customer) {
