@@ -7,7 +7,7 @@ const auth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
     return res
-      .status(StatusCodes.UNAUTHORIZED)
+      .status(403)
       .json({ msg: "Token not found" });
   }
   const token = authHeader.split(" ")[1];
@@ -24,7 +24,7 @@ const auth = async (req, res, next) => {
     next();
   } catch (error) {
     return res
-      .status(StatusCodes.UNAUTHORIZED)
+      .status(403)
       .json({ msg: "Authentication invalid" });
   }
 };
