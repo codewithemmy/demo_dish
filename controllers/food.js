@@ -168,7 +168,7 @@ const deleteFood = async (req, res) => {
     .json({ msg: "error while deleting food" });
 };
 
-//get menu
+//get food
 const getFood = async (req, res) => {
   const sellar = req.user.userId;
   if (sellar) {

@@ -18,6 +18,7 @@ const OrderSchema = new mongoose.Schema(
       ref: "Customer",
       required: [true, "Provide customer Id"],
     },
+    sellarId: { type: String },
     totalAmount: { type: Number },
     orderDate: { type: Date },
     paymentResponse: { type: String },
@@ -28,9 +29,8 @@ const OrderSchema = new mongoose.Schema(
       enum: ["pending", "failed", "paid", "delivered", "canceled"],
       default: "pending",
     },
-    clientSecret: {
-      type: String,
-    },
+    remarks: { type: String },
+    readyTime: { type: String },
     paymentIntentId: {
       type: String,
     },

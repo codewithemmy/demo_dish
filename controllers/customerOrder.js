@@ -10,7 +10,7 @@ const fakeStripeAPI = async ({ amount, currency }) => {
 };
 
 //create order
-const CreateOrder = async (req, res) => {
+const createOrder = async (req, res) => {
   //grab the login customer
   const customer = req.user;
   if (customer) {
@@ -23,6 +23,8 @@ const CreateOrder = async (req, res) => {
     let cartItems = Array();
     let netAmount = 0.0;
 
+    let sellarId;
+
     //calculate order amount
     const foods = await Food.find()
       .where("_id")
@@ -32,6 +34,7 @@ const CreateOrder = async (req, res) => {
     foods.map((food) => {
       cart.map(({ _id, quantity }) => {
         if (food._id == _id) {
+          sellarId = food.storeOwner;
           netAmount += food.price * quantity;
           cartItems.push({ food, quantity });
         }
@@ -59,8 +62,10 @@ const CreateOrder = async (req, res) => {
         totalAmount: totalPrice,
         orderDate: new Date(),
         paymentResponse: "",
-        orderStatus: "pending",
+        sellarId: sellarId,
         clientSecret: paymentIntent.client_secret,
+        readyTime: "",
+        remarks: "",
       });
 
       if (currentOrder) {
@@ -129,4 +134,25 @@ const deleteOrder = async (req, res) => {
     .json({ msg: `error deleting order` });
 };
 
-module.exports = { CreateOrder, getOrders, getOrderById, deleteOrder };
+const updateOrder = async (req, res) => {
+  const { id: orderId } = req.params;
+  const { paymentIntentId } = req.body;
+  const order = await Order.findById({ _id: orderId });
+  if (!order) {
+    return res.status(200).json({ msg: `No order with id : ${orderId}` });
+  }
+
+  order.paymentIntentId = paymentIntentId;
+  order.status = "paid";
+  await order.save();
+
+  return res.status(200).json(order);
+};
+
+module.exports = {
+  createOrder,
+  getOrders,
+  getOrderById,
+  deleteOrder,
+  updateOrder,
+};

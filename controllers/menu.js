@@ -29,7 +29,7 @@ const createMenu = async (req, res) => {
   if (!menuTitle) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: `kindly input your menu name` });
+      .json({ msg: `kindly input your menu title` });
   }
 
   if (sellar) {

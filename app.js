@@ -42,6 +42,7 @@ const storeDetailsRouter = require("./routes/storeDetailsRoute");
 const documentsUploadRouter = require("./routes/documentsRoutes");
 const menuRouter = require("./routes/menuRoute");
 const foodRouter = require("./routes/foodRoutes");
+const getOrderRouter = require("./routes/orderRoute");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -70,6 +71,7 @@ app.use("/api/v1", storeDetailsRouter);
 app.use("/api/v1", documentsUploadRouter);
 app.use("/api/v1", menuRouter);
 app.use("/api/v1", foodRouter);
+app.use("/api/v1", getOrderRouter);
 
 //serve exprss json
 app.use(express.json());
