@@ -22,8 +22,7 @@ const bufferToStream = (buffer) => {
 
 //create menu
 const createFood = async (req, res) => {
-  const { id: menuId } = req.params;
-  const { foodName, price, nutritionalFacts } = req.body;
+  const { foodName, price, nutritionalFacts, menuId, shortInfo } = req.body;
   const sellar = req.user.userId;
 
   if (!foodName || !price || !nutritionalFacts) {
@@ -74,6 +73,7 @@ const createFood = async (req, res) => {
       nutritionalFacts: nutritionalFacts,
       menu: menuId,
       storeOwner: sellar,
+      shortInfo: shortInfo,
     });
 
     return res
@@ -87,9 +87,8 @@ const createFood = async (req, res) => {
 
 //edit food
 const editFood = async (req, res) => {
-  const { id: foodId } = req.params;
   const sellar = req.user.userId;
-  const { foodName, price, nutritionalFacts } = req.body;
+  const { foodName, price, nutritionalFacts, foodId } = req.body;
 
   if (!foodId) {
     return res.status(StatusCodes.BAD_REQUEST).json({ msg: `Insert food Id` });
@@ -147,7 +146,7 @@ const editFood = async (req, res) => {
 
 //delete menu
 const deleteFood = async (req, res) => {
-  const { id: deleteId } = req.params;
+  const { deleteId } = req.body;
   const sellar = req.user.userId;
 
   if (!deleteId) {

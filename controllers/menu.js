@@ -22,8 +22,7 @@ const bufferToStream = (buffer) => {
 
 //create menu
 const createMenu = async (req, res) => {
-  const { id: storeId } = req.params;
-  const { menuTitle, description } = req.body;
+  const { menuTitle, description, storeId } = req.body;
   const sellar = req.user.userId;
 
   if (!menuTitle) {
@@ -78,9 +77,8 @@ const createMenu = async (req, res) => {
 
 //edit menu
 const editMenu = async (req, res) => {
-  const { id: menuId } = req.params;
   const sellar = req.user.userId;
-  const { menuTitle, description } = req.body;
+  const { menuTitle, description, menuId } = req.body;
 
   if (!menuId) {
     return res
@@ -136,7 +134,7 @@ const editMenu = async (req, res) => {
 
 //delete menu
 const deleteMenu = async (req, res) => {
-  const { id: deleteId } = req.params;
+  const { deleteId } = req.body;
   const sellar = req.user.userId;
 
   if (!deleteId) {
@@ -172,7 +170,7 @@ const getMenu = async (req, res) => {
 
 //get menu with food
 const getMenuFood = async (req, res) => {
-  const { id: menuId } = req.params;
+  const { menuId } = req.body;
   const sellar = req.user.userId;
   if (sellar) {
     const food = await Food.find({ menu: menuId, storeOwner: sellar });

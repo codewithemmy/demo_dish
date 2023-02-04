@@ -17,7 +17,10 @@ const FoodSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide nutritional facts of food"],
     },
-    menu: {
+    shortInfo: {
+      type: String,
+    },
+    menuId: {
       type: String,
       required: [true, "provide menu id"],
     },

@@ -44,7 +44,7 @@ const register = async (req, res) => {
 
   //send Mail
   mailTransport.sendMail({
-    from: '"Dish-Out" <Afrilish@gmail.com>', // sender address
+    from: '"Aflilish" <Afrilish@gmail.com>', // sender address
     to: email, // list of receivers
     subject: "VERIFY YOUR EMAIL ACCOUNT", // Subject line
     html: `Hello, ${firstName}, kindly verify your account with this token:<h4>${verificationToken}</h4>`, // html body
@@ -55,6 +55,7 @@ const register = async (req, res) => {
     sellar,
   });
 };
+
 //verify user
 const verifyEmail = async (req, res) => {
   const { id } = req.params;
