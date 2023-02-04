@@ -44,6 +44,15 @@ const SellarSchema = new mongoose.Schema(
       required: [true, "Please provide password"],
       minlength: 6,
     },
+    storeType: {
+      type: String,
+    },
+    cuisineType: {
+      type: String,
+    },
+    numberOfLocation: {
+      type: Number,
+    },
     verificationToken: String,
     isVerified: {
       type: Boolean,

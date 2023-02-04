@@ -6,8 +6,18 @@ const { mailTransport } = require("../utils/sendEmail");
 
 //register sellar
 const register = async (req, res) => {
-  const { store, floor, firstName, surname, email, phonenumber, password } =
-    req.body;
+  const {
+    cuisineType,
+    storeType,
+    numberOfLocation,
+    floor,
+    store,
+    firstName,
+    surname,
+    email,
+    phonenumber,
+    password,
+  } = req.body;
 
   const emailAlreadyExists = await Sellar.findOne({ email });
   if (emailAlreadyExists) {
@@ -19,8 +29,11 @@ const register = async (req, res) => {
   const verificationToken = crypto.randomBytes(2).toString("hex");
   const hastToken = createHash(verificationToken);
   const sellar = await Sellar.create({
-    store,
+    cuisineType,
+    storeType,
+    numberOfLocation,
     floor,
+    store,
     firstName,
     surname,
     email,
@@ -42,7 +55,6 @@ const register = async (req, res) => {
     sellar,
   });
 };
-
 //verify user
 const verifyEmail = async (req, res) => {
   const { id } = req.params;
