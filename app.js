@@ -31,6 +31,7 @@ const authenticateUser = require("./middleware/authentication");
 // routers
 const customerAuthRouter = require("./routes/customerAuth");
 const customerOrderRouter = require("./routes/customerOrderRoute");
+const customerAddressRouter = require("./routes/customerAddress");
 const customerMenuRouter = require("./routes/customerMenu");
 const customerDeliveryRouter = require("./routes/customerDelivery");
 const customerStoreRouter = require("./routes/customerStore");
@@ -64,6 +65,7 @@ app.use("/api/v1/customer", customerAuthRouter);
 app.use("/api/v1/customer", customerOrderRouter);
 app.use("/api/v1/customer", customerMenuRouter);
 app.use("/api/v1/customer", customerDeliveryRouter);
+app.use("/api/v1/customer", customerAddressRouter);
 app.use("/api/v1/customer", customerStoreRouter);
 app.use("/api/v1", partnerRouter);
 app.use("/api/v1", businessInfoRouter);
