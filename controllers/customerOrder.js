@@ -2,12 +2,7 @@ const Order = require("../models/CustomerOrder");
 const Customer = require("../models/Customer");
 const Food = require("../models/Food");
 const { StatusCodes } = require("http-status-codes");
-
-//sample for stripe api
-const fakeStripeAPI = async ({ amount, currency }) => {
-  const client_secret = "someRandomValue";
-  return { client_secret, amount };
-};
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 //create order
 const createOrder = async (req, res) => {
@@ -50,10 +45,17 @@ const createOrder = async (req, res) => {
 
     //create order with item description
     if (cartItems) {
-      const paymentIntent = await fakeStripeAPI({
-        amount: totalPrice,
+      const calculateOrderAmount = () => {
+        return totalPrice;
+      };
+
+      console.log(calculateOrderAmount());
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: "10",
         currency: "usd",
       });
+
       //create order
       const currentOrder = await Order.create({
         orderID: orderId,
@@ -74,7 +76,7 @@ const createOrder = async (req, res) => {
 
         return res
           .status(200)
-          .json({ currentOrder, clientSecret: currentOrder.clientSecret });
+          .json({ clientSecret: currentOrder.client_secret });
       }
     }
     return res.status(400).json({ msg: "Your cart is empty" });
