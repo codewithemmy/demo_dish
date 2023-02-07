@@ -1,7 +1,7 @@
 /**passport authentication setup */
 const express = require("express");
 const router = express.Router();
-const Sellar = require("../models/Sellar");
+const Sellar = require("../models/sellarModel/Sellar");
 const passport = require("passport");
 require("../utils/passportAuth");
 const { StatusCodes } = require("http-status-codes");

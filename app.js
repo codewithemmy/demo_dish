@@ -29,21 +29,22 @@ const connectDB = require("./db/connect");
 const authenticateUser = require("./middleware/authentication");
 
 // routers
-const customerAuthRouter = require("./routes/customerAuth");
-const customerOrderRouter = require("./routes/customerOrderRoute");
-const customerAddressRouter = require("./routes/customerAddress");
-const customerMenuRouter = require("./routes/customerMenu");
-const customerDeliveryRouter = require("./routes/customerDelivery");
-const customerStoreRouter = require("./routes/customerStore");
-const authRouter = require("./routes/auth");
+const customerAuthRouter = require("./routes/customer/customerAuth");
+const customerOrderRouter = require("./routes/customer/customerOrderRoute");
+const customerAddressRouter = require("./routes/customer/customerAddress");
+const customerMenuRouter = require("./routes/customer/customerMenu");
+const customerDeliveryRouter = require("./routes/customer/customerDelivery");
+const customerStoreRouter = require("./routes/customer/customerStore");
+const authRouter = require("./routes/sellarRoute/auth");
 const passportRouter = require("./routes/passportRoutes");
-const partnerRouter = require("./routes/partner");
-const businessInfoRouter = require("./routes/businessInfoRoute");
-const storeDetailsRouter = require("./routes/storeDetailsRoute");
-const documentsUploadRouter = require("./routes/documentsRoutes");
-const menuRouter = require("./routes/menuRoute");
-const foodRouter = require("./routes/foodRoutes");
-const getOrderRouter = require("./routes/orderRoute");
+const partnerRouter = require("./routes/sellarRoute/partner");
+const businessInfoRouter = require("./routes/sellarRoute/businessInfoRoute");
+const storeDetailsRouter = require("./routes/sellarRoute/storeDetailsRoute");
+const documentsUploadRouter = require("./routes/sellarRoute/documentsRoutes");
+const menuRouter = require("./routes/sellarRoute/menuRoute");
+const foodRouter = require("./routes/sellarRoute/foodRoutes");
+const getOrderRouter = require("./routes/sellarRoute/orderRoute");
+const riderAuthRouter = require("./routes/riderRoute/auth");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -67,6 +68,7 @@ app.use("/api/v1/customer", customerMenuRouter);
 app.use("/api/v1/customer", customerDeliveryRouter);
 app.use("/api/v1/customer", customerAddressRouter);
 app.use("/api/v1/customer", customerStoreRouter);
+app.use("/api/v1/rider", riderAuthRouter);
 app.use("/api/v1", partnerRouter);
 app.use("/api/v1", businessInfoRouter);
 app.use("/api/v1", storeDetailsRouter);
