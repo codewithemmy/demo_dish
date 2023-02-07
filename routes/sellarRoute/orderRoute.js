@@ -3,7 +3,7 @@ const {
   getOrder,
   getOrderDetails,
   processOrders,
-} = require("../../controllers/Sellar/order");
+} = require("../../controllers/sellar/order");
 const authMiddleware = require("../../middleware/authentication");
 
 const router = express.Router();

@@ -4,7 +4,7 @@ const {
   passportId,
   taxDocument,
   multipleDoc,
-} = require("../../controllers/Sellar/documentsRequired");
+} = require("../../controllers/sellar/documentsRequired");
 const authMiddleware = require("../../middleware/authentication");
 
 const router = express.Router();

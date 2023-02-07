@@ -5,7 +5,7 @@ const {
   deleteMenu,
   getMenu,
   getMenuFood,
-} = require("../../controllers/Sellar/menu");
+} = require("../../controllers/sellar/menu");
 const authMiddleware = require("../../middleware/authentication");
 
 const router = express.Router();
