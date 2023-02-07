@@ -8,7 +8,7 @@ const {
   login,
   forgotPassword,
   resetPassword,
-} = require("../../controllers/Sellar/auth");
+} = require("../../controllers/sellar/auth");
 
 router.route("/register").post(register);
 router.route("/verify-mail/:id").post(verifyEmail);
