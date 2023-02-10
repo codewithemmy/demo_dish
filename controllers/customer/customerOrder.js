@@ -37,23 +37,23 @@ const createOrder = async (req, res) => {
     });
 
     const deliveryFee = 2;
-    const marketPlace = 2.99;
+    const marketPlace = 3;
 
     const totalPrice = netAmount + deliveryFee + marketPlace;
+
 
     // get client secret
 
     //create order with item description
     if (cartItems) {
+      // use stripe calculation
       const calculateOrderAmount = () => {
         return totalPrice;
       };
 
-      console.log(calculateOrderAmount());
-
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: "10",
-        currency: "usd",
+        amount: calculateOrderAmount(),
+        currency: "gbp",
       });
 
       //create order
@@ -65,7 +65,7 @@ const createOrder = async (req, res) => {
         orderDate: new Date(),
         paymentResponse: "",
         sellarId: sellarId,
-        clientSecret: paymentIntent.client_secret,
+        clientSecret: "paymentIntent.client_secret",
         readyTime: "",
         remarks: "",
       });
@@ -76,7 +76,7 @@ const createOrder = async (req, res) => {
 
         return res
           .status(200)
-          .json({ clientSecret: currentOrder.client_secret });
+          .json({ currentOrder, clientSecret: paymentIntent.client_secret });
       }
     }
     return res.status(400).json({ msg: "Your cart is empty" });
