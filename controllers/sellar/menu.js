@@ -168,6 +168,20 @@ const getMenu = async (req, res) => {
     .json({ msg: "error while getting menu" });
 };
 
+//get menu
+const getSingleMenu = async (req, res) => {
+  const sellar = req.user.userId;
+  const { id: menuId } = req.params;
+  if (sellar) {
+    const menu = await Menu.find({ storeOwner: sellar, _id: menuId });
+
+    return res.status(StatusCodes.CREATED).json(menu);
+  }
+  return res
+    .status(StatusCodes.BAD_REQUEST)
+    .json({ msg: "error while getting menu" });
+};
+
 //get menu with food
 const getMenuFood = async (req, res) => {
   const { menuId } = req.body;
@@ -187,4 +201,11 @@ const getMenuFood = async (req, res) => {
     .json({ msg: "error while getting menu with food" });
 };
 
-module.exports = { createMenu, editMenu, deleteMenu, getMenu, getMenuFood };
+module.exports = {
+  createMenu,
+  editMenu,
+  deleteMenu,
+  getMenu,
+  getSingleMenu,
+  getMenuFood,
+};
