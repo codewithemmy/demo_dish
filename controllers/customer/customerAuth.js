@@ -21,9 +21,14 @@ const register = async (req, res) => {
     email,
     phonenumber,
     password,
-    orders: []
+    orders: [],
   });
-
+  let token = customer.createJWT({
+    userId: customer._id,
+    firstName: customer.firstName,
+    surname: customer.surname,
+    email: customer.email,
+  });
   //send Mail
   mailTransport.sendMail({
     from: '"Afrilish" <afrlish@gmail.com>', // sender address

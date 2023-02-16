@@ -50,9 +50,12 @@ const register = async (req, res) => {
     html: `Hello, ${firstName}, kindly verify your account with this token:<h4>${verificationToken}</h4>`, // html body
   });
 
+  let token = sellar.createJWT();
+
   return res.status(StatusCodes.CREATED).json({
     msg: "Success! Please check your email to verify account",
     sellar,
+    token,
   });
 };
 
@@ -126,12 +129,7 @@ const login = async (req, res) => {
   //     .json({ msg: "please verify you mail" });
   // }
 
-  let token = sellar.createJWT({
-    userId: sellar._id,
-    firstName: sellar.firstName,
-    surname: sellar.surname,
-    email: sellar.email,
-  });
+  let token = sellar.createJWT();
 
   return res
     .status(StatusCodes.OK)
