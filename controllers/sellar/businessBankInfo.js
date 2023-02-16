@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const BusinessBankInfo = require("../../models/sellarModel/BusinessBankInfo");
+const BusinessBankInfo = require("../../models/sellarModel/businessBankInfo");
 
 //create business bank information
 const createBusinessBank = async (req, res) => {
