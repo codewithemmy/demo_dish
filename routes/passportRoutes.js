@@ -28,7 +28,9 @@ router.get("/api/v1/auth/passportFailed", (req, res) => {
 });
 
 router.get("/api/v1/auth/passportLogin", async (req, res) => {
+  console.log(req.user)
   const sellar = await Sellar.findOne();
+  console.log(req.user);
   if (req.user.email === sellar.email) {
     let token = sellar.createJWT();
     return res
