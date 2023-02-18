@@ -6,8 +6,8 @@ const GoogleStrategy = require("passport-google-oauth2").Strategy;
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientID: process.env.LOCAL_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.LOCAL_GOOGLE_CLIENT_SECRET,
       callbackURL: "https://dish-demo.onrender.com/auth/google/callback",
       passReqToCallback: true,
     },
