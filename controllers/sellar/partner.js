@@ -5,6 +5,7 @@ const Partner = require("../../models/sellarModel/Partner");
 const createPartner = async (req, res) => {
   const { delivery } = req.body;
   const store = req.user.userId;
+  console.log(req.user);
 
   if (store) {
     const partner = await Partner.create({

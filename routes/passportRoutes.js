@@ -30,9 +30,10 @@ router.get("/api/v1/auth/passportFailed", (req, res) => {
 router.get("/api/v1/auth/passportLogin", async (req, res) => {
   const sellar = await Sellar.findOne();
   if (req.user.email === sellar.email) {
+    let token = sellar.createJWT();
     return res
       .status(StatusCodes.ACCEPTED)
-      .json({ msg: `Google Authentication valid` });
+      .json({ msg: `Google Authentication valid`, token });
   } else {
     return res
       .status(StatusCodes.NOT_FOUND)
