@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const OrderSchema = new mongoose.Schema(
   {
     orderID: { type: String, required: true },
+    assignedRider: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Rider",
+    },
     items: [
       {
         food: {

@@ -4,7 +4,6 @@ const Order = require("../../models/customerModel/CustomerOrder");
 // get customer order for sellar
 const getOrder = async (req, res) => {
   const sellar = req.user;
-  console.log(sellar);
 
   if (sellar) {
     const orders = await Order.find({ sellarId: req.user.userId }).populate(

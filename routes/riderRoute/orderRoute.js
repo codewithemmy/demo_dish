@@ -2,7 +2,9 @@ const express = require("express");
 const { getOrders } = require("../../controllers/rider/getOrders");
 const router = express.Router();
 
-router.route("/getOrders").get(getOrders);
+const auth = require("../../riderMiddleware/authentication");
+
+router.route("/getOrders").get(auth, getOrders);
 // router.route("/verifyEmail/:id").post(verifyEmail);
 // router.route("/login").post(login);
 // // router.route("/logout").delete(logout);

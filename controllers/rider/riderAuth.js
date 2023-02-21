@@ -91,8 +91,33 @@ const verifyEmail = async (req, res) => {
   return res.status(StatusCodes.OK).json({ msg: "Token verified" });
 };
 
+
+const riderLogin = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ msg: "Please provide email" });
+  }
+  const rider = await Rider.findOne({ email });
+
+  if (!rider) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Invalid username" });
+  }
+
+  let token = rider.createJWT();
+
+  return res
+    .status(StatusCodes.OK)
+    .json({ msg: "Login Successful", token: token });
+};
+
 //export modules
 module.exports = {
   register,
   verifyEmail,
+  riderLogin,
 };

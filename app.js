@@ -11,8 +11,8 @@ const session = require("express-session");
 app.use(
   session({
     secret: "cats",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
   })
 );
 app.use(passport.initialize());
@@ -50,6 +50,7 @@ const foodRouter = require("./routes/sellarRoute/foodRoutes");
 const getOrderRouter = require("./routes/sellarRoute/orderRoute");
 const riderAuthRouter = require("./routes/riderRoute/authRoute");
 const riderRouter = require("./routes/riderRoute/orderRoute");
+const getRiderRouter = require("./routes/sellarRoute/rider");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -86,6 +87,7 @@ app.use("/api/v1", documentsUploadRouter);
 app.use("/api/v1", menuRouter);
 app.use("/api/v1", foodRouter);
 app.use("/api/v1", getOrderRouter);
+app.use("/api/v1", getRiderRouter);
 
 //serve exprss json
 app.use(express.json());

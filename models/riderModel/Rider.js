@@ -38,6 +38,10 @@ const RiderSchema = new mongoose.Schema(
     verificationToken: {
       type: Number,
     },
+    location: { type: String },
+    ratings: { type: Number },
+    longitude: { type: Number },
+    latitude: { type: Number },
   },
   {
     timestamps: true,

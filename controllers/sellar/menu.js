@@ -22,7 +22,10 @@ const bufferToStream = (buffer) => {
 
 //create menu
 const createMenu = async (req, res) => {
-  const { menuTitle, description, storeId } = req.body;
+  const { menuTitle, description } = req.body;
+
+  const { id: storeId } = req.params;
+
   const sellar = req.user.userId;
 
   if (!menuTitle) {
@@ -54,7 +57,7 @@ const createMenu = async (req, res) => {
     };
 
     const uri = await convert_url(req);
-    // console.log(uri.secure_url);
+    
 
     fs.unlinkSync(req.files.image.tempFilePath);
 
