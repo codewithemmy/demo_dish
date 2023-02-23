@@ -3,7 +3,7 @@ const StoreDetails = require("../../models/sellarModel/StoreDetails");
 
 //get menu
 const getStore = async (req, res) => {
-  const store = await StoreDetails.find({}).populate('storeOwner')
+  const store = await StoreDetails.find();
   return res.status(StatusCodes.OK).json(store);
 };
 

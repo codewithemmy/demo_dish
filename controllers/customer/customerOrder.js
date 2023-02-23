@@ -41,7 +41,6 @@ const createOrder = async (req, res) => {
 
     const totalPrice = netAmount + deliveryFee + marketPlace;
 
-
     // get client secret
 
     //create order with item description
@@ -151,10 +150,30 @@ const updateOrder = async (req, res) => {
   return res.status(200).json(order);
 };
 
+const confirmDelivery = async (req, res) => {
+  const deliveryId = req.params.id;
+  const { confirmDelivery } = req.body;
+  const customer = req.user.userId;
+
+  if (customer) {
+    const order = await Order.findById({ _id: deliveryId });
+    if (!order) {
+      return res.status(200).json({ msg: `No order with id : ${deliveryId}` });
+    }
+
+    order.confirmDelivery = confirmDelivery;
+    const result = await order.save();
+
+    return res.status(200).json(result);
+  }
+  return res.status(400).json({ msg: `unable to confirm delivery` });
+};
+
 module.exports = {
   createOrder,
   getOrders,
   getOrderById,
   deleteOrder,
   updateOrder,
+  confirmDelivery,
 };
