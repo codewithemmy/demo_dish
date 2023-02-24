@@ -30,7 +30,7 @@ const OrderSchema = new mongoose.Schema(
     deliveryFee: { type: Number, default: 2.0 },
     orderStatus: {
       type: String,
-      enum: ["pending", "failed", "paid", "delivered", "canceled"],
+      enum: ["pending", "failed", "completed", "delivered", "canceled"],
       default: "pending",
     },
     riderStatus: {

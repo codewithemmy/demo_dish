@@ -4,7 +4,6 @@ const MenuSchema = new mongoose.Schema(
   {
     menuTitle: { type: String, required: [true, "provide menu name"] },
     description: { type: String, required: [true, "provide menu description"] },
-    menuImage: { type: String },
     storeOwner: {
       type: mongoose.Schema.ObjectId,
       ref: "Sellar",
