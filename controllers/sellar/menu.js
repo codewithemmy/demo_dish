@@ -36,7 +36,8 @@ const createMenu = async (req, res) => {
 //edit menu
 const editMenu = async (req, res) => {
   const sellar = req.user.userId;
-  const { menuTitle, description, menuId } = req.body;
+  const menuId = req.params.id;
+  const { menuTitle, description } = req.body;
 
   if (!menuId) {
     return res
