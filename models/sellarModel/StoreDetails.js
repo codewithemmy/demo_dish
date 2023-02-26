@@ -17,6 +17,8 @@ const StoreDetailsSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide your cuisines"],
     },
+    lng: { type: Number },
+    lat: { type: Number },
     deliveryFee: {
       type: String,
       required: [true, "provide your delivery fee"],
@@ -35,7 +37,7 @@ const StoreDetailsSchema = new mongoose.Schema(
       trim: true,
       required: [true, "provide hours store is open"],
     },
-    serviceAvalaible: { type: Boolean },
+    serviceAvailable: { type: Boolean },
     storeOwner: {
       type: mongoose.Schema.ObjectId,
       ref: "Sellar",

@@ -20,7 +20,8 @@ const FoodSchema = new mongoose.Schema(
     shortInfo: {
       type: String,
     },
-    menuId: {
+    foodavailable: { type: Boolean, default: false },
+    menu: {
       type: String,
       required: [true, "provide menu id"],
     },

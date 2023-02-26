@@ -25,6 +25,9 @@ const RiderSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    location: { type: String },
+    lng: { type: Number },
+    lat: { type: Number },
     isVerified: {
       type: Boolean,
       default: false,

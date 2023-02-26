@@ -71,7 +71,7 @@ const createStoreDetails = async (req, res) => {
       rating: 0,
       minimumOrder: minimumOrder,
       description: description,
-      serviceAvalaible: false,
+      serviceAvailable: false,
       storeImage: uri.secure_url,
       storeOwner: sellar,
     });
@@ -183,7 +183,7 @@ const getStoreDetails = async (req, res) => {
 const isAvailable = async (req, res) => {
   const sellar = req.user.userId;
   if (sellar) {
-    const verifySellar = await await StoreDetails.findOne({
+    const verifySellar = await StoreDetails.findOne({
       storeOwner: sellar,
     });
     if (!verifySellar) {
@@ -191,7 +191,7 @@ const isAvailable = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ msg: `not a verified sellar` });
     }
-    verifySellar.serviceAvalaible = !verifySellar.serviceAvalaible;
+    verifySellar.serviceAvalaible = !verifySellar.serviceAvailable;
     const result = await verifySellar.save();
     return res
       .status(StatusCodes.OK)

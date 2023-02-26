@@ -20,9 +20,10 @@ const bufferToStream = (buffer) => {
   return readable;
 };
 
-//create menu
+//create food
 const createFood = async (req, res) => {
-  const { foodName, price, nutritionalFacts, menuId, shortInfo } = req.body;
+  const { id: menuId } = req.params;
+  const { foodName, price, nutritionalFacts, shortInfo } = req.body;
   const sellar = req.user.userId;
 
   if (!foodName || !price || !nutritionalFacts) {
@@ -180,4 +181,27 @@ const getFood = async (req, res) => {
     .json({ msg: "error while getting food" });
 };
 
-module.exports = { createFood, editFood, deleteFood, getFood };
+//food availability
+const foodAvailable = async (req, res) => {
+  const sellar = req.user.userId;
+  if (sellar) {
+    const foodId = req.params.id;
+    const food = await Food.findOne({
+      _id: foodId,
+    });
+    if (!food) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: `food id not available` });
+    }
+    food.foodavailable = !food.foodavailable;
+    const result = await food.save();
+    return res.status(StatusCodes.OK).json({ result });
+  }
+
+  return res
+    .status(StatusCodes.OK)
+    .json({ msg: `unable to verify the availability of food` });
+};
+
+module.exports = { createFood, editFood, deleteFood, getFood, foodAvailable };

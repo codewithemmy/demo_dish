@@ -1,14 +1,34 @@
 const { StatusCodes } = require("http-status-codes");
 const Order = require("../../models/customerModel/CustomerOrder");
 
-// get customer order for sellar
-const getOrder = async (req, res) => {
+// get pending order for sellar
+const getPendingOrder = async (req, res) => {
   const sellar = req.user;
 
   if (sellar) {
-    const orders = await Order.find({ sellarId: req.user.userId }).populate(
-      "items.food"
-    );
+    const orders = await Order.find({
+      sellarId: req.user.userId,
+      orderStatus: "pending",
+    }).populate("items.food");
+    if (orders != null) {
+      return res.status(StatusCodes.OK).json(orders);
+    }
+    return res.status(StatusCodes.OK).json({ msg: `your order cart is empty` });
+  }
+  return res
+    .status(StatusCodes.BAD_REQUEST)
+    .json({ msg: `error getting orders` });
+};
+
+// get completed order for sellar
+const getCompletedOrder = async (req, res) => {
+  const sellar = req.user;
+
+  if (sellar) {
+    const orders = await Order.find({
+      sellarId: req.user.userId,
+      orderStatus: "completed",
+    }).populate("items.food");
     if (orders != null) {
       return res.status(StatusCodes.OK).json(orders);
     }
@@ -56,7 +76,8 @@ const processOrders = async (req, res) => {
 };
 
 module.exports = {
-  getOrder,
+  getPendingOrder,
   getOrderDetails,
   processOrders,
+  getCompletedOrder,
 };
