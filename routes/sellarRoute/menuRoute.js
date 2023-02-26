@@ -12,7 +12,7 @@ const authMiddleware = require("../../middleware/authentication");
 const router = express.Router();
 
 router.route("/getMenu").get(authMiddleware, getMenu);
-router.route("/getMenuFood").get(authMiddleware, getMenuFood);
+router.route("/getMenuFood/:id").get(authMiddleware, getMenuFood);
 router.route("/getSingleMenu/:id").get(authMiddleware, getSingleMenu);
 router.route("/editMenu").patch(authMiddleware, editMenu);
 router.route("/createMenu/:id").post(authMiddleware, createMenu);

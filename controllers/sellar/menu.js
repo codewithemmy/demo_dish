@@ -115,7 +115,7 @@ const getSingleMenu = async (req, res) => {
 
 //get menu with food
 const getMenuFood = async (req, res) => {
-  const { menuId } = req.body;
+  const { id: menuId } = req.params;
   const sellar = req.user.userId;
   if (sellar) {
     const food = await Food.find({ menu: menuId, storeOwner: sellar });
