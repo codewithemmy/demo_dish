@@ -16,6 +16,6 @@ router.route("/getMenuFood/:id").get(authMiddleware, getMenuFood);
 router.route("/getSingleMenu/:id").get(authMiddleware, getSingleMenu);
 router.route("/editMenu/:id").patch(authMiddleware, editMenu);
 router.route("/createMenu/:id").post(authMiddleware, createMenu);
-router.route("/deleteMenu").delete(authMiddleware, deleteMenu);
+router.route("/deleteMenu/:id").delete(authMiddleware, deleteMenu);
 
 module.exports = router;

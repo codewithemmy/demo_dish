@@ -66,7 +66,7 @@ const editMenu = async (req, res) => {
 
 //delete menu
 const deleteMenu = async (req, res) => {
-  const { deleteId } = req.body;
+  const { id: deleteId } = req.params;
   const sellar = req.user.userId;
 
   if (!deleteId) {
