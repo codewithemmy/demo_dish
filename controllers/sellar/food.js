@@ -147,7 +147,7 @@ const editFood = async (req, res) => {
 
 //delete menu
 const deleteFood = async (req, res) => {
-  const { deleteId } = req.body;
+  const { id: deleteId } = req.body;
   const sellar = req.user.userId;
 
   if (!deleteId) {

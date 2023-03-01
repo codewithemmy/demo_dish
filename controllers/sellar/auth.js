@@ -123,11 +123,11 @@ const login = async (req, res) => {
       .json({ msg: "Password is not valid" });
   }
 
-  // if (!sellar.isVerified) {
-  //   return res
-  //     .status(StatusCodes.BAD_REQUEST)
-  //     .json({ msg: "please verify you mail" });
-  // }
+  if (!sellar.isVerified) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "please verify you mail" });
+  }
 
   let token = sellar.createJWT();
 
