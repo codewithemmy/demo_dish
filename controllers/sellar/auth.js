@@ -14,6 +14,7 @@ const register = async (req, res) => {
     store,
     firstName,
     surname,
+    currency,
     email,
     phonenumber,
     password,
@@ -36,6 +37,7 @@ const register = async (req, res) => {
     store,
     firstName,
     surname,
+    currency,
     email,
     phonenumber,
     password,
@@ -126,14 +128,17 @@ const login = async (req, res) => {
   if (!sellar.isVerified) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "please verify you mail" });
+      .json({ msg: "please verify your account" });
   }
 
   let token = sellar.createJWT();
 
-  return res
-    .status(StatusCodes.OK)
-    .json({ msg: "Login Successful", userId: sellar._id, token: token });
+  return res.status(StatusCodes.OK).json({
+    msg: "Login Successful",
+    userId: sellar._id,
+    currency: sellar.currency,
+    token: token,
+  });
 };
 
 //user logout
