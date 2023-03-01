@@ -35,8 +35,8 @@ const OrderSchema = new mongoose.Schema(
     },
     riderStatus: {
       type: String,
-      enum: ["pending", "reject", "accepted", "delivered", "pick", ""],
-      default: "pending",
+      enum: ["pending", "reject", "accepted", "delivered", "pick", "on-road"],
+      default: "pending", 
     },
     confirmDelivery: {
       type: String,
