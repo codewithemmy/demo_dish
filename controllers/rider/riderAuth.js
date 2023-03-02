@@ -19,13 +19,14 @@ const register = async (req, res) => {
   const resetTokenExpirationDate = new Date(Date.now() + twentyMinutes);
 
   // const hastToken = createHash(randomNumberGenerator());
+  const otp = randomNumberGenerator();
 
   const rider = await Rider.create({
     fullname,
     email,
     phonenumber,
     resetTokenExpirationDate,
-    verificationToken: randomNumberGenerator(),
+    verificationToken: otp,
   });
 
   let token = rider.createJWT();
@@ -35,7 +36,7 @@ const register = async (req, res) => {
     from: '"Afrilish" <afrlish@gmail.com>', // sender address
     to: email, // list of receivers
     subject: "AFRILISH RIDER REGISTRATION SUCCESSFUL", // Subject line
-    html: `Hello, Mr. ${fullname}, your verification token is: ${randomNumberGenerator()}. We are gladly ready to work with you.</h4>`, // html body
+    html: `Hello, Mr. ${fullname}, your verification token is: ${otp}. We are gladly ready to work with you.</h4>`, // html body
   });
 
   return res.status(StatusCodes.CREATED).json({
@@ -90,7 +91,6 @@ const verifyEmail = async (req, res) => {
 
   return res.status(StatusCodes.OK).json({ msg: "Token verified" });
 };
-
 
 const riderLogin = async (req, res) => {
   const { email } = req.body;

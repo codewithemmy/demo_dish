@@ -1,7 +1,13 @@
 const Order = require("../../models/customerModel/CustomerOrder");
 
-const getOrders = async (req, res) => {
+const getPendingOrders = async (req, res) => {
   const getOrders = await Order.find({ riderStatus: "pending" });
+
+  return res.status(200).json(getOrders);
+};
+
+const getDeliveredOrders = async (req, res) => {
+  const getOrders = await Order.find({ riderStatus: "delivered" });
 
   return res.status(200).json(getOrders);
 };
@@ -36,6 +42,7 @@ const updateOrderStatus = async (req, res) => {
 };
 
 module.exports = {
-  getOrders,
+  getPendingOrders,
+  getDeliveredOrders,
   updateOrderStatus,
 };

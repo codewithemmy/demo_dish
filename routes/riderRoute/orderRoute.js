@@ -1,13 +1,15 @@
 const express = require("express");
 const {
-  getOrders,
   updateOrderStatus,
+  getPendingOrders,
+  getDeliveredOrders,
 } = require("../../controllers/rider/getOrders");
 const router = express.Router();
 
 const auth = require("../../riderMiddleware/authentication");
 
-router.route("/getOrders").get(auth, getOrders);
+router.route("/getPendingOrders").get(auth, getPendingOrders);
+router.route("/getDeliveredOrders").get(auth, getDeliveredOrders);
 router.route("/updateOrderStatus/:id").patch(auth, updateOrderStatus);
 // router.route("/verifyEmail/:id").post(verifyEmail);
 // router.route("/login").post(login);
