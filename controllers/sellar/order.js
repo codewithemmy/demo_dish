@@ -9,7 +9,12 @@ const getPendingOrder = async (req, res) => {
     const orders = await Order.find({
       sellarId: req.user.userId,
       orderStatus: "pending",
-    }).populate("items.food");
+    })
+      .populate({
+        path: "orderedBy",
+        select: "firstName surname _id",
+      })
+      .populate("items.food");
     if (orders != null) {
       return res.status(StatusCodes.OK).json(orders);
     }
@@ -28,7 +33,12 @@ const getCompletedOrder = async (req, res) => {
     const orders = await Order.find({
       sellarId: req.user.userId,
       orderStatus: "completed",
-    }).populate("items.food");
+    })
+      .populate({
+        path: "orderedBy",
+        select: "firstName surname _id",
+      })
+      .populate("items.food");
     if (orders != null) {
       return res.status(StatusCodes.OK).json(orders);
     }
