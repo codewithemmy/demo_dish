@@ -89,7 +89,9 @@ const createFood = async (req, res) => {
 //edit food
 const editFood = async (req, res) => {
   const sellar = req.user.userId;
-  const { foodName, price, nutritionalFacts, foodId } = req.body;
+  const { foodName, price, nutritionalFacts, shortInfo } = req.body;
+
+  const { id: foodId } = req.params;
 
   if (!foodId) {
     return res.status(StatusCodes.BAD_REQUEST).json({ msg: `Insert food Id` });
@@ -129,6 +131,7 @@ const editFood = async (req, res) => {
         foodName: foodName,
         price: price,
         nutritionalFacts: nutritionalFacts,
+        shortInfo: shortInfo,
       },
       {
         runValidators: true,
