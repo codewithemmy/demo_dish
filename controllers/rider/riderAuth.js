@@ -15,38 +15,66 @@ const register = async (req, res) => {
       .json({ msg: "Email already exist" });
   }
 
-  const twentyMinutes = 1000 * 60 * 20;
-  const resetTokenExpirationDate = new Date(Date.now() + twentyMinutes);
-
-  // const hastToken = createHash(randomNumberGenerator());
-  const otp = randomNumberGenerator();
-
   const rider = await Rider.create({
     fullname,
     email,
     phonenumber,
-    resetTokenExpirationDate,
-    verificationToken: otp,
   });
-
-  let token = rider.createJWT();
 
   //send Mail
   mailTransport.sendMail({
     from: '"Afrilish" <afrlish@gmail.com>', // sender address
     to: email, // list of receivers
     subject: "AFRILISH RIDER REGISTRATION SUCCESSFUL", // Subject line
-    html: `Hello, Mr. ${fullname}, your verification token is: ${otp}. We are gladly ready to work with you.</h4>`, // html body
+    html: `Hello, Mr. ${fullname}. We are gladly ready to work with you.</h4>`, // html body
   });
 
   return res.status(StatusCodes.CREATED).json({
-    msg: "Rider Resgistration Successful, check you mail for verification token",
+    msg: "Rider Resgistration Successful",
     userId: rider._id,
     fullname: fullname,
     emal: email,
     phone: phonenumber,
-    token,
   });
+};
+
+const riderLogin = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ msg: "Please provide email" });
+  }
+  const rider = await Rider.findOne({ email });
+
+  if (!rider) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Invalid username" });
+  }
+
+  const twentyMinutes = 1000 * 60 * 20;
+  const resetTokenExpirationDate = new Date(Date.now() + twentyMinutes);
+
+  // const hastToken = createHash(randomNumberGenerator());
+  const otp = randomNumberGenerator();
+
+  rider.resetTokenExpirationDate = resetTokenExpirationDate;
+  (rider.verificationToken = otp), await rider.save();
+
+  let token = rider.createJWT();
+  //send Mail
+  mailTransport.sendMail({
+    from: '"Afrilish" <afrlish@gmail.com>', // sender address
+    to: email, // list of receivers
+    subject: "OTP FOR LOGIN", // Subject line
+    html: `Hello, Mr. ${rider.fullname}, your verification token is: ${otp}. We are gladly ready to work with you.</h4>`, // html body
+  });
+
+  return res
+    .status(StatusCodes.OK)
+    .json({ msg: "Login Successful, verify you login", token: token });
 };
 
 //verify token
@@ -92,27 +120,17 @@ const verifyEmail = async (req, res) => {
   return res.status(StatusCodes.OK).json({ msg: "Token verified" });
 };
 
-const riderLogin = async (req, res) => {
-  const { email } = req.body;
+//logout
+const logout = async (req, res) => {
+  const user = req.user.userId;
+  if (user) {
+    const rider = await Rider.findOne({ _id: user });
+    rider.isVerified = false;
+    await rider.save();
 
-  if (!email) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .json({ msg: "Please provide email" });
+    return res.status(200).json({ msg: `logout successful` });
   }
-  const rider = await Rider.findOne({ email });
-
-  if (!rider) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Invalid username" });
-  }
-
-  let token = rider.createJWT();
-
-  return res
-    .status(StatusCodes.OK)
-    .json({ msg: "Login Successful", token: token });
+  return res.status(400).json({ msg: `unable to logout` });
 };
 
 //export modules
@@ -120,4 +138,5 @@ module.exports = {
   register,
   verifyEmail,
   riderLogin,
+  logout,
 };
