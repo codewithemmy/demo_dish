@@ -191,8 +191,10 @@ const isAvailable = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ msg: `not a verified sellar` });
     }
-    verifySellar.serviceAvalaible = !verifySellar.serviceAvailable;
+
+    verifySellar.serviceAvalaible = !verifySellar.serviceAvalaible;
     const result = await verifySellar.save();
+
     return res
       .status(StatusCodes.OK)
       .json({ msg: `Sellar is now available`, result });

@@ -37,7 +37,7 @@ const StoreDetailsSchema = new mongoose.Schema(
       trim: true,
       required: [true, "provide hours store is open"],
     },
-    serviceAvailable: { type: Boolean },
+    serviceAvalaible: { type: Boolean, default: false },
     storeOwner: {
       type: mongoose.Schema.ObjectId,
       ref: "Sellar",
