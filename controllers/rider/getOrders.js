@@ -6,8 +6,32 @@ const getPendingOrders = async (req, res) => {
   return res.status(200).json(getOrders);
 };
 
+const getCompletedOrders = async (req, res) => {
+  const getOrders = await Order.find({ riderStatus: "completed" });
+
+  return res.status(200).json(getOrders);
+};
+
 const getDeliveredOrders = async (req, res) => {
   const getOrders = await Order.find({ riderStatus: "delivered" });
+
+  return res.status(200).json(getOrders);
+};
+
+const getPendingOrdersNumbers = async (req, res) => {
+  const getOrders = await Order.countDocuments({ riderStatus: "pending" });
+
+  return res.status(200).json(getOrders);
+};
+
+const getComPletedOrdersNumbers = async (req, res) => {
+  const getOrders = await Order.countDocuments({ riderStatus: "completed" });
+
+  return res.status(200).json(getOrders);
+};
+
+const getDeliveredOrdersNumbers = async (req, res) => {
+  const getOrders = await Order.countDocuments({ riderStatus: "delivered" });
 
   return res.status(200).json(getOrders);
 };
@@ -45,4 +69,8 @@ module.exports = {
   getPendingOrders,
   getDeliveredOrders,
   updateOrderStatus,
+  getCompletedOrders,
+  getPendingOrdersNumbers,
+  getComPletedOrdersNumbers,
+  getDeliveredOrdersNumbers,
 };
