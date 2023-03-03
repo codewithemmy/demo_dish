@@ -74,7 +74,7 @@ const riderLogin = async (req, res) => {
 
   return res
     .status(StatusCodes.OK)
-    .json({ msg: "Login Successful, verify you login", token: token });
+    .json({ msg: "Login Successful, verify your login", token: token });
 };
 
 //verify token
