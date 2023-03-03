@@ -41,11 +41,9 @@ const SellarSchema = new mongoose.Schema(
     },
     country: {
       type: String,
-      required: true,
     },
     currency: {
       type: String,
-      unique: true,
     },
     password: {
       type: String,

@@ -122,15 +122,11 @@ const verifyEmail = async (req, res) => {
 
 //logout
 const logout = async (req, res) => {
-  const user = req.user.userId;
-  if (user) {
-    const rider = await Rider.findOne({ _id: user });
-    rider.isVerified = false;
-    await rider.save();
-
-    return res.status(200).json({ msg: `logout successful` });
-  }
-  return res.status(400).json({ msg: `unable to logout` });
+  const { id: user } = req.params;
+  const rider = await Rider.findOne({ _id: user });
+  rider.isVerified = false;
+  await rider.save();
+  return res.status(200).json({ msg: `logout successful` });
 };
 
 //export modules
