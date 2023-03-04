@@ -5,6 +5,7 @@ const {
   deleteStoreDetails,
   getStoreDetails,
   isAvailable,
+  getStoreLocation,
 } = require("../../controllers/sellar/storeDetails");
 const authMiddleware = require("../../middleware/authentication");
 
@@ -17,5 +18,7 @@ router.route("/isAvailable").post(authMiddleware, isAvailable);
 router
   .route("/deleteStoreDetails/:id")
   .delete(authMiddleware, deleteStoreDetails);
+  
+router.route("/location/:id").patch(authMiddleware, getStoreLocation);
 
 module.exports = router;

@@ -205,10 +205,31 @@ const isAvailable = async (req, res) => {
     .json({ msg: `unable to verify the availability of sellar` });
 };
 
+const getStoreLocation = async (req, res) => {
+  const { lng, lat } = req.body;
+  const storeId = req.params.id;
+  if (storeId) {
+    const location = await StoreDetails.findByIdAndUpdate(
+      { _id: storeId },
+      { lng, lat },
+      { new: true, runValidators: true }
+    );
+
+    return res
+      .status(200)
+      .json({ msg: `longitude and latitude created successful`, location });
+  }
+
+  return res
+    .status(400)
+    .json({ msg: `unable to store longitude and latitude` });
+};
+
 module.exports = {
   createStoreDetails,
   editStoreDetails,
   deleteStoreDetails,
   getStoreDetails,
   isAvailable,
+  getStoreLocation,
 };
