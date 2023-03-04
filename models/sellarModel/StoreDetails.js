@@ -17,8 +17,8 @@ const StoreDetailsSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide your cuisines"],
     },
-    lng: { type: Number },
-    lat: { type: Number },
+    lng: { type: Number, float: true },
+    lat: { type: Number, float: true },
     deliveryFee: {
       type: String,
       required: [true, "provide your delivery fee"],
