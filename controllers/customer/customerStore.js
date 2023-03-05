@@ -16,7 +16,7 @@ const getFood = async (req, res) => {
 };
 
 //create location
-const getStoreLocation = async (req, res) => {
+const getCustomerLocation = async (req, res) => {
   const { lng, lat } = req.body;
   const customerId = req.params.id;
   if (customerId) {
@@ -36,4 +36,4 @@ const getStoreLocation = async (req, res) => {
     .json({ msg: `unable to store longitude and latitude` });
 };
 
-module.exports = { getStore, getFood, getStoreLocation };
+module.exports = { getStore, getFood, getCustomerLocation };

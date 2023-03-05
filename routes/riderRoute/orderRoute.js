@@ -8,6 +8,8 @@ const {
   getComPletedOrdersNumbers,
   getDeliveredOrdersNumbers,
 } = require("../../controllers/rider/getOrders");
+
+const { getRiderLocation } = require("../../controllers/rider/riderLocation");
 const router = express.Router();
 
 const auth = require("../../riderMiddleware/authentication");
@@ -19,6 +21,10 @@ router.route("/getPendingOrders").get(auth, getPendingOrders);
 router.route("/getCompletedOrders").get(auth, getCompletedOrders);
 router.route("/getDeliveredOrders").get(auth, getDeliveredOrders);
 router.route("/updateOrderStatus/:id").patch(auth, updateOrderStatus);
+
+//location for rider routes
+router.route("/location/:id").patch(getRiderLocation);
+
 // router.route("/verifyEmail/:id").post(verifyEmail);
 // router.route("/login").post(login);
 // // router.route("/logout").delete(logout);

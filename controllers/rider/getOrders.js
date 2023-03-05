@@ -65,6 +65,7 @@ const updateOrderStatus = async (req, res) => {
   return res.status(400).json({ msg: `unable to update status` });
 };
 
+
 module.exports = {
   getPendingOrders,
   getDeliveredOrders,

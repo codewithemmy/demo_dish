@@ -18,7 +18,7 @@ router.route("/isAvailable").post(authMiddleware, isAvailable);
 router
   .route("/deleteStoreDetails/:id")
   .delete(authMiddleware, deleteStoreDetails);
-  
-router.route("/location/:id").patch(authMiddleware, getStoreLocation);
+
+router.route("/location/:id").patch(getStoreLocation);
 
 module.exports = router;

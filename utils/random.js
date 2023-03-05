@@ -1,5 +1,5 @@
   const randomNumberGenerator = () => {
-    let random = Math.floor(Math.random() * 1000000);
+    let random = Math.floor(Math.random() * 10000);
 
     return random;
   };
