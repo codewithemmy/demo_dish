@@ -50,6 +50,7 @@ const foodRouter = require("./routes/sellarRoute/foodRoutes");
 const getOrderRouter = require("./routes/sellarRoute/orderRoute");
 const riderAuthRouter = require("./routes/riderRoute/authRoute");
 const riderRouter = require("./routes/riderRoute/orderRoute");
+const riderDocumentRouter = require("./routes/riderRoute/documentRoute");
 const getRiderRouter = require("./routes/sellarRoute/rider");
 
 // error handler
@@ -76,6 +77,7 @@ app.use("/api/v1/customer", customerAddressRouter);
 app.use("/api/v1/customer", customerStoreRouter);
 app.use("/api/v1/rider", riderAuthRouter);
 app.use("/api/v1/rider", riderRouter);
+app.use("/api/v1/rider", riderDocumentRouter);
 app.use("/api/v1", partnerRouter);
 app.use("/api/v1", businessInfoRouter);
 app.use("/api/v1", businessBankInfoRouter);
