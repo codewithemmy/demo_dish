@@ -9,6 +9,15 @@ const StoreDetailsSchema = new mongoose.Schema(
     storeImage: {
       type: String,
     },
+    address: {
+      type: String,
+    },
+    email: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
     location: {
       type: { type: String },
       coordinates: [],
@@ -43,5 +52,7 @@ const StoreDetailsSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+StoreDetailsSchema.index({ location: "2dsphere" });
 
 module.exports = mongoose.model("StoreDetails", StoreDetailsSchema);

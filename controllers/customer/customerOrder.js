@@ -1,5 +1,6 @@
 const Order = require("../../models/customerModel/CustomerOrder");
 const Customer = require("../../models/customerModel/Customer");
+const StoreDetails = require("../../models/sellarModel/StoreDetails");
 const Food = require("../../models/sellarModel/Food");
 const { StatusCodes } = require("http-status-codes");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
@@ -9,6 +10,15 @@ const createOrder = async (req, res) => {
   //grab the login customer
   const customer = req.user;
   if (customer) {
+    //get the store id
+    const storeId = req.params.id;
+    //get the store using findOne
+    const store = await StoreDetails.findOne({ _id: storeId });
+
+    //get the store location type and coordinates
+    const locationType = store.location.type;
+    const locationCoordinates = store.location.coordinates;
+
     //create an Order Id
     const orderId = `${Math.floor(Math.random() * 89999) + 1000}`;
 
@@ -63,6 +73,11 @@ const createOrder = async (req, res) => {
         totalAmount: totalPrice,
         orderDate: new Date(),
         paymentResponse: "",
+        location: {
+          type: locationType,
+          coordinates: locationCoordinates,
+        },
+        store: storeId,
         sellarId: sellarId,
         clientSecret: "paymentIntent.client_secret",
         readyTime: "",

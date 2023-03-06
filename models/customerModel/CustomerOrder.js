@@ -23,6 +23,10 @@ const OrderSchema = new mongoose.Schema(
       required: [true, "Provide customer Id"],
     },
     sellarId: { type: String },
+    store: {
+      type: mongoose.Schema.ObjectId,
+      ref: "StoreDetails",
+    },
     totalAmount: { type: Number },
     orderDate: { type: Date },
     paymentResponse: { type: String },
@@ -30,13 +34,20 @@ const OrderSchema = new mongoose.Schema(
     deliveryFee: { type: Number, default: 2.0 },
     orderStatus: {
       type: String,
-      enum: ["pending", "failed", "completed", "delivered", "canceled", "in-progress"],
+      enum: [
+        "pending",
+        "failed",
+        "completed",
+        "delivered",
+        "canceled",
+        "in-progress",
+      ],
       default: "pending",
     },
     riderStatus: {
       type: String,
       enum: ["pending", "reject", "accepted", "delivered", "picked", "on-road"],
-      default: "pending", 
+      default: "pending",
     },
     confirmDelivery: {
       type: String,
@@ -48,8 +59,14 @@ const OrderSchema = new mongoose.Schema(
     paymentIntentId: {
       type: String,
     },
+    location: {
+      type: { type: String, require: true },
+      coordinates: [],
+    },
   },
   { timestamps: true }
 );
+
+OrderSchema.index({ location: "2dsphere" });
 
 module.exports = mongoose.model("Order", OrderSchema);

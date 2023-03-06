@@ -17,7 +17,7 @@ const auth = require("../../riderMiddleware/authentication");
 router.route("/getDeliveredOrdersNumbers").get(auth, getDeliveredOrdersNumbers);
 router.route("/getOrdersPendingNumbers").get(auth, getPendingOrdersNumbers);
 router.route("/getComPletedOrdersNumbers").get(auth, getComPletedOrdersNumbers);
-router.route("/getPendingOrders").get(auth, getPendingOrders);
+router.route("/getPendingOrders").post(auth, getPendingOrders);
 router.route("/getCompletedOrders").get(auth, getCompletedOrders);
 router.route("/getDeliveredOrders").get(auth, getDeliveredOrders);
 router.route("/updateOrderStatus/:id").patch(auth, updateOrderStatus);
