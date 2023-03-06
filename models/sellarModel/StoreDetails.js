@@ -10,15 +10,13 @@ const StoreDetailsSchema = new mongoose.Schema(
       type: String,
     },
     location: {
-      type: String,
-      required: [true, "provide your location"],
+      type: { type: String },
+      coordinates: [],
     },
     cuisineType: {
       type: String,
       required: [true, "provide your cuisines"],
     },
-    lng: { type: Number, float: true },
-    lat: { type: Number, float: true },
     deliveryFee: {
       type: String,
       required: [true, "provide your delivery fee"],

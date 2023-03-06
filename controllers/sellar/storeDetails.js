@@ -211,7 +211,12 @@ const getStoreLocation = async (req, res) => {
   if (storeId) {
     const location = await StoreDetails.findByIdAndUpdate(
       { _id: storeId },
-      { lng, lat },
+      {
+        location: {
+          type: "Path",
+          coordinates: [parseFloat(lng), parseFloat(lat)],
+        },
+      },
       { new: true, runValidators: true }
     );
 

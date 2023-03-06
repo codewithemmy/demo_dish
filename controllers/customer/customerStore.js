@@ -22,7 +22,12 @@ const getCustomerLocation = async (req, res) => {
   if (customerId) {
     const customer = await Customer.findByIdAndUpdate(
       { _id: customerId },
-      { lng, lat },
+      {
+        location: {
+          type: "Path",
+          coordinates: [parseFloat(lng), parseFloat(lat)],
+        },
+      },
       { new: true, runValidators: true }
     );
 

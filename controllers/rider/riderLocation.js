@@ -7,7 +7,12 @@ const getRiderLocation = async (req, res) => {
   if (riderId) {
     const rider = await Rider.findByIdAndUpdate(
       { _id: riderId },
-      { lng, lat },
+      {
+        location: {
+          type: "Path",
+          coordinates: [parseFloat(lng), parseFloat(lat)],
+        },
+      },
       { new: true, runValidators: true }
     );
 

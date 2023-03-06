@@ -39,9 +39,10 @@ const CustomerSchema = new mongoose.Schema(
     passwordToken: {
       type: String,
     },
-    location: { type: String },
-    lng: { type: Number, float: true },
-    lat: { type: Number, float: true },
+    location: {
+      type: { type: String },
+      coordinates: [],
+    },
     passwordTokenExpirationDate: {
       type: Date,
     },
