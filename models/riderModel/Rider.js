@@ -40,7 +40,7 @@ const RiderSchema = new mongoose.Schema(
       type: Date,
     },
     verificationToken: {
-      type: Number,
+      type: String,
     },
     location: { type: String },
     ratings: { type: Number },

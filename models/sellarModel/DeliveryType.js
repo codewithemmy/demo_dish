@@ -7,7 +7,7 @@ const DeliveryTypeSchema = new mongoose.Schema(
       required: [true, "provide your delivery type"],
     },
     type: {
-      type: String,
+      type: Boolean,
     },
     storeOwner: {
       type: mongoose.Schema.ObjectId,
