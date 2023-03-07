@@ -29,12 +29,15 @@ const register = async (req, res) => {
     html: `Hello, Mr. ${fullname}. We are gladly ready to work with you.</h4>`, // html body
   });
 
+  let token = rider.createJWT();
+
   return res.status(StatusCodes.CREATED).json({
     msg: "Rider Resgistration Successful",
     userId: rider._id,
     fullname: fullname,
     emal: email,
     phone: phonenumber,
+    token,
   });
 };
 
@@ -72,13 +75,11 @@ const riderLogin = async (req, res) => {
     html: `Hello, Mr. ${rider.fullname}, your verification token is: ${otp}. We are gladly ready to work with you.</h4>`, // html body
   });
 
-  return res
-    .status(StatusCodes.OK)
-    .json({
-      msg: "Login Successful, verify your login",
-      userId: rider._id,
-      token: token,
-    });
+  return res.status(StatusCodes.OK).json({
+    msg: "Login Successful, verify your login",
+    userId: rider._id,
+    token: token,
+  });
 };
 
 //verify token
