@@ -10,10 +10,10 @@ const authMiddleware = require("../../middleware/authentication");
 
 const router = express.Router();
 
-router.route("/compRegCert").post(authMiddleware, compRegCert);
-router.route("/passportId").post(authMiddleware, passportId);
-router.route("/taxDocument").post(authMiddleware, taxDocument);
-router.route("/multipleDoc").post(authMiddleware, multipleDoc);
+router.route("/compRegCert").post(compRegCert);
+router.route("/passportId").post(passportId);
+router.route("/taxDocument").post(taxDocument);
+router.route("/multipleDoc").post(multipleDoc);
 router.route("/upload").post(authMiddleware, insertDoc);
 
 module.exports = router;

@@ -9,8 +9,8 @@ const router = express.Router();
 // router.route("/compRegCert").post(auth, compRegCert);
 // router.route("/passportId").post(auth, passportId);
 // router.route("/taxDocument").post(auth, taxDocument);
-router.route("/document").post(auth, multipleDoc);
-router.route("/registration").post(auth, createReg);
-router.route("/upload").post(auth, insertDoc);
+router.route("/document").post(multipleDoc);
+router.route("/registration").post(createReg);
+router.route("/upload").post(insertDoc);
 
 module.exports = router;
