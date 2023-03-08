@@ -8,8 +8,6 @@ const SellarSchema = new mongoose.Schema(
     store: {
       type: String,
       required: [true, "kindly provide store/restaurant name"],
-      minlength: 3,
-      maxlength: 50,
     },
     floor: { type: String },
     firstName: {
@@ -21,8 +19,6 @@ const SellarSchema = new mongoose.Schema(
     surname: {
       type: String,
       required: [true, "Please provide your surname"],
-      minlength: 3,
-      maxlength: 50,
     },
     email: {
       type: String,

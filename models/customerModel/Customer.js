@@ -8,14 +8,10 @@ const CustomerSchema = new mongoose.Schema(
     firstName: {
       type: String,
       required: [true, "Please provide your first name"],
-      minlength: 2,
-      maxlength: 50,
     },
     surname: {
       type: String,
       required: [true, "Please provide your last name"],
-      minlength: 2,
-      maxlength: 50,
     },
     email: {
       type: String,
@@ -34,12 +30,12 @@ const CustomerSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "Please provide password"],
-      minlength: 6,
+      minlength: 3,
     },
     passwordToken: {
       type: String,
     },
-    address: { type: String},
+    address: { type: String },
     location: {
       type: { type: String },
       coordinates: [],
