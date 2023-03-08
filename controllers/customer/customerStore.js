@@ -24,7 +24,7 @@ const getCustomerLocation = async (req, res) => {
       { _id: customerId },
       {
         location: {
-          type: "Path",
+          type: "Point",
           coordinates: [parseFloat(lng), parseFloat(lat)],
         },
       },

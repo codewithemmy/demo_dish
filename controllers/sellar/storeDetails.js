@@ -213,7 +213,7 @@ const getStoreLocation = async (req, res) => {
       { _id: storeId },
       {
         location: {
-          type: "Path",
+          type: "Point",
           coordinates: [parseFloat(lng), parseFloat(lat)],
         },
       },
