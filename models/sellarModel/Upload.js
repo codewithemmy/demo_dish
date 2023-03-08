@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const DocumentSchema = new mongoose.Schema(
+const UploadSchema = new mongoose.Schema(
   {
     document: {
       type: String,
@@ -8,12 +8,12 @@ const DocumentSchema = new mongoose.Schema(
     type: {
       type: String,
     },
-    rider: {
+    sellar: {
       type: mongoose.Schema.ObjectId,
-      ref: "Rider",
+      ref: "Sellar",
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Document", DocumentSchema);
+module.exports = mongoose.model("Upload", UploadSchema);

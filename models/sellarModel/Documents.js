@@ -18,9 +18,3 @@ const RequiredDocumentsSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("RequiredDocuments", RequiredDocumentsSchema);
-
-// location: {
-//             type: String,
-//         },
-//         description: {
-//             type: String,

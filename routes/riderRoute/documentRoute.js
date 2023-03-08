@@ -1,5 +1,5 @@
 const express = require("express");
-const { multipleDoc } = require("../../controllers/rider/document");
+const { multipleDoc, insertDoc } = require("../../controllers/rider/document");
 const { createReg } = require("../../controllers/rider/registration");
 
 const auth = require("../../riderMiddleware/authentication");
@@ -11,5 +11,6 @@ const router = express.Router();
 // router.route("/taxDocument").post(auth, taxDocument);
 router.route("/document").post(auth, multipleDoc);
 router.route("/registration").post(auth, createReg);
+router.route("/upload").post(auth, insertDoc);
 
 module.exports = router;
