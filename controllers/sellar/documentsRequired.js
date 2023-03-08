@@ -186,7 +186,6 @@ const insertDoc = async (req, res) => {
     const document = await Upload.create({
       document: uri.secure_url,
       type,
-      sellar: user.userId,
     });
 
     return res.status(200).json(document);

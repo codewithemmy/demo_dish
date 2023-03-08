@@ -73,7 +73,6 @@ const insertDoc = async (req, res) => {
     const document = await Document.create({
       document: uri.secure_url,
       type,
-      rider: user.userId,
     });
 
     return res.status(200).json(document);
