@@ -14,6 +14,6 @@ router.route("/compRegCert").post(compRegCert);
 router.route("/passportId").post(passportId);
 router.route("/taxDocument").post(taxDocument);
 router.route("/multipleDoc").post(multipleDoc);
-router.route("/upload").post(authMiddleware, insertDoc);
+router.route("/upload").post(insertDoc);
 
 module.exports = router;

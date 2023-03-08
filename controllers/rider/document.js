@@ -44,8 +44,8 @@ const multipleDoc = async (req, res) => {
 
 //insert uploaded pictures/photos
 const insertDoc = async (req, res) => {
-  const user = req.user;
-  if (user) {
+  // const user = req.user;
+  // if (user) {
     const { type } = req.body;
     //create function that uses async/await while return promise with cloudinary & sharp package
     const convert_url = async (req) => {
@@ -76,9 +76,9 @@ const insertDoc = async (req, res) => {
     });
 
     return res.status(200).json(document);
-  }
+  
 
-  return res.status(400).json({ msg: `unable to upload document` });
+  // return res.status(400).json({ msg: `unable to upload document` });
 };
 
 module.exports = { multipleDoc, insertDoc };
