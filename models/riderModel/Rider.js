@@ -25,6 +25,8 @@ const RiderSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    location: { type: String },
+    image: { type: String },
     location: {
       type: { type: String },
       coordinates: [],
@@ -42,7 +44,7 @@ const RiderSchema = new mongoose.Schema(
     verificationToken: {
       type: String,
     },
-    location: { type: String },
+
     ratings: { type: Number },
     longitude: { type: Number },
     latitude: { type: Number },
