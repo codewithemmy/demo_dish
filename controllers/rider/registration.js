@@ -23,7 +23,7 @@ const createReg = async (req, res) => {
       rider: user.userId,
     });
 
-    return res.status(200).json({ msg: `document upload successful` });
+    return res.status(200).json({ msg: `successful` });
   }
   return res.status(400).json({ msg: `unable to register` });
 };
