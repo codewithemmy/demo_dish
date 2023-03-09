@@ -46,37 +46,37 @@ const multipleDoc = async (req, res) => {
 const insertDoc = async (req, res) => {
   // const user = req.user;
   // if (user) {
-    const { type } = req.body;
-    //create function that uses async/await while return promise with cloudinary & sharp package
-    const convert_url = async (req) => {
-      const data = await sharp(req.files.image.tempFilePath)
-        .webp({ quality: 20 })
-        .toBuffer();
-      return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: "DEV" },
-          (err, url) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(url);
-            }
+  const { type } = req.body;
+
+  let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
+  const buffer = Buffer.from(converts, "base64");
+  //create function that uses async/await while return promise with cloudinary & sharp package
+  const convert_url = async (req) => {
+    const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
+    return new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "DEV" },
+        (err, url) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(url);
           }
-        );
-        bufferToStream(data).pipe(stream);
-      });
-    };
-
-    const uri = await convert_url(req);
-
-    //find and update item with cloudinary secure url
-    const document = await Document.create({
-      document: uri.secure_url,
-      type,
+        }
+      );
+      bufferToStream(data).pipe(stream);
     });
+  };
 
-    return res.status(200).json(document);
-  
+  const uri = await convert_url(req);
+
+  //find and update item with cloudinary secure url
+  const document = await Document.create({
+    document: uri.secure_url,
+    type,
+  });
+
+  return res.status(200).json(document);
 
   // return res.status(400).json({ msg: `unable to upload document` });
 };
