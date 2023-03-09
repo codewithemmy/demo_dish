@@ -76,7 +76,7 @@ const insertDoc = async (req, res) => {
     type,
   });
 
-  return res.status(200).json(document);
+  return res.status(200).json({ msg: `Document Upload Successful` });
 
   // return res.status(400).json({ msg: `unable to upload document` });
 };

@@ -24,10 +24,10 @@ const getPendingOrders = async (req, res) => {
     },
   ]);
 
-  const result = await Order.populate(nearestStore, { path: "store" }).populate(
-    nearestStore,
-    { path: "orderedBy" }
-  );
+  const result = await Order.populate(nearestStore, [
+    { path: "store" },
+    { path: "orderedBy" },
+  ]);
 
   return res.status(200).send(result);
 };
