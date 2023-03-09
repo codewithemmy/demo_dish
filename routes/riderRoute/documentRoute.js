@@ -10,7 +10,7 @@ const router = express.Router();
 // router.route("/passportId").post(auth, passportId);
 // router.route("/taxDocument").post(auth, taxDocument);
 router.route("/document").post(multipleDoc);
-router.route("/registration").post(createReg);
+router.route("/registration").post(auth, createReg);
 router.route("/upload").post(insertDoc);
 
 module.exports = router;
