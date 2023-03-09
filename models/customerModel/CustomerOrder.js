@@ -46,7 +46,15 @@ const OrderSchema = new mongoose.Schema(
     },
     riderStatus: {
       type: String,
-      enum: ["pending", "reject", "accepted",'completed', "delivered", "picked", "on-road"],
+      enum: [
+        "pending",
+        "reject",
+        "accepted",
+        "completed",
+        "delivered",
+        "picked",
+        "on-road",
+      ],
       default: "pending",
     },
     confirmDelivery: {

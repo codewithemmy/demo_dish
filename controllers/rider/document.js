@@ -55,7 +55,7 @@ const insertDoc = async (req, res) => {
     const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
     return new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: "DEV" },
+        { folder: `${type}` },
         (err, url) => {
           if (err) {
             reject(err);

@@ -24,7 +24,10 @@ const getPendingOrders = async (req, res) => {
     },
   ]);
 
-  const result = await Order.populate(nearestStore, { path: "store" });
+  const result = await Order.populate(nearestStore, { path: "store" }).populate(
+    nearestStore,
+    { path: "orderedBy" }
+  );
 
   return res.status(200).send(result);
 };
@@ -70,31 +73,31 @@ const getCompletedOrders = async (req, res) => {
 // };
 
 const getDeliveredOrders = async (req, res) => {
-   const longitude = req.body.lng;
-   const latitude = req.body.lat;
-   const nearestStore = await Order.aggregate([
-     {
-       $geoNear: {
-         near: {
-           type: "Point",
-           coordinates: [parseFloat(longitude), parseFloat(latitude)],
-         },
-         key: "location",
-         maxDistance: parseFloat(20000) * 1609,
-         distanceField: "distance",
-         spherical: true,
-       },
-     },
-     {
-       $match: {
-         riderStatus: "delivered",
-       },
-     },
-   ]);
+  const longitude = req.body.lng;
+  const latitude = req.body.lat;
+  const nearestStore = await Order.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: "Point",
+          coordinates: [parseFloat(longitude), parseFloat(latitude)],
+        },
+        key: "location",
+        maxDistance: parseFloat(20000) * 1609,
+        distanceField: "distance",
+        spherical: true,
+      },
+    },
+    {
+      $match: {
+        riderStatus: "delivered",
+      },
+    },
+  ]);
 
-   const result = await Order.populate(nearestStore, { path: "store" });
+  const result = await Order.populate(nearestStore, { path: "store" });
 
-   return res.status(200).send(result);
+  return res.status(200).send(result);
 };
 
 const getPendingOrdersNumbers = async (req, res) => {
