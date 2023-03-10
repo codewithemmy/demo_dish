@@ -11,12 +11,14 @@ const StoreDetailsSchema = new mongoose.Schema(
     },
     address: {
       type: String,
+      required: true,
     },
     email: {
       type: String,
     },
     phone: {
       type: String,
+      required: true,
     },
     location: {
       type: { type: String },
@@ -28,21 +30,21 @@ const StoreDetailsSchema = new mongoose.Schema(
     },
     deliveryFee: {
       type: String,
-      required: [true, "provide your delivery fee"],
+      // required: [true, "provide your delivery fee"],
     },
     minimumOrder: {
       type: String,
-      required: [true, "provide your minimum order"],
+      // required: [true, "provide your minimum order"],
     },
     description: {
       type: String,
-      required: [true, "description must not be empty"],
+      // required: [true, "description must not be empty"],
     },
     rating: { type: Number },
     openHours: {
       type: String,
       trim: true,
-      required: [true, "provide hours store is open"],
+      // required: [true, "provide hours store is open"],
     },
     serviceAvalaible: { type: Boolean, default: false },
     storeOwner: {
