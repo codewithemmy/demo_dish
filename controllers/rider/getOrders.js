@@ -33,71 +33,46 @@ const getPendingOrders = async (req, res) => {
 };
 
 const getCompletedOrders = async (req, res) => {
-  const longitude = req.body.lng;
-  const latitude = req.body.lat;
-  const nearestStore = await Order.aggregate([
-    {
-      $geoNear: {
-        near: {
-          type: "Point",
-          coordinates: [parseFloat(longitude), parseFloat(latitude)],
-        },
-        key: "location",
-        maxDistance: parseFloat(20000) * 1609,
-        distanceField: "distance",
-        spherical: true,
-      },
-    },
-    {
-      $match: {
-        riderStatus: "completed",
-      },
-    },
-  ]);
-
-  const result = await Order.populate(nearestStore, { path: "store" });
-
-  return res.status(200).send(result);
+  const user = req.user.userId;
+  if (user) {
+    const completeOrders = await Order.find({
+      assignedRider: user,
+      riderStatus: "completed",
+    });
+    return res.status(200).json(completeOrders);
+  }
+  return res.status(400).json({ msg: `unable to get completed orders` });
 };
 
-// const getPendingOrders = async (req, res) => {
-//   const getOrders = await Order.find({ riderStatus: "pending" });
-
-//   return res.status(200).json(getOrders);
-// };
-
-// const getCompletedOrders = async (req, res) => {
-//   const getOrders = await Order.find({ riderStatus: "completed" });
-
-//   return res.status(200).json(getOrders);
-// };
-
 const getDeliveredOrders = async (req, res) => {
-  const longitude = req.body.lng;
-  const latitude = req.body.lat;
-  const nearestStore = await Order.aggregate([
-    {
-      $geoNear: {
-        near: {
-          type: "Point",
-          coordinates: [parseFloat(longitude), parseFloat(latitude)],
-        },
-        key: "location",
-        maxDistance: parseFloat(20000) * 1609,
-        distanceField: "distance",
-        spherical: true,
-      },
-    },
-    {
-      $match: {
-        riderStatus: "delivered",
-      },
-    },
-  ]);
+  const user = req.user.userId;
+  if (user) {
+    const completeOrders = await Order.find({
+      assignedRider: user,
+      riderStatus: "delivered",
+    });
+    return res.status(200).json(completeOrders);
+  }
+  return res.status(400).json({ msg: `unable to get completed orders` });
+};
 
-  const result = await Order.populate(nearestStore, { path: "store" });
 
-  return res.status(200).send(result);
+//assign and pick order
+const pickUpOrder = async (req, res) => {
+  const orderId = req.params.id;
+  if (orderId) {
+    const pickOrder = await Order.findByIdAndUpdate(
+      { _id: orderId },
+      { assignedRider: req.user.userId, riderStatus: "picked" },
+      { new: true, runValidators: true }
+    );
+
+    return res
+      .status(200)
+      .json({ msg: `Order is now assigned to riderId: ${orderId}`, pickOrder });
+  }
+
+  return res.status(400).json({ msg: `unable to update order` });
 };
 
 const getPendingOrdersNumbers = async (req, res) => {
@@ -155,4 +130,5 @@ module.exports = {
   getPendingOrdersNumbers,
   getComPletedOrdersNumbers,
   getDeliveredOrdersNumbers,
+  pickUpOrder,
 };

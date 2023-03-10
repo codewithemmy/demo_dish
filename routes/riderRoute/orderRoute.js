@@ -7,6 +7,7 @@ const {
   getPendingOrdersNumbers,
   getComPletedOrdersNumbers,
   getDeliveredOrdersNumbers,
+  pickUpOrder,
 } = require("../../controllers/rider/getOrders");
 
 const { getRiderLocation } = require("../../controllers/rider/riderLocation");
@@ -21,6 +22,7 @@ router.route("/getPendingOrders").post(auth, getPendingOrders);
 router.route("/getCompletedOrders").post(auth, getCompletedOrders);
 router.route("/getDeliveredOrders").post(auth, getDeliveredOrders);
 router.route("/updateOrderStatus/:id").patch(auth, updateOrderStatus);
+router.route("/pickOrder/:id").patch(auth, pickUpOrder);
 
 //location for rider routes
 router.route("/location/:id").patch(getRiderLocation);
