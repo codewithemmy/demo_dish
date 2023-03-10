@@ -17,7 +17,7 @@ const createInvoiceInfo = async (req, res) => {
     !comapanyLegalName ||
     !streetAddress ||
     !townOrCity ||
-    !sortCode ||
+    !postCode ||
     !vatRegNo ||
     !companyRegNumber
   ) {
@@ -29,7 +29,7 @@ const createInvoiceInfo = async (req, res) => {
       comapanyLegalName,
       streetAddress,
       townOrCity,
-      sortCode,
+      postCode,
       vatRegNo,
       companyRegNumber,
       storeOwner: sellar,
