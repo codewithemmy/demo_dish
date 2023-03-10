@@ -56,6 +56,17 @@ const getDeliveredOrders = async (req, res) => {
   return res.status(400).json({ msg: `unable to get completed orders` });
 };
 
+const getPickedOrders = async (req, res) => {
+  const user = req.user.userId;
+  if (user) {
+    const completeOrders = await Order.find({
+      assignedRider: user,
+      riderStatus: "picked",
+    });
+    return res.status(200).json(completeOrders);
+  }
+  return res.status(400).json({ msg: `unable to get picked orders` });
+};
 
 //assign and pick order
 const pickUpOrder = async (req, res) => {
@@ -131,4 +142,5 @@ module.exports = {
   getComPletedOrdersNumbers,
   getDeliveredOrdersNumbers,
   pickUpOrder,
+  getPickedOrders,
 };
