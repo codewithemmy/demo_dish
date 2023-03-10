@@ -7,7 +7,7 @@ const createInvoiceInfo = async (req, res) => {
     comapanyLegalName,
     streetAddress,
     townOrCity,
-    sortCode,
+    postCode,
     vatRegNo,
     companyRegNumber,
   } = req.body;

@@ -14,7 +14,7 @@ const InvoiceInfoSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide the town/city"],
     },
-    sortCode: {
+    postCode: {
       type: String,
     },
     vatRegNo: {
