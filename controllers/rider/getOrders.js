@@ -39,8 +39,8 @@ const getCompletedOrders = async (req, res) => {
       assignedRider: user,
       riderStatus: "completed",
     })
-      .populate({ path: "store", select: "storeName" })
-      .populate({ path: "orderedBy", select: "firstName surname" });
+      .populate({ path: "store" })
+      .populate({ path: "orderedBy", select: "-orders" });
     return res.status(200).json(completeOrders);
   }
   return res.status(400).json({ msg: `unable to get completed orders` });
@@ -53,8 +53,8 @@ const getDeliveredOrders = async (req, res) => {
       assignedRider: user,
       riderStatus: "delivered",
     })
-      .populate({ path: "store", select: "storeName" })
-      .populate({ path: "orderedBy", select: "firstName surname" });
+      .populate({ path: "store" })
+      .populate({ path: "orderedBy", select: "-orders" });
     return res.status(200).json(completeOrders);
   }
   return res.status(400).json({ msg: `unable to get completed orders` });
@@ -67,8 +67,8 @@ const getPickedOrders = async (req, res) => {
       assignedRider: user,
       riderStatus: "picked",
     })
-      .populate({ path: "store", select: "storeName" })
-      .populate({ path: "orderedBy", select: "firstName surname" });
+      .populate({ path: "store" })
+      .populate({ path: "orderedBy", select: "-orders" });
     return res.status(200).json(completeOrders);
   }
   return res.status(400).json({ msg: `unable to get picked orders` });
