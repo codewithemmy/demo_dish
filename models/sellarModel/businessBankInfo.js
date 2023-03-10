@@ -9,6 +9,9 @@ const BusinessBankingInfoSchema = new mongoose.Schema(
     postCode: {
       type: String,
     },
+    bankName: {
+      type: String,
+    },
     bankAccountNumber: {
       type: String,
     },
