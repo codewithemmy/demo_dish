@@ -24,7 +24,7 @@ router.route("/getCompletedOrders").post(auth, getCompletedOrders);
 router.route("/getDeliveredOrders").post(auth, getDeliveredOrders);
 router.route("/updateOrderStatus/:id").patch(auth, updateOrderStatus);
 router.route("/pickOrder/:id").patch(auth, pickUpOrder);
-router.route("/getPickOrder").patch(auth, getPickedOrders);
+router.route("/getPickOrder").get(auth, getPickedOrders);
 
 //location for rider routes
 router.route("/location/:id").patch(getRiderLocation);
