@@ -9,7 +9,11 @@ const {
   forgotPassword,
   resetPassword,
   login,
+  riderAvailable,
 } = require("../../controllers/rider/riderAuth");
+
+
+const auth = require("../../riderMiddleware/authentication");
 
 const router = express.Router();
 
@@ -24,5 +28,8 @@ router.route("/reset-password").post(resetPassword);
 //profile
 router.route("/profile/:id").get(getProfile);
 router.route("/updateProfile/:id").patch(updateProfile);
+
+//rider available
+router.route("/riderAvailable").patch(auth, riderAvailable);
 
 module.exports = router;

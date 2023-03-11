@@ -44,24 +44,18 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res
-      .status(404)
-      .json({ msg: "Please provide username or password" });
+    return res.status(404).json({ msg: "Please provide username or password" });
   }
 
   const rider = await Rider.findOne({ email });
 
   const isPasswordCorrect = await rider.comparePassword(password);
   if (!isPasswordCorrect) {
-    return res
-      .status(400)
-      .json({ msg: "Password is not valid" });
+    return res.status(400).json({ msg: "Password is not valid" });
   }
 
   if (!rider.isVerified) {
-    return res
-      .status(400)
-      .json({ msg: "please verify your account" });
+    return res.status(400).json({ msg: "please verify your account" });
   }
 
   let token = rider.createJWT();
@@ -89,9 +83,7 @@ const verifyEmail = async (req, res) => {
   const rider = await Rider.findOne({ _id: id });
 
   if (!verificationToken) {
-    return res
-      .status(404)
-      .json({ msg: "Kindly input your token" });
+    return res.status(404).json({ msg: "Kindly input your token" });
   }
 
   if (!rider) {
@@ -101,9 +93,7 @@ const verifyEmail = async (req, res) => {
   const hastToken = createHash(verificationToken);
 
   if (rider.verificationToken !== hastToken) {
-    return res
-      .status(400)
-      .json({ msg: "Verification Failed" });
+    return res.status(400).json({ msg: "Verification Failed" });
   }
 
   (rider.isVerified = true), (rider.verified = Date.now());
@@ -126,9 +116,7 @@ const verifyEmail = async (req, res) => {
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
-    return res
-      .status(400)
-      .json({ msg: "Please provide valid email" });
+    return res.status(400).json({ msg: "Please provide valid email" });
   }
 
   const rider = await Rider.findOne({ email });
@@ -161,9 +149,7 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   const { token, email, newPassword } = req.body;
   if (!token || !email || !newPassword) {
-    return res
-      .status(200)
-      .json({ msg: "Please provide all values" });
+    return res.status(200).json({ msg: "Please provide all values" });
   }
   const rider = await Rider.findOne({ email });
 
@@ -180,9 +166,26 @@ const resetPassword = async (req, res) => {
       await rider.save();
     }
   }
-  return res
-    .status(200)
-    .json({ msg: "your password is sucessfully reset" });
+  return res.status(200).json({ msg: "your password is sucessfully reset" });
+};
+
+const riderAvailable = async (req, res) => {
+  const rider = req.user.userId;
+  if (rider) {
+    const verifyRider = await Rider.findOne({
+      _id: rider,
+    });
+    if (!verifyRider) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: `not a verified rider` });
+    }
+
+    verifyRider.serviceAvailable = !verifyRider.serviceAvailable;
+    const result = await verifyRider.save();
+
+    return res.status(200).json({ msg: `rider is now available` });
+  }
 };
 
 //export modules
@@ -193,4 +196,5 @@ module.exports = {
   verifyEmail,
   forgotPassword,
   resetPassword,
+  riderAvailable,
 };

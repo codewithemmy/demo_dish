@@ -58,6 +58,7 @@ const RiderSchema = new mongoose.Schema(
     ratings: { type: Number },
     longitude: { type: Number },
     latitude: { type: Number },
+    serviceAvailable: { type: Boolean, default: false },
   },
   {
     timestamps: true,
