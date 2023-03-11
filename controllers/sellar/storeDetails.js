@@ -202,8 +202,8 @@ const isAvailable = async (req, res) => {
     const result = await verifySellar.save();
 
     return res
-      .status(StatusCodes.OK)
-      .json({ msg: `Sellar is now available`, result });
+      .status(200)
+      .json({ msg: `Sellar is now available`});
   }
 
   return res
