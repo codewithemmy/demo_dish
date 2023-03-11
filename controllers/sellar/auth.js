@@ -115,7 +115,7 @@ const login = async (req, res) => {
   if (!sellar) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Invalid username or password" });
+      .json({ msg: "Sellar not found" });
   }
 
   const isPasswordCorrect = await sellar.comparePassword(password);

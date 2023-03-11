@@ -1,5 +1,4 @@
 const Rider = require("../../models/riderModel/Rider");
-const { StatusCodes } = require("http-status-codes");
 const crypto = require("crypto");
 const createHash = require("../../utils/createHash");
 const { mailTransport } = require("../../utils/sendEmail");
@@ -11,9 +10,7 @@ const register = async (req, res) => {
 
   const emailAlreadyExists = await Rider.findOne({ email });
   if (emailAlreadyExists) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Email already exist" });
+    return res.status(400).json({ msg: "Email already exist" });
   }
 
   const verificationToken = crypto.randomBytes(2).toString("hex");
@@ -36,85 +33,40 @@ const register = async (req, res) => {
 
   let token = rider.createJWT();
 
-  return res.status(StatusCodes.CREATED).json({
+  return res.status(200).json({
     msg: "Success! Please check your email to verify account",
     rider,
     token,
   });
 };
 
-//verify user
-const verifyEmail = async (req, res) => {
-  const { id } = req.params;
-  const { verificationToken } = req.body;
-  const rider = await Rider.findOne({ _id: id });
-
-  if (!verificationToken) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .json({ msg: "Kindly input your token" });
-  }
-
-  if (!rider) {
-    return res.status(StatusCodes.NOT_FOUND).json({ msg: "Rider not found" });
-  }
-
-  const hastToken = createHash(verificationToken);
-
-  if (rider.verificationToken !== hastToken) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Verification Failed" });
-  }
-
-  (rider.isVerified = true), (rider.verified = Date.now());
-  rider.verificationToken = "";
-
-  await rider.save();
-
-  //send Mail
-  mailTransport.sendMail({
-    from: '"Afrilish" <Afrilish@gmail.com>', // sender address
-    to: Rider.email, // list of receivers
-    subject: "MAIL IS VERIFIED", // Subject line
-    html: `<h4> Hello, ${rider.fullname}</h4> <h2>Congrats</h2> you are now verified,you can login now`, // html body
-  });
-
-  return res.status(StatusCodes.OK).json({ msg: "Email Verified" });
-};
-
-//user login
-const riderLogin = async (req, res) => {
+//login Rider
+const login = async (req, res) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     return res
-      .status(StatusCodes.NOT_FOUND)
+      .status(404)
       .json({ msg: "Please provide username or password" });
   }
+
   const rider = await Rider.findOne({ email });
 
-  if (!rider) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ msg: "rider not found" });
-  }
-
-  const isPasswordCorrect = await Rider.comparePassword(password);
+  const isPasswordCorrect = await rider.comparePassword(password);
   if (!isPasswordCorrect) {
     return res
-      .status(StatusCodes.BAD_REQUEST)
+      .status(400)
       .json({ msg: "Password is not valid" });
-    s;
   }
 
   if (!rider.isVerified) {
     return res
-      .status(StatusCodes.BAD_REQUEST)
+      .status(400)
       .json({ msg: "please verify your account" });
   }
 
-  let token = Rider.createJWT();
+  let token = rider.createJWT();
 
-  return res.status(StatusCodes.OK).json({
+  return res.status(200).json({
     msg: "Login Successful",
     userId: rider._id,
     token: token,
@@ -130,12 +82,52 @@ const riderLogin = async (req, res) => {
 //   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 // };
 
+//verify user
+const verifyEmail = async (req, res) => {
+  const { id } = req.params;
+  const { verificationToken } = req.body;
+  const rider = await Rider.findOne({ _id: id });
+
+  if (!verificationToken) {
+    return res
+      .status(404)
+      .json({ msg: "Kindly input your token" });
+  }
+
+  if (!rider) {
+    return res.status(404).json({ msg: "Rider not found" });
+  }
+
+  const hastToken = createHash(verificationToken);
+
+  if (rider.verificationToken !== hastToken) {
+    return res
+      .status(400)
+      .json({ msg: "Verification Failed" });
+  }
+
+  (rider.isVerified = true), (rider.verified = Date.now());
+  rider.verificationToken = "";
+
+  await rider.save();
+
+  //send Mail
+  mailTransport.sendMail({
+    from: '"Afrilish" <Afrilish@gmail.com>', // sender address
+    to: rider.email, // list of receivers
+    subject: "MAIL IS VERIFIED", // Subject line
+    html: `<h4> Hello, ${rider.fullname}</h4> <h2>Congrats</h2> you are now verified,you can login now`, // html body
+  });
+
+  return res.status(200).json({ msg: "Email Verified" });
+};
+
 //forget password
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
     return res
-      .status(StatusCodes.BAD_REQUEST)
+      .status(400)
       .json({ msg: "Please provide valid email" });
   }
 
@@ -160,7 +152,7 @@ const forgotPassword = async (req, res) => {
     await rider.save();
   }
 
-  return res.status(StatusCodes.OK).json({
+  return res.status(200).json({
     msg: "Please check your email to reset password",
   });
 };
@@ -170,7 +162,7 @@ const resetPassword = async (req, res) => {
   const { token, email, newPassword } = req.body;
   if (!token || !email || !newPassword) {
     return res
-      .status(StatusCodes.BAD_REQUEST)
+      .status(200)
       .json({ msg: "Please provide all values" });
   }
   const rider = await Rider.findOne({ email });
@@ -189,14 +181,14 @@ const resetPassword = async (req, res) => {
     }
   }
   return res
-    .status(StatusCodes.OK)
+    .status(200)
     .json({ msg: "your password is sucessfully reset" });
 };
 
 //export modules
 module.exports = {
   register,
-  riderLogin,
+  login,
   // logout,
   verifyEmail,
   forgotPassword,

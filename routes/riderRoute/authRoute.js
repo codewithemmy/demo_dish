@@ -6,16 +6,16 @@ const {
 const {
   register,
   verifyEmail,
-  riderLogin,
   forgotPassword,
   resetPassword,
+  login,
 } = require("../../controllers/rider/riderAuth");
 
 const router = express.Router();
 
 router.route("/register").post(register);
 router.route("/verify-mail/:id").post(verifyEmail);
-router.route("/login").post(riderLogin);
+router.route("/login").post(login);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password").post(resetPassword);
 
