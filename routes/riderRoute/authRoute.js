@@ -7,19 +7,22 @@ const {
   register,
   verifyEmail,
   riderLogin,
-  logout,
+  forgotPassword,
+  resetPassword,
 } = require("../../controllers/rider/riderAuth");
 
 const router = express.Router();
 
 router.route("/register").post(register);
-router.route("/verifyEmail/:id").post(verifyEmail);
+router.route("/verify-mail/:id").post(verifyEmail);
 router.route("/login").post(riderLogin);
-router.route("/logout/:id").delete(logout);
+router.route("/forgot-password").post(forgotPassword);
+router.route("/reset-password").post(resetPassword);
+
+// router.route("/logout/:id").delete(logout);
+
+//profile
 router.route("/profile/:id").get(getProfile);
 router.route("/updateProfile/:id").patch(updateProfile);
-
-// router.route("/forgot-password").post(forgotPassword);
-// router.route("/reset-password").post(resetPassword);
 
 module.exports = router;

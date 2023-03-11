@@ -31,11 +31,19 @@ const RiderSchema = new mongoose.Schema(
       type: { type: String },
       coordinates: [],
     },
+    password: {
+      type: String,
+      required: [true, "Please provide password"],
+      minlength: 6,
+    },
     isVerified: {
       type: Boolean,
       default: false,
     },
     resetToken: {
+      type: String,
+    },
+    passwordToken: {
       type: String,
     },
     resetTokenExpirationDate: {
@@ -44,7 +52,9 @@ const RiderSchema = new mongoose.Schema(
     verificationToken: {
       type: String,
     },
-
+    passwordTokenExpirationDate: {
+      type: Date,
+    },
     ratings: { type: Number },
     longitude: { type: Number },
     latitude: { type: Number },
@@ -53,6 +63,14 @@ const RiderSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+RiderSchema.pre("save", async function () {
+  // console.log(this.modifiedPaths());
+  // console.log(this.isModified('name'));
+  if (!this.isModified("password")) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
 RiderSchema.methods.createJWT = function () {
   return jwt.sign(
@@ -67,6 +85,11 @@ RiderSchema.methods.createJWT = function () {
       expiresIn: process.env.RIDER_JWT_LIFETIME,
     }
   );
+};
+
+RiderSchema.methods.comparePassword = async function (canditatePassword) {
+  const isMatch = await bcrypt.compare(canditatePassword, this.password);
+  return isMatch;
 };
 
 RiderSchema.methods.comparePassword = async function (canditatePassword) {

@@ -4,21 +4,21 @@ const StoreDetailsSchema = new mongoose.Schema(
   {
     storeName: {
       type: String,
-      required: [true, "provide the store name"],
+      // required: [true, "provide the store name"],
     },
     storeImage: {
       type: String,
     },
     address: {
       type: String,
-      required: true,
+      // required: true,
     },
     email: {
       type: String,
     },
     phone: {
       type: String,
-      required: true,
+      // required: true,
     },
     location: {
       type: { type: String },
@@ -26,7 +26,7 @@ const StoreDetailsSchema = new mongoose.Schema(
     },
     cuisineType: {
       type: String,
-      required: [true, "provide your cuisines"],
+      // required: [true, "provide your cuisines"],
     },
     deliveryFee: {
       type: String,
