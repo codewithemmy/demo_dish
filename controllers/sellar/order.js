@@ -39,7 +39,15 @@ const getPendingOrder = async (req, res) => {
       select: "firstName surname _id",
     })
     .populate("items.food")
-    .populate({ path: "sellarId" });
+    .populate({
+      path: "store",
+      select:
+        "location storeName openHours deliveryFee minimumOrder description address email phone",
+    })
+    .populate({
+      path: "sellarId",
+      select: "cuisineType storeType firstName surname",
+    });
 
   if (orders != null) {
     io.emit("pending-orders", orders); // emit the orders to connected clients

@@ -24,8 +24,7 @@ const OrderSchema = new mongoose.Schema(
     },
     sellarId: {
       type: mongoose.Schema.ObjectId,
-      ref: "StoreDetails",
-      required: [true, "store details cannot be empty"],
+      ref: "Sellar",
     },
     store: {
       type: mongoose.Schema.ObjectId,
