@@ -12,8 +12,30 @@ const createOrder = async (req, res) => {
   if (customer) {
     //get the store id
     const storeId = req.params.id;
-    //get the store using findOne
+    //get the store and customer using findOne
     const store = await StoreDetails.findOne({ _id: storeId });
+    // const customerCoordinates = await Customer.findOne({
+    //   _id: customer.userId,
+    // });
+
+    // const R = 6371; // Earth's radius in kilometers
+    // const dLat = deg2rad(lat2 - lat1);
+    // const dLon = deg2rad(lon2 - lon1);
+
+    // const a =   Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    //   Math.cos(deg2rad(lat1)) *
+    //     Math.cos(deg2rad(lat2)) *
+    //     Math.sin(dLon / 2) *
+    //     Math.sin(dLon / 2);
+
+    // const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    // const distance = R * c;
+
+    // res.send(
+    //   `The distance between the two locations is ${distance.toFixed(
+    //     2
+    //   )} kilometers.`
+    // );
 
     //get the store location type and coordinates
     const locationType = store.location.type;
