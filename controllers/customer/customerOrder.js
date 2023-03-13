@@ -39,7 +39,7 @@ const createOrder = async (req, res) => {
     foods.map((food) => {
       cart.map(({ _id, quantity }) => {
         if (food._id == _id) {
-          sellarId = food.storeOwner;
+          // sellarId = food.storeOwner;
           netAmount += food.price * quantity;
           cartItems.push({ food, quantity });
         }
@@ -78,7 +78,7 @@ const createOrder = async (req, res) => {
           coordinates: locationCoordinates,
         },
         store: storeId,
-        sellarId: sellarId,
+        sellarId: store._id,
         clientSecret: "paymentIntent.client_secret",
         readyTime: "",
         remarks: "",

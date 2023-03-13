@@ -22,7 +22,11 @@ const OrderSchema = new mongoose.Schema(
       ref: "Customer",
       required: [true, "Provide customer Id"],
     },
-    sellarId: { type: String },
+    sellarId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "StoreDetails",
+      required: [true, "store details cannot be empty"],
+    },
     store: {
       type: mongoose.Schema.ObjectId,
       ref: "StoreDetails",

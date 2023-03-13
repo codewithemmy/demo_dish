@@ -1,29 +1,61 @@
 const { StatusCodes } = require("http-status-codes");
 const Order = require("../../models/customerModel/CustomerOrder");
+const http = require("http").createServer();
+const io = require("socket.io")(http);
 
 // get pending order for sellar
-const getPendingOrder = async (req, res) => {
-  const sellar = req.user;
+// const getPendingOrder = async (req, res) => {
+//   const sellar = req.user;
 
-  if (sellar) {
-    const orders = await Order.find({
-      sellarId: req.user.userId,
-      orderStatus: "pending",
+//   if (sellar) {
+//     const orders = await Order.find({
+//       sellarId: req.user.userId,
+//       orderStatus: "pending",
+//     })
+//       .populate({
+//         path: "orderedBy",
+//         select: "firstName surname _id",
+//       })
+//       .populate("items.food");
+//     if (orders != null) {
+//       return res.status(StatusCodes.OK).json(orders);
+//     }
+
+//     return res.status(StatusCodes.OK).json({ msg: `your order cart is empty` });
+//   }
+//   return res
+//     .status(StatusCodes.BAD_REQUEST)
+//     .json({ msg: `error getting orders` });
+// };
+
+//get pending using emit function in socket io
+
+const getPendingOrder = async (req, res) => {
+  const orders = await Order.find({
+    orderStatus: "pending",
+  })
+    .populate({
+      path: "orderedBy",
+      select: "firstName surname _id",
     })
-      .populate({
-        path: "orderedBy",
-        select: "firstName surname _id",
-      })
-      .populate("items.food");
-    if (orders != null) {
-      return res.status(StatusCodes.OK).json(orders);
-    }
-    return res.status(StatusCodes.OK).json({ msg: `your order cart is empty` });
+    .populate("items.food")
+    .populate({ path: "sellarId" });
+
+  if (orders != null) {
+    io.emit("pending-orders", orders); // emit the orders to connected clients
+    // return res.status(StatusCodes.OK).json(orders);
+    console.log(orders);
   }
-  return res
-    .status(StatusCodes.BAD_REQUEST)
-    .json({ msg: `error getting orders` });
+
+  io.emit("empty-cart", { msg: `your order cart is empty` }); // emit empty cart message to connected clients
+
+  // return res.status(StatusCodes.OK).json({ msg: `your order cart is empty` });
 };
+
+// Call the getPendingOrder function every 30 seconds using setInterval
+setInterval(() => {
+  getPendingOrder();
+}, 30000);
 
 // get completed order for sellar
 const getCompletedOrder = async (req, res) => {
