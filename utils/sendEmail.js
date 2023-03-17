@@ -1,5 +1,3 @@
-
-
 // exports.mailTransport = () =>
 //     nodemailer.createTransport({
 //         host: "smtp.mailtrap.io",
@@ -35,4 +33,3 @@ mailTransport.verify(function (error, success) {
 });
 
 module.exports = { mailTransport };
-

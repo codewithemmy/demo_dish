@@ -5,6 +5,11 @@ const Food = require("../../models/sellarModel/Food");
 const { StatusCodes } = require("http-status-codes");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
+// Helper function to convert degrees to radians
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
+}
+
 //create order
 const createOrder = async (req, res) => {
   //grab the login customer
@@ -14,28 +19,42 @@ const createOrder = async (req, res) => {
     const storeId = req.params.id;
     //get the store and customer using findOne
     const store = await StoreDetails.findOne({ _id: storeId });
-    // const customerCoordinates = await Customer.findOne({
-    //   _id: customer.userId,
-    // });
 
-    // const R = 6371; // Earth's radius in kilometers
-    // const dLat = deg2rad(lat2 - lat1);
-    // const dLon = deg2rad(lon2 - lon1);
+    const customerCoordinates = await Customer.findOne({
+      _id: customer.userId,
+    });
 
-    // const a =   Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    //   Math.cos(deg2rad(lat1)) *
-    //     Math.cos(deg2rad(lat2)) *
-    //     Math.sin(dLon / 2) *
-    //     Math.sin(dLon / 2);
+    const customerlng = customerCoordinates.location.coordinates[0];
+    const customerlat = customerCoordinates.location.coordinates[1];
+    const storelng = store.location.coordinates[0];
+    const storelat = store.location.coordinates[1];
 
-    // const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    // const distance = R * c;
+    const R = 6371; // Earth's radius in kilometers
+    const dLon = deg2rad(customerlng - storelng);
+    const dLat = deg2rad(customerlat - storelat);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(storelat)) *
+        Math.cos(deg2rad(customerlat)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
 
     // res.send(
     //   `The distance between the two locations is ${distance.toFixed(
     //     2
     //   )} kilometers.`
     // );
+    console.log(
+      `The distance between the two locations is ${distance.toFixed(
+        2
+      )} kilometers.`
+    );
+
+    const kilometers = distance.toFixed(2);
 
     //get the store location type and coordinates
     const locationType = store.location.type;
