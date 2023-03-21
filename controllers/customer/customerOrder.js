@@ -56,6 +56,8 @@ const createOrder = async (req, res) => {
 
     const kilometers = distance.toFixed(2);
 
+    // riderFee = kilometers * s
+
     //get the store location type and coordinates
     const locationType = store.location.type;
     const locationCoordinates = store.location.coordinates;
