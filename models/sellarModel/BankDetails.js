@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const BusinessBankingInfoSchema = new mongoose.Schema(
+const BankDetailsSchema = new mongoose.Schema(
   {
     fullname: {
       type: String,
@@ -23,7 +23,4 @@ const BusinessBankingInfoSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model(
-  "BusinessBankingInfo",
-  BusinessBankingInfoSchema
-);
+module.exports = mongoose.model("BankDetails", BankDetailsSchema);

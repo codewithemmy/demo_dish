@@ -1,20 +1,15 @@
 const { StatusCodes } = require("http-status-codes");
-const BusinessBankInfo = require("../../models/sellarModel/businessBankInfo");
+// const BusinessBankInfo = require("../../models/sellarModel/businessBankInfo");
+const BankDetails = require("../../models/sellarModel/BankDetails");
 
 //create business bank information
-const createBusinessBank = async (req, res) => {
-  const { fullname, bankAccountNumber, sortCode } = req.body;
+
+const createBankDetails = async (req, res) => {
   const sellar = req.user.userId;
 
-  if (!fullname || !postCode || !bankAccountNumber || !sortCode) {
-    return res.status(400).json({ msg: `No field should be empty` });
-  }
-
   if (sellar) {
-    const businessBank = await BusinessBankInfo.create({
-      fullname,
-      bankAccountNumber,
-      sortCode,
+    const businessBank = await BankDetails.create({
+      ...req.body,
       storeOwner: sellar,
     });
 
@@ -28,13 +23,14 @@ const createBusinessBank = async (req, res) => {
     .json({ msg: "error in creating business  bank information" });
 };
 
+
 //update business bank information
 const updateBusinessBankInfo = async (req, res) => {
   const { id: businessBankId } = req.params;
   const sellar = req.user.userId;
 
   if (sellar) {
-    const businessBank = await BusinessBankInfo.findByIdAndUpdate(
+    const businessBank = await BankDetails.findByIdAndUpdate(
       {
         _id: businessBankId,
         storeOwner: sellar,
@@ -53,4 +49,4 @@ const updateBusinessBankInfo = async (req, res) => {
     .json({ msg: "error in updating business bank information" });
 };
 
-module.exports = { createBusinessBank, updateBusinessBankInfo };
+module.exports = { createBankDetails, updateBusinessBankInfo };
