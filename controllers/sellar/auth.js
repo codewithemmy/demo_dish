@@ -136,7 +136,6 @@ const login = async (req, res) => {
   return res.status(StatusCodes.OK).json({
     msg: "Login Successful",
     userId: sellar._id,
-    currency: sellar.currency,
     token: token,
   });
 };

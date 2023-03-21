@@ -3,7 +3,7 @@ const BusinessBankInfo = require("../../models/sellarModel/businessBankInfo");
 
 //create business bank information
 const createBusinessBank = async (req, res) => {
-  const { fullname, postCode, bankAccountNumber, sortCode } = req.body;
+  const { fullname, bankAccountNumber, sortCode } = req.body;
   const sellar = req.user.userId;
 
   if (!fullname || !postCode || !bankAccountNumber || !sortCode) {
@@ -13,7 +13,6 @@ const createBusinessBank = async (req, res) => {
   if (sellar) {
     const businessBank = await BusinessBankInfo.create({
       fullname,
-      postCode,
       bankAccountNumber,
       sortCode,
       storeOwner: sellar,

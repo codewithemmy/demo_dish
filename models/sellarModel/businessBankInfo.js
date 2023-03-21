@@ -6,9 +6,6 @@ const BusinessBankingInfoSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide your fullname"],
     },
-    postCode: {
-      type: String,
-    },
     bankName: {
       type: String,
     },
