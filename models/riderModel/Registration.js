@@ -13,6 +13,7 @@ const RegistrationSchema = new mongoose.Schema(
     insuranceNo: { type: String },
     deliveryInsuranceNo: { type: String },
     driverLicenseNo: { type: String },
+    sortCode: { type: String },
     rider: {
       type: mongoose.Schema.ObjectId,
       ref: "Rider",
