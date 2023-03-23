@@ -6,13 +6,13 @@ const BankDetailsSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide your fullname"],
     },
-    bankName: {
+    bankname: {
       type: String,
     },
-    bankAccountNumber: {
+    accountnumber: {
       type: String,
     },
-    sortCode: {
+    sortcode: {
       type: String,
     },
     storeOwner: {

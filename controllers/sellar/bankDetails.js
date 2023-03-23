@@ -1,5 +1,4 @@
 const { StatusCodes } = require("http-status-codes");
-// const BusinessBankInfo = require("../../models/sellarModel/businessBankInfo");
 const BankDetails = require("../../models/sellarModel/BankDetails");
 
 //create business bank information
@@ -13,7 +12,7 @@ const createBankDetails = async (req, res) => {
       storeOwner: sellar,
     });
 
-    return res.status(StatusCodes.CREATED).json({
+    return res.status(201).json({
       msg: "Business Bank information created successfully",
       businessBank,
     });
@@ -39,7 +38,7 @@ const updateBusinessBankInfo = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    return res.status(StatusCodes.CREATED).json({
+    return res.status(201).json({
       msg: "Business bank information updated successfully",
       businessBank,
     });
