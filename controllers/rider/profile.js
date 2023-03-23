@@ -23,7 +23,7 @@ const getProfile = async (req, res) => {
   const riderId = req.params.id;
   if (riderId) {
     const profile = await Rider.find({ _id: riderId }).select(
-      "-verificationToken"
+      "-verificationToken -password"
     );
     return res.status(200).json(profile);
   }
