@@ -4,43 +4,24 @@ const crypto = require("crypto");
 const createHash = require("../../utils/createHash");
 const { mailTransport } = require("../../utils/sendEmail");
 
+const { currency } = require("../../utils/currency");
+
 //register sellar
 const register = async (req, res) => {
-  const {
-    cuisineType,
-    storeType,
-    numberOfLocation,
-    floor,
-    store,
-    firstName,
-    surname,
-    country,
-    email,
-    phonenumber,
-    password,
-  } = req.body;
+  const { country, email, firstName } = req.body;
+  let symbol = await currency(country);
 
   const emailAlreadyExists = await Sellar.findOne({ email });
+
   if (emailAlreadyExists) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Email already exist" });
+    return res.status(400).json({ msg: "Email already exist" });
   }
 
   const verificationToken = crypto.randomBytes(2).toString("hex");
   const hastToken = createHash(verificationToken);
   const sellar = await Sellar.create({
-    cuisineType,
-    storeType,
-    numberOfLocation,
-    floor,
-    store,
-    firstName,
-    surname,
-    country,
-    email,
-    phonenumber,
-    password,
+    ...req.body,
+    currency: symbol,
     verificationToken: hastToken,
   });
 

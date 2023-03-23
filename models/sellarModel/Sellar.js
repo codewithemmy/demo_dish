@@ -37,6 +37,9 @@ const SellarSchema = new mongoose.Schema(
     country: {
       type: String,
     },
+    currency: {
+      type: String,
+    },
     password: {
       type: String,
       required: [true, "Please provide password"],

@@ -1,32 +1,22 @@
-// const getCurrencySymbol = (country) => {
-//     const currencySymbols = {
-//     "UnitedStates": "$",
-//     Canada: "$",
-//     "UnitedKingdom": "£",
-//     Australia: "$",
-//     Japan: "¥",
-//     China: "¥",
-//     Germany: "€",
-//     France: "€",
-//     Italy: "€",
-//     Spain: "€",
-//     Brazil: "R$",
-//     Mexico: "$",
-//     India: "₹",
-//     Russia: "₽",
-//     South Africa: "R",
-//     Nigeria: "₦",
-//     Egypt: "E£",
-//   };
+const axios = require("axios");
 
-//   // Lookup currency symbol by country
-//   const currencySymbol = currencySymbols[country];
+// Define endpoint for getting currency symbol of a country and storing it in the database
 
-//   if (!currencySymbol) {
-//     // Country not found in mapping
-//     throw new Error(`No currency symbol found for country '${country}'`);
-//   }
+const currency = async (country) => {
+  try {
+    // Call REST API to get currency data of the country
+    const response = await axios.get(
+      `https://restcountries.com/v2/name/${country}?fullText=true`
+    );
+    const { currencies } = response.data[0];
 
-//   return currencySymbol;
-// }
+    const result = currencies[0].symbol;
 
+    return result;
+  } catch (error) {
+    // console.error(error);
+    res.status(500).send("Error getting currency data");
+  }
+};
+
+module.exports = { currency };
