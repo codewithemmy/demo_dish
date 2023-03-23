@@ -9,11 +9,11 @@ const RegistrationSchema = new mongoose.Schema(
       type: String,
     },
     vehicleSerialNo: { type: String },
-    BankAccount: { type: String },
+    accountnumber: { type: String },
     insuranceNo: { type: String },
     deliveryInsuranceNo: { type: String },
     driverLicenseNo: { type: String },
-    sortCode: { type: String },
+    sortcode: { type: String },
     rider: {
       type: mongoose.Schema.ObjectId,
       ref: "Rider",

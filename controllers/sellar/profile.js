@@ -1,4 +1,4 @@
-const Sellar = require("../../models/sellarModel/Sellar");
+const Rider = require("../../models/riderModel/Rider");
 const fs = require("fs");
 const { Readable } = require("stream");
 const sharp = require("sharp");
@@ -18,19 +18,21 @@ const bufferToStream = (buffer) => {
   return readable;
 };
 
-//get Sellar profile
-const getSellarProfile = async (req, res) => {
-  const sellar = await Sellar.find({ _id: req.user.userId }).select(
-    "-password"
-  );
-
-  res.status(200).json({ profile: sellar });
+//get profile
+const getProfile = async (req, res) => {
+  const riderId = req.params.id;
+  if (riderId) {
+    const profile = await Rider.find({ _id: riderId }).select(
+      "-verificationToken -password"
+    );
+    return res.status(200).json(profile);
+  }
 };
 
 //udpdate profile
-const updateSellarProfile = async (req, res) => {
-  const sellarId = req.params.id;
-  if (sellarId) {
+const updateProfile = async (req, res) => {
+  const riderId = req.params.id;
+  if (riderId) {
     let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
     const buffer = Buffer.from(converts, "base64");
 
@@ -39,7 +41,7 @@ const updateSellarProfile = async (req, res) => {
       //use clodinary as a promise using the uploadStream method
       return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { folder: "Sellar Image Profile" },
+          { folder: "DEV" },
           (err, url) => {
             if (err) {
               reject(err);
@@ -56,16 +58,17 @@ const updateSellarProfile = async (req, res) => {
 
     fs.unlinkSync(req.files.image.tempFilePath);
 
-    await Sellar.findByIdAndUpdate(
-      { _id: sellarId },
+    const profile = await Rider.findByIdAndUpdate(
+      { _id: riderId },
       { image: uri.secure_url, ...req.body },
       { new: true, runValidators: true }
     );
-    return res
-      .status(200)
-      .json({ msg: `profile update successful`, iage_url: uri.secure_url });
+    return res.status(200).json({ msg: `profile update successful` });
   }
   return res.status(400).json({ msg: `unable to update profile` });
 };
 
-module.exports = { getSellarProfile, updateSellarProfile };
+module.exports = {
+  getProfile,
+  updateProfile,
+};
