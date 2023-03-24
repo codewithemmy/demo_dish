@@ -2,6 +2,7 @@ const express = require("express");
 const {
   getProfile,
   updateProfile,
+  createSupport,
 } = require("../../controllers/rider/profile");
 const {
   register,
@@ -11,7 +12,6 @@ const {
   login,
   riderAvailable,
 } = require("../../controllers/rider/riderAuth");
-
 
 const auth = require("../../riderMiddleware/authentication");
 
@@ -31,5 +31,8 @@ router.route("/updateProfile/:id").patch(updateProfile);
 
 //rider available
 router.route("/riderAvailable").patch(auth, riderAvailable);
+
+//support
+router.route("/support").post(auth, createSupport);
 
 module.exports = router;
