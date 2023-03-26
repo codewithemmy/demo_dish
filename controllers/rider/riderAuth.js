@@ -25,7 +25,7 @@ const register = async (req, res) => {
 
   //send Mail
   mailTransport.sendMail({
-    from: '"Aflilish" <Afrilish@gmail.com>', // sender address
+    from: '"Aflilish" <afrilish@afrilish.com>', // sender address
     to: email, // list of receivers
     subject: "VERIFY YOUR EMAIL ACCOUNT", // Subject line
     html: `Hello, ${fullname}, kindly verify your account with this otp:<h4>${verificationToken}</h4>`, // html body
@@ -102,7 +102,7 @@ const verifyEmail = async (req, res) => {
 
   //send Mail
   mailTransport.sendMail({
-    from: '"Afrilish" <Afrilish@gmail.com>', // sender address
+    from: '"Afrilish" <afrilish@afrilish.com>', // sender address
     to: rider.email, // list of receivers
     subject: "MAIL IS VERIFIED", // Subject line
     html: `<h4> Hello, ${rider.fullname}</h4> <h2>Congrats</h2> you are now verified,you can login now`, // html body

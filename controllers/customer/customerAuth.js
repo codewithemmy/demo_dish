@@ -31,7 +31,7 @@ const register = async (req, res) => {
   });
   //send Mail
   mailTransport.sendMail({
-    from: '"Afrilish" <afrlish@gmail.com>', // sender address
+    from: '"Afrilish" <afrilish@afrilish.com>', // sender address
     to: email, // list of receivers
     subject: "AFRILISH REGISTRATION SUCCESSFUL", // Subject line
     html: `Hello, ${firstName}, welcome to the best cuisine delicacies. Your registration with Afrilish is success.</h4>`, // html body
@@ -95,7 +95,7 @@ const forgotPassword = async (req, res) => {
 
     // send email
     mailTransport.sendMail({
-      from: '"Afrilish" <afrlish@gmail.com>', // sender address
+      from: '"Afrilish" <afrilish@afrilish.com>', // sender address
       to: email,
       subject: "AFRILISH: Reset you account",
       html: `Hi, kindly reset your password with this token: <h4>${passwordToken}</h4>`,
