@@ -33,8 +33,9 @@ const OrderSchema = new mongoose.Schema(
     totalAmount: { type: Number },
     orderDate: { type: Date },
     paymentResponse: { type: String },
+    ridersFee: { type: Number },
     marketPlace: { type: Number, default: 2.99 },
-    deliveryFee: { type: Number, default: 2.0 },
+    serviceCharge: { type: Number},
     orderStatus: {
       type: String,
       enum: [

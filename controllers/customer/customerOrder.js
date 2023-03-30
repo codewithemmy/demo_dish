@@ -43,20 +43,15 @@ const createOrder = async (req, res) => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
 
-    // res.send(
+    // console.log(
     //   `The distance between the two locations is ${distance.toFixed(
     //     2
     //   )} kilometers.`
     // );
-    console.log(
-      `The distance between the two locations is ${distance.toFixed(
-        2
-      )} kilometers.`
-    );
 
     const kilometers = distance.toFixed(2);
 
-    // riderFee = kilometers * s
+    let ridersFee = kilometers * 2;
 
     //get the store location type and coordinates
     const locationType = store.location.type;
@@ -108,6 +103,8 @@ const createOrder = async (req, res) => {
         currency: "gbp",
       });
 
+      let serviceCharge = (10 * totalPrice) / 100;
+
       //create order
       const currentOrder = await Order.create({
         orderID: orderId,
@@ -121,7 +118,9 @@ const createOrder = async (req, res) => {
           coordinates: locationCoordinates,
         },
         store: storeId,
-        sellarId: sellarId,
+        ridersFee,
+        serviceCharge,
+        sellarId,
         clientSecret: "paymentIntent.client_secret",
         readyTime: "",
         remarks: "",
