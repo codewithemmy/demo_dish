@@ -105,6 +105,8 @@ const createOrder = async (req, res) => {
 
       let serviceCharge = (10 * totalPrice) / 100;
 
+      console.log(paymentIntent);
+
       //create order
       const currentOrder = await Order.create({
         orderID: orderId,
