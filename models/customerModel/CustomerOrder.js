@@ -67,6 +67,7 @@ const OrderSchema = new mongoose.Schema(
       default: "no",
     },
     remarks: { type: String },
+    addNote: { type: String },
     readyTime: { type: String },
     paymentIntentId: {
       type: String,
