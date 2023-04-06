@@ -6,7 +6,7 @@ const { mailTransport } = require("../../utils/sendEmail");
 
 //register sellar
 const register = async (req, res) => {
-  const { firstName, surname, email, phonenumber, password } = req.body;
+  const { fullName, email } = req.body;
 
   const emailAlreadyExists = await Customer.findOne({ email });
   if (emailAlreadyExists) {
@@ -16,11 +16,7 @@ const register = async (req, res) => {
   }
 
   const customer = await Customer.create({
-    firstName,
-    surname,
-    email,
-    phonenumber,
-    password,
+    ...req.body,
     orders: [],
   });
 
@@ -29,7 +25,7 @@ const register = async (req, res) => {
     from: '"Afrilish" <afrilish@afrilish.com>', // sender address
     to: email, // list of receivers
     subject: "AFRILISH REGISTRATION SUCCESSFUL", // Subject line
-    html: `Hello, ${firstName}, welcome to the best cuisine delicacies. Your registration with Afrilish is success.</h4>`, // html body
+    html: `Hello, ${fullName}, welcome to the best cuisine delicacies. Your registration with Afrilish is success.</h4>`, // html body
   });
 
   return res.status(StatusCodes.CREATED).json({
