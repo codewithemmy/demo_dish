@@ -23,12 +23,7 @@ const register = async (req, res) => {
     password,
     orders: [],
   });
-  let token = customer.createJWT({
-    userId: customer._id,
-    firstName: customer.firstName,
-    surname: customer.surname,
-    email: customer.email,
-  });
+
   //send Mail
   mailTransport.sendMail({
     from: '"Afrilish" <afrilish@afrilish.com>', // sender address
@@ -60,6 +55,7 @@ const login = async (req, res) => {
       .json({ msg: "Invalid username or password" });
   }
 
+  //compare password
   const isPasswordCorrect = await customer.comparePassword(password);
   if (!isPasswordCorrect) {
     return res
@@ -67,6 +63,7 @@ const login = async (req, res) => {
       .json({ msg: "Password is not valid" });
   }
 
+  //compare password
   let token = customer.createJWT({
     userId: customer._id,
     firstName: customer.firstName,
@@ -101,6 +98,7 @@ const forgotPassword = async (req, res) => {
       html: `Hi, kindly reset your password with this token: <h4>${passwordToken}</h4>`,
     });
 
+    //set otp timeout to 60 ten minutes
     const tenMinutes = 1000 * 60 * 10;
     const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
 

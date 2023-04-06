@@ -3,6 +3,7 @@ const Customer = require("../../models/customerModel/Customer");
 const StoreDetails = require("../../models/sellarModel/StoreDetails");
 const Food = require("../../models/sellarModel/Food");
 const { StatusCodes } = require("http-status-codes");
+const Transaction = require("../../models/customerModel/Transaction");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 // Helper function to convert degrees to radians
@@ -14,16 +15,20 @@ function deg2rad(deg) {
 const createOrder = async (req, res) => {
   //grab the login customer
   const customer = req.user;
+
   if (customer) {
     //get the store id
     const storeId = req.params.id;
+
     //get the store and customer using findOne
     const store = await StoreDetails.findOne({ _id: storeId });
 
+    // find the customer coordinates
     const customerCoordinates = await Customer.findOne({
       _id: customer.userId,
     });
 
+    //create a container for both lng and lat
     const customerlng = customerCoordinates.location.coordinates[0];
     const customerlat = customerCoordinates.location.coordinates[1];
     const storelng = store.location.coordinates[0];
@@ -74,6 +79,7 @@ const createOrder = async (req, res) => {
       .in(cart.map((item) => item._id))
       .exec();
 
+    //map food and compare with id from req.body array
     foods.map((food) => {
       cart.map(({ _id, quantity }) => {
         if (food._id == _id) {
@@ -88,8 +94,6 @@ const createOrder = async (req, res) => {
     const marketPlace = 3;
 
     const totalPrice = netAmount + deliveryFee + marketPlace;
-
-    // get client secret
 
     //create order with item description
     if (cartItems) {
@@ -129,9 +133,19 @@ const createOrder = async (req, res) => {
         remarks: "",
       });
 
+      //create transaction for order
+      await Transaction.create({
+        customerId: customer.userId,
+        storeId,
+        orderId: currentOrder._id,
+        amount: totalPrice,
+        ridersFee,
+        transactionId: paymentIntent.id,
+      });
+
       if (currentOrder) {
         profile.orders.push(currentOrder);
-        const profileResponse = await profile.save();
+        await profile.save();
 
         return res
           .status(200)
@@ -139,7 +153,6 @@ const createOrder = async (req, res) => {
       }
     }
     return res.status(400).json({ msg: "Your cart is empty" });
-    //finally update orders to user account
   }
   return res.status(400).json({ msg: "error with creating order" });
 };
@@ -195,6 +208,7 @@ const deleteOrder = async (req, res) => {
     .json({ msg: `error deleting order` });
 };
 
+//update order controller
 const updateOrder = async (req, res) => {
   const { id: orderId } = req.params;
   const { paymentIntentId } = req.body;
@@ -210,6 +224,7 @@ const updateOrder = async (req, res) => {
   return res.status(200).json(order);
 };
 
+//confirm delivery
 const confirmDelivery = async (req, res) => {
   const deliveryId = req.params.id;
   const { confirmDelivery } = req.body;

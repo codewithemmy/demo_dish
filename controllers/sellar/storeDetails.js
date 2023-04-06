@@ -1,8 +1,8 @@
+const StoreDetails = require("../../models/sellarModel/StoreDetails");
 const { StatusCodes } = require("http-status-codes");
 const fs = require("fs");
 const { Readable } = require("stream");
 const sharp = require("sharp");
-const StoreDetails = require("../../models/sellarModel/StoreDetails");
 require("../../utils/cloudinary");
 
 //require cloudinary version 2
@@ -33,36 +33,37 @@ const createStoreDetails = async (req, res) => {
     email,
     phone,
   } = req.body;
+
   const sellar = req.user.userId;
   if (!storeName || !cuisineType || !openHours) {
     return res.status(400).json({ msg: `all fields should be filled` });
   }
 
-  // let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
-  // const buffer = Buffer.from(converts, "base64");
+  let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
+  const buffer = Buffer.from(converts, "base64");
 
-  // const convert_url = async (req) => {
-  //   const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
-  //   //use clodinary as a promise using the uploadStream method
-  //   return new Promise((resolve, reject) => {
-  //     const stream = cloudinary.uploader.upload_stream(
-  //       { folder: "DEV" },
-  //       (err, url) => {
-  //         if (err) {
-  //           reject(err);
-  //         } else {
-  //           resolve(url);
-  //         }
-  //       }
-  //     );
-  //     bufferToStream(data).pipe(stream);
-  //   });
-  // };
+  const convert_url = async (req) => {
+    const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
+    //use clodinary as a promise using the uploadStream method
+    return new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "DEV" },
+        (err, url) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(url);
+          }
+        }
+      );
+      bufferToStream(data).pipe(stream);
+    });
+  };
 
-  // const uri = await convert_url(req);
-  // // console.log(uri.secure_url);
+  const uri = await convert_url(req);
+  // console.log(uri.secure_url);
 
-  // fs.unlinkSync(req.files.image.tempFilePath);
+  fs.unlinkSync(req.files.image.tempFilePath);
 
   if (sellar) {
     const storeDetails = await StoreDetails.create({
@@ -78,7 +79,7 @@ const createStoreDetails = async (req, res) => {
       minimumOrder: minimumOrder,
       description: description,
       serviceAvailable: false,
-      // storeImage: uri.secure_url,
+      storeImage: uri.secure_url,
       storeOwner: sellar,
     });
 
@@ -133,7 +134,9 @@ const editStoreDetails = async (req, res) => {
       minimumOrder,
       description,
     } = req.body;
+
     const editedStore = await StoreDetails.findById(storeDetailsId);
+
     editedStore.storeName = storeName;
     editedStore.location = location;
     editedStore.cuisineType = cuisineType;
@@ -147,13 +150,13 @@ const editStoreDetails = async (req, res) => {
     const result = await editedStore.save();
 
     return res.status(StatusCodes.CREATED).json({
-      msg: "Store has been created successfully",
+      msg: "Store has been updated successfully",
       result,
     });
   }
   return res
     .status(StatusCodes.BAD_REQUEST)
-    .json({ msg: "error in creating business information" });
+    .json({ msg: "unable to update" });
 };
 
 //delete store details

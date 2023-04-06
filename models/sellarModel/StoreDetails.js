@@ -21,6 +21,9 @@ const StoreDetailsSchema = new mongoose.Schema(
       type: { type: String },
       coordinates: [],
     },
+    city: {
+      type: { type: String },
+    },
     cuisineType: {
       type: String,
     },

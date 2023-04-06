@@ -35,6 +35,9 @@ const CustomerSchema = new mongoose.Schema(
     passwordToken: {
       type: String,
     },
+    wallet: {
+      balance: Number,
+    },
     address: { type: String },
     location: {
       type: { type: String },

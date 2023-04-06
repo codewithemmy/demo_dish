@@ -1,6 +1,8 @@
 const CustomerAddress = require("../../models/customerModel/CustomerAddress");
 const { StatusCodes } = require("http-status-codes");
 
+
+//post address
 const postAddress = async (req, res) => {
   const customer = req.user.userId;
   if (customer) {

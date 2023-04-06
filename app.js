@@ -54,6 +54,9 @@ const riderRouter = require("./routes/riderRoute/orderRoute");
 const riderDocumentRouter = require("./routes/riderRoute/documentRoute");
 const getRiderRouter = require("./routes/sellarRoute/rider");
 
+//for webhook
+const webhookRouter = require("./routes/customer/customerTransaction");
+
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -92,6 +95,8 @@ app.use("/api/v1", menuRouter);
 app.use("/api/v1", foodRouter);
 app.use("/api/v1", getOrderRouter);
 app.use("/api/v1", getRiderRouter);
+//for webhook
+app.use("/api/v1", webhookRouter);
 
 //serve exprss json
 app.use(express.json());

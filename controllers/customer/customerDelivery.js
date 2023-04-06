@@ -1,6 +1,7 @@
 const CustomerDelivery = require("../../models/customerModel/CustomerDelivery");
 const { StatusCodes } = require("http-status-codes");
 
+// create delivery post
 const createDelivery = async (req, res) => {
   const customer = req.user.userId;
   if (customer) {
@@ -52,6 +53,8 @@ const updateDeliveryType = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ msg: `cannot identify id: ${deliveryId}` });
     }
+
+    //update customer delivery post
     const result = await CustomerDelivery.findByIdAndUpdate(
       { _id: deliveryId },
       req.body,

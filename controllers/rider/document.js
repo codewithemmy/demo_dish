@@ -19,6 +19,7 @@ const bufferToStream = (buffer) => {
   return readable;
 };
 
+//upload multiple document
 const multipleDoc = async (req, res) => {
   const photos = req.files.image;
   const email = req.user.email.toString();
@@ -44,41 +45,43 @@ const multipleDoc = async (req, res) => {
 
 //insert uploaded pictures/photos
 const insertDoc = async (req, res) => {
-  // const user = req.user;
-  // if (user) {
-  const { type } = req.body;
+  const user = req.user;
+  if (user) {
+    const { type } = req.body;
 
-  let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
-  const buffer = Buffer.from(converts, "base64");
-  //create function that uses async/await while return promise with cloudinary & sharp package
-  const convert_url = async (req) => {
-    const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
-    return new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: `${type}` },
-        (err, url) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(url);
+    let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
+    const buffer = Buffer.from(converts, "base64");
+
+    //create function that uses async/await while return promise with cloudinary & sharp package
+    const convert_url = async (req) => {
+      const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: `Afrilish-Riders-Document-${type}` },
+          (err, url) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(url);
+            }
           }
-        }
-      );
-      bufferToStream(data).pipe(stream);
+        );
+        bufferToStream(data).pipe(stream);
+      });
+    };
+
+    const uri = await convert_url(req);
+
+    //created document with cloudinary secure url
+    const document = await Document.create({
+      document: uri.secure_url,
+      type,
     });
-  };
 
-  const uri = await convert_url(req);
+    return res.status(200).json({ msg: `Document Upload Successful` });
+  }
 
-  //find and update item with cloudinary secure url
-  const document = await Document.create({
-    document: uri.secure_url,
-    type,
-  });
-
-  return res.status(200).json({ msg: `Document Upload Successful` });
-
-  // return res.status(400).json({ msg: `unable to upload document` });
+  return res.status(400).json({ msg: `unable to upload document` });
 };
 
 module.exports = { multipleDoc, insertDoc };
