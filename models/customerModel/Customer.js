@@ -7,7 +7,7 @@ const CustomerSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      required: true,
+      required: [true, "Please provide your first name"],
     },
     email: {
       type: String,

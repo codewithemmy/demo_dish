@@ -172,6 +172,69 @@ const getOrders = async (req, res) => {
   return res.status(400).json({ msg: `error getting customer orders` });
 };
 
+//get all customer orders
+const getCustomerOrders = async (req, res) => {
+  const customer = req.user.userId;
+  if (customer) {
+    const customerOrders = await Order.find({ orderedBy: customer }).populate(
+      "items.food"
+    );
+    if (!customerOrders) {
+      return res.status(404).json({ msg: `order not available` });
+    }
+    return res.status(200).json(customerOrders);
+  }
+  return res.status(400).json({ msg: `error getting customer orders` });
+};
+
+//get all pending  orders
+const getCompletedOrders = async (req, res) => {
+  const customer = req.user.userId;
+  if (customer) {
+    const customerOrders = await Order.find({
+      orderedBy: customer,
+      orderStatus: "completed",
+    }).populate("items.food");
+    if (!customerOrders) {
+      return res.status(404).json({ msg: `order not available` });
+    }
+    return res.status(200).json(customerOrders);
+  }
+  return res.status(400).json({ msg: `error getting customer orders` });
+};
+
+//get all pending  orders
+const getPendingOrders = async (req, res) => {
+  const customer = req.user.userId;
+  if (customer) {
+    const customerOrders = await Order.find({
+      orderedBy: customer,
+      orderStatus: "pending",
+    }).populate("items.food");
+    if (!customerOrders) {
+      return res.status(404).json({ msg: `order not available` });
+    }
+    return res.status(200).json(customerOrders);
+  }
+  return res.status(400).json({ msg: `error getting customer orders` });
+};
+
+//get all waiting  orders
+const getWaitingOrders = async (req, res) => {
+  const customer = req.user.userId;
+  if (customer) {
+    const customerOrders = await Order.find({
+      orderedBy: customer,
+      orderStatus: "waiting",
+    }).populate("items.food");
+    if (!customerOrders) {
+      return res.status(404).json({ msg: `order not available` });
+    }
+    return res.status(200).json(customerOrders);
+  }
+  return res.status(400).json({ msg: `error getting customer orders` });
+};
+
 //get customers order by id
 const getOrderById = async (req, res) => {
   const { id: orderId } = req.params;
@@ -251,4 +314,8 @@ module.exports = {
   deleteOrder,
   updateOrder,
   confirmDelivery,
+  getCustomerOrders,
+  getPendingOrders,
+  getCompletedOrders,
+  getWaitingOrders,
 };
