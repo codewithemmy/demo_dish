@@ -2,6 +2,7 @@ const Rider = require("../../models/riderModel/Rider");
 const crypto = require("crypto");
 const createHash = require("../../utils/createHash");
 const { mailTransport } = require("../../utils/sendEmail");
+const bcrypt = require("bcryptjs");
 // const { randomNumberGenerator } = require("../../utils/random");
 
 //register Rider
@@ -187,6 +188,34 @@ const riderAvailable = async (req, res) => {
   }
 };
 
+//change Password
+const changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (req.user) {
+    const rider = await Rider.findOne({ _id: req.user.userId });
+    if (!rider) {
+      return res.status(404).json({ msg: `unable to find rider` });
+    }
+
+    //compare password
+    const isPasswordCorrect = await customer.comparePassword(oldPassword);
+    if (!isPasswordCorrect) {
+      return res
+        .status(401)
+        .json({ msg: `old password does not match with current password` });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
+
+    await rider.updateOne({ password: hash });
+
+    return res.status(200).json({ msg: `Password Successfully changed` });
+  }
+
+  return res.status(400).json({ msg: `unable to change password` });
+};
+
 //export modules
 module.exports = {
   register,
@@ -196,4 +225,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   riderAvailable,
+  changePassword,
 };

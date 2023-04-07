@@ -11,6 +11,7 @@ const {
   resetPassword,
   login,
   riderAvailable,
+  changePassword,
 } = require("../../controllers/rider/riderAuth");
 
 const auth = require("../../riderMiddleware/authentication");
@@ -22,6 +23,7 @@ router.route("/verify-mail/:id").post(verifyEmail);
 router.route("/login").post(login);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password").post(resetPassword);
+router.route("/change-password").post(auth, changePassword);
 
 // router.route("/logout/:id").delete(logout);
 

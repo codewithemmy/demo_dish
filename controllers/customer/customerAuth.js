@@ -3,6 +3,7 @@ const { StatusCodes } = require("http-status-codes");
 const crypto = require("crypto");
 const createHash = require("../../utils/createHash");
 const { mailTransport } = require("../../utils/sendEmail");
+const bcrypt = require("bcryptjs");
 
 //register sellar
 const register = async (req, res) => {
@@ -136,10 +137,39 @@ const resetPassword = async (req, res) => {
     .json({ msg: "your password is sucessfully reset" });
 };
 
+//change Password
+const changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (req.user) {
+    const customer = await Customer.findOne({ _id: req.user.userId });
+    if (!customer) {
+      return res.status(404).json({ msg: `unable to find user` });
+    }
+
+    //compare password
+    const isPasswordCorrect = await customer.comparePassword(oldPassword);
+    if (!isPasswordCorrect) {
+      return res
+        .status(401)
+        .json({ msg: `old password does not match with current password` });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
+
+    await customer.updateOne({ password: hash });
+
+    return res.status(200).json({ msg: `Password Successfully changed` });
+  }
+
+  return res.status(400).json({ msg: `unable to change password` });
+};
+
 //export modules
 module.exports = {
   register,
   login,
   forgotPassword,
   resetPassword,
+  changePassword,
 };
