@@ -7,13 +7,17 @@ const MenuSchema = new mongoose.Schema(
     storeOwner: {
       type: mongoose.Schema.ObjectId,
       ref: "Sellar",
-      required: [true, "Please provide sellar"],
     },
     store: {
       type: mongoose.Schema.ObjectId,
       ref: "StoreDetails",
-      required: [true, "Please provide sellar"],
     },
+    food: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "SellarFood",
+      },
+    ],
   },
   { timestamps: true }
 );

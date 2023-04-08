@@ -29,20 +29,27 @@ const getMenuFood = async (req, res) => {
 
 //get single store, menu, foodMenu
 const getSingleStoreDetails = async (req, res) => {
-  const menuId = req.params.menuId;
   const storeId = req.params.storeId;
 
-  if (menuId && storeId) {
-    const food = await SellarFood.find({ menu: menuId });
-    const storeDetails = await StoreDetails.findById(storeId);
-    const menu = await Menu.find({ store: storeId });
-    if (!food && !store) {
+  if (storeId) {
+    const storeDetails = await StoreDetails.findOne({ _id: storeId }).populate({
+      path: "menuId",
+    });
+
+    if (!storeDetails) {
       return res.status(400).json({
-        msg: `cannot find menuId: ${menuId} or storeId ${storeId}  in params`,
+        msg: `cannot find storeId ${storeId}  in params`,
       });
     }
 
-    return res.status(200).json({ food, storeDetails, menu });
+    // Loop through each menu item and populate its nested food items
+    for (const menuItem of storeDetails.menuId) {
+      await menuItem.populate("food").execPopulate();
+    }
+
+    const food = await SellarFood.find({ storeOwner: storeDetails.storeOwner });
+
+    return res.status(200).json({ storeDetails, food });
   }
 
   return res.status(400).json({ msg: "unable to get store, food, and menu" });

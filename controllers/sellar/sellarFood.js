@@ -67,7 +67,7 @@ const createFood = async (req, res) => {
   fs.unlinkSync(req.files.image.tempFilePath);
 
   if (sellar) {
-    const food = await SellarFood.create({
+    const createfood = await SellarFood.create({
       foodImage: uri.secure_url,
       foodName: foodName,
       price: price,
@@ -77,9 +77,17 @@ const createFood = async (req, res) => {
       shortInfo: shortInfo,
     });
 
+    await Menu.findOneAndUpdate(
+      {
+        _id: menuId,
+      },
+      { $push: { food: createfood } },
+      { new: true, runValidators: true }
+    );
+
     return res
       .status(StatusCodes.CREATED)
-      .json({ msg: "food successfully added", food });
+      .json({ msg: "food successfully added", createfood });
   }
   return res
     .status(StatusCodes.BAD_REQUEST)

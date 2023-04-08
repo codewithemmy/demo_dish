@@ -1,6 +1,8 @@
 const { StatusCodes } = require("http-status-codes");
+const mongoose = require("mongoose");
 const Menu = require("../../models/sellarModel/Menu");
 const SellarFood = require("../../models/sellarModel/SellarFood");
+const StoreDetails = require("../../models/sellarModel/StoreDetails");
 
 //create menu
 const createMenu = async (req, res) => {
@@ -17,16 +19,31 @@ const createMenu = async (req, res) => {
   }
 
   if (sellar) {
-    const menu = await Menu.create({
+    const createMenu = await Menu.create({
       menuTitle: menuTitle,
       description: description,
       storeOwner: sellar,
       store: storeId,
     });
 
+    const store = await StoreDetails.findOne({
+      storeOwner: req.user.userId,
+    });
+
+    
+    console.log(store);
+
+    await StoreDetails.findOneAndUpdate(
+      {
+        storeOwner: req.user.userId,
+      },
+      { $push: { menuId: createMenu } },
+      { new: true, runValidators: true }
+    );
+
     return res
       .status(StatusCodes.CREATED)
-      .json({ msg: "Menu Successfully created", menu });
+      .json({ msg: "Menu Successfully created", createMenu });
   }
   return res
     .status(StatusCodes.BAD_REQUEST)
