@@ -35,6 +35,7 @@ const CustomerSchema = new mongoose.Schema(
       balance: Number,
     },
     address: { type: String },
+    image: { type: String },
     location: {
       type: { type: String },
       coordinates: [],

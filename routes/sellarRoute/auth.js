@@ -10,7 +10,6 @@ const {
   resetPassword,
   changePassword,
 } = require("../../controllers/sellar/auth");
-
 const auth = require("../../middleware/authentication");
 
 router.route("/register").post(register);
