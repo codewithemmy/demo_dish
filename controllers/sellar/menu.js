@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const Menu = require("../../models/sellarModel/Menu");
-const Food = require("../../models/sellarModel/Food");
+const SellarFood = require("../../models/sellarModel/SellarFood");
 
 //create menu
 const createMenu = async (req, res) => {
@@ -119,7 +119,7 @@ const getMenuFood = async (req, res) => {
   const { id: menuId } = req.params;
   const sellar = req.user.userId;
   if (sellar) {
-    const food = await Food.find({ menu: menuId, storeOwner: sellar });
+    const food = await SellarFood.find({ menu: menuId, storeOwner: sellar });
     if (!food) {
       return res
         .status(StatusCodes.BAD_REQUEST)

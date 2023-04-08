@@ -1,5 +1,5 @@
 const Menu = require("../../models/sellarModel/Menu");
-const Food = require("../../models/sellarModel/Food");
+const SellarFood = require("../../models/sellarModel/SellarFood");
 const StoreDetails = require("../../models/sellarModel/StoreDetails");
 
 //get menu
@@ -14,7 +14,7 @@ const getMenuFood = async (req, res) => {
   const { id: menuId } = req.params;
 
   if (menuId) {
-    const food = await Food.find({ menu: menuId });
+    const food = await SellarFood.find({ menu: menuId });
     if (!food) {
       return res
         .status(400)
@@ -33,7 +33,7 @@ const getSingleStoreDetails = async (req, res) => {
   const storeId = req.params.storeId;
 
   if (menuId && storeId) {
-    const food = await Food.find({ menu: menuId });
+    const food = await SellarFood.find({ menu: menuId });
     const storeDetails = await StoreDetails.findById(storeId);
     const menu = await Menu.find({ store: storeId });
     if (!food && !store) {

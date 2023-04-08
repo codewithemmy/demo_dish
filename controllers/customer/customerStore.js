@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const StoreDetails = require("../../models/sellarModel/StoreDetails");
 const Customer = require("../../models/customerModel/Customer");
-const Food = require("../../models/sellarModel/Food");
+const SellarFood = require("../../models/sellarModel/SellarFood");
 
 //get store
 const getStore = async (req, res) => {
@@ -11,7 +11,7 @@ const getStore = async (req, res) => {
 
 //get food
 const getFood = async (req, res) => {
-  const food = await Food.find({});
+  const food = await SellarFood.find({});
   return res.status(StatusCodes.CREATED).json(food);
 };
 

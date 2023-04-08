@@ -1,7 +1,7 @@
 const Order = require("../../models/customerModel/CustomerOrder");
 const Customer = require("../../models/customerModel/Customer");
 const StoreDetails = require("../../models/sellarModel/StoreDetails");
-const Food = require("../../models/sellarModel/Food");
+const SellarFood = require("../../models/sellarModel/SellarFood");
 const { StatusCodes } = require("http-status-codes");
 const Transaction = require("../../models/customerModel/Transaction");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
@@ -74,7 +74,7 @@ const createOrder = async (req, res) => {
     let sellarId;
 
     //calculate order amount
-    const foods = await Food.find()
+    const foods = await SellarFood.find()
       .where("_id")
       .in(cart.map((item) => item._id))
       .exec();

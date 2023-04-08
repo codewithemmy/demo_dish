@@ -1,5 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
-const Food = require("../../models/sellarModel/Food");
+const SellarFood = require("../../models/sellarModel/SellarFood");
 const Menu = require("../../models/sellarModel/Menu");
 const fs = require("fs");
 const { Readable } = require("stream");
@@ -67,7 +67,7 @@ const createFood = async (req, res) => {
   fs.unlinkSync(req.files.image.tempFilePath);
 
   if (sellar) {
-    const food = await Food.create({
+    const food = await SellarFood.create({
       foodImage: uri.secure_url,
       foodName: foodName,
       price: price,
@@ -124,7 +124,7 @@ const editFood = async (req, res) => {
   fs.unlinkSync(req.files.image.tempFilePath);
 
   if (sellar) {
-    const food = await Food.findByIdAndUpdate(
+    const food = await SellarFood.findByIdAndUpdate(
       { _id: foodId },
       {
         foodImage: uri.secure_url,
@@ -160,7 +160,7 @@ const deleteFood = async (req, res) => {
   }
 
   if (sellar) {
-    const food = await Food.findByIdAndDelete({ _id: deleteId });
+    const food = await SellarFood.findByIdAndDelete({ _id: deleteId });
 
     return res
       .status(StatusCodes.CREATED)
@@ -175,7 +175,7 @@ const deleteFood = async (req, res) => {
 const getFood = async (req, res) => {
   const sellar = req.user.userId;
   if (sellar) {
-    const food = await Food.find({ storeOwner: sellar }).populate({
+    const food = await SellarFood.find({ storeOwner: sellar }).populate({
       path: "menu",
     });
 
@@ -191,7 +191,7 @@ const foodAvailable = async (req, res) => {
   const sellar = req.user.userId;
   if (sellar) {
     const foodId = req.params.id;
-    const food = await Food.findOne({
+    const food = await SellarFood.findOne({
       _id: foodId,
     });
     if (!food) {
