@@ -22,8 +22,8 @@ const FoodSchema = new mongoose.Schema(
     },
     foodavailable: { type: Boolean, default: false },
     menu: {
-      type: String,
-      required: [true, "provide menu id"],
+      type: mongoose.Schema.ObjectId,
+      ref: "Menu",
     },
     storeOwner: {
       type: mongoose.Schema.ObjectId,

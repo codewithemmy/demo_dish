@@ -21,7 +21,11 @@ const bufferToStream = (buffer) => {
 
 //create store details
 const createStoreDetails = async (req, res) => {
-  const { storeName, cuisineType, openHours } = req.body;
+  const {
+    storeName,
+    cuisineType,
+    openHours,
+  } = req.body;
 
   const sellar = req.user.userId;
   if (!storeName || !cuisineType || !openHours) {
