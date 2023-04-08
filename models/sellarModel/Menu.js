@@ -1,21 +1,36 @@
 const mongoose = require("mongoose");
 
-const MenuSchema = new mongoose.Schema(
+const FoodSchema = new mongoose.Schema(
   {
-    menuTitle: { type: String, required: [true, "provide menu name"] },
-    description: { type: String, required: [true, "provide menu description"] },
+    foodImage: {
+      type: String,
+    },
+    foodName: {
+      type: String,
+      required: [true, "provide food name"],
+    },
+    price: {
+      type: Number,
+      required: [true, "provide food price"],
+    },
+    nutritionalFacts: {
+      type: String,
+      required: [true, "provide nutritional facts of food"],
+    },
+    shortInfo: {
+      type: String,
+    },
+    foodavailable: { type: Boolean, default: false },
+    menu: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Menu",
+    },
     storeOwner: {
       type: mongoose.Schema.ObjectId,
       ref: "Sellar",
-      required: [true, "Please provide sellar"],
-    },
-    store: {
-      type: mongoose.Schema.ObjectId,
-      ref: "StoreDetails",
-      required: [true, "Please provide sellar"],
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Menu", MenuSchema);
+module.exports = mongoose.model("Food", FoodSchema);

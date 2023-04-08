@@ -175,7 +175,9 @@ const deleteFood = async (req, res) => {
 const getFood = async (req, res) => {
   const sellar = req.user.userId;
   if (sellar) {
-    const food = await Food.find({ storeOwner: sellar });
+    const food = await Food.find({ storeOwner: sellar }).populate({
+      path: "menu",
+    });
 
     return res.status(StatusCodes.CREATED).json(food);
   }

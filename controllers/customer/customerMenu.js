@@ -1,5 +1,6 @@
 const Menu = require("../../models/sellarModel/Menu");
-const Food = require('../../models/sellarModel/Food');
+const Food = require("../../models/sellarModel/Food");
+const StoreDetails = require("../../models/sellarModel/StoreDetails");
 
 //get menu
 const getStoreMenu = async (req, res) => {
@@ -26,4 +27,25 @@ const getMenuFood = async (req, res) => {
   return res.status(400).json({ msg: "error while getting menu with food" });
 };
 
-module.exports = { getStoreMenu, getMenuFood };
+//get single store, menu, foodMenu
+const getSingleStoreDetails = async (req, res) => {
+  const menuId = req.params.menuId;
+  const storeId = req.params.storeId;
+
+  if (menuId && storeId) {
+    const food = await Food.find({ menu: menuId });
+    const storeDetails = await StoreDetails.findById(storeId);
+    const menu = await Menu.find({ store: storeId });
+    if (!food && !store) {
+      return res.status(400).json({
+        msg: `cannot find menuId: ${menuId} or storeId ${storeId}  in params`,
+      });
+    }
+
+    return res.status(200).json({ food, storeDetails, menu });
+  }
+
+  return res.status(400).json({ msg: "unable to get store, food, and menu" });
+};
+
+module.exports = { getStoreMenu, getMenuFood, getSingleStoreDetails };

@@ -21,18 +21,7 @@ const bufferToStream = (buffer) => {
 
 //create store details
 const createStoreDetails = async (req, res) => {
-  const {
-    storeName,
-    location,
-    cuisineType,
-    openHours,
-    deliveryFee,
-    minimumOrder,
-    description,
-    address,
-    email,
-    phone,
-  } = req.body;
+  const { storeName, cuisineType, openHours } = req.body;
 
   const sellar = req.user.userId;
   if (!storeName || !cuisineType || !openHours) {
@@ -67,18 +56,8 @@ const createStoreDetails = async (req, res) => {
 
   if (sellar) {
     const storeDetails = await StoreDetails.create({
-      storeName: storeName,
-      cuisineType: cuisineType,
-      location: location,
-      openHours: openHours,
-      deliveryFee: deliveryFee,
+      ...req.body,
       rating: 0,
-      address,
-      email,
-      phone,
-      minimumOrder: minimumOrder,
-      description: description,
-      serviceAvailable: false,
       storeImage: uri.secure_url,
       storeOwner: sellar,
     });
@@ -154,9 +133,7 @@ const editStoreDetails = async (req, res) => {
       result,
     });
   }
-  return res
-    .status(StatusCodes.BAD_REQUEST)
-    .json({ msg: "unable to update" });
+  return res.status(StatusCodes.BAD_REQUEST).json({ msg: "unable to update" });
 };
 
 //delete store details
@@ -204,9 +181,7 @@ const isAvailable = async (req, res) => {
     verifySellar.serviceAvalaible = !verifySellar.serviceAvalaible;
     const result = await verifySellar.save();
 
-    return res
-      .status(200)
-      .json({ msg: `Sellar is now available`});
+    return res.status(200).json({ msg: `Sellar is now available` });
   }
 
   return res
