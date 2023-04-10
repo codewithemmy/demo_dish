@@ -34,6 +34,7 @@ const getSingleStoreDetails = async (req, res) => {
   if (storeId) {
     const storeDetails = await StoreDetails.findOne({ _id: storeId }).populate({
       path: "menuId",
+      select: " -storeOwner -createdAt -updatedAt -__v",
     });
 
     if (!storeDetails) {
@@ -44,7 +45,12 @@ const getSingleStoreDetails = async (req, res) => {
 
     // Loop through each menu item and populate its nested food items
     for (const menuItem of storeDetails.menuId) {
-      await menuItem.populate("food").execPopulate();
+      await menuItem
+        .populate({
+          path: "food",
+          select: "-foodavailable -menu -storeOwner -createdAt -updatedAt -__v",
+        })
+        .execPopulate();
     }
 
     const food = await SellarFood.find({ storeOwner: storeDetails.storeOwner });
