@@ -15,7 +15,7 @@ const CustomerDeliverySchema = new mongoose.Schema(
       default: "rider",
     },
     customer: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Customer",
       required: [true, "Please provide customer"],
     },

@@ -45,7 +45,7 @@ const CustomerSchema = new mongoose.Schema(
     },
     orders: [
       {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: "Order",
       },
     ],
@@ -65,8 +65,7 @@ CustomerSchema.methods.createJWT = function () {
   return jwt.sign(
     {
       userId: this._id,
-      firstName: this.firstName,
-      surname: this.surname,
+      fullName: this.fullName,
       email: this.email,
     },
     process.env.CUSTOMER_JWT_SECRET,

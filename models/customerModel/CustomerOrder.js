@@ -4,13 +4,13 @@ const OrderSchema = new mongoose.Schema(
   {
     orderID: { type: String, required: true },
     assignedRider: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Rider",
     },
     items: [
       {
         food: {
-          type: mongoose.Schema.ObjectId,
+          type: mongoose.Types.ObjectId,
           ref: "Food",
           required: [true, "provide food ID"],
         },
@@ -18,16 +18,16 @@ const OrderSchema = new mongoose.Schema(
       },
     ],
     orderedBy: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Customer",
       required: [true, "Provide customer Id"],
     },
     sellarId: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },
     store: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "StoreDetails",
     },
     totalAmount: { type: Number },
@@ -35,7 +35,7 @@ const OrderSchema = new mongoose.Schema(
     paymentResponse: { type: String },
     ridersFee: { type: Number },
     marketPlace: { type: Number, default: 2.99 },
-    serviceCharge: { type: Number},
+    serviceCharge: { type: Number },
     orderStatus: {
       type: String,
       enum: [
@@ -71,6 +71,10 @@ const OrderSchema = new mongoose.Schema(
     readyTime: { type: String },
     paymentIntentId: {
       type: String,
+    },
+    transaction: {
+      type: mongoose.Types.ObjectId,
+      ref: "Transaction",
     },
     location: {
       type: { type: String, require: true },

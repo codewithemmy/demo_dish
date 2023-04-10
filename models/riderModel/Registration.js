@@ -15,7 +15,7 @@ const RegistrationSchema = new mongoose.Schema(
     driverLicenseNo: { type: String },
     sortcode: { type: String },
     rider: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Rider",
     },
   },

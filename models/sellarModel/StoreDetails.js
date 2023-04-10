@@ -44,12 +44,12 @@ const StoreDetailsSchema = new mongoose.Schema(
     serviceAvalaible: { type: Boolean, default: false },
     menuId: [
       {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: "Menu",
       },
     ],
     storeOwner: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },
   },

@@ -9,7 +9,7 @@ const DocumentSchema = new mongoose.Schema(
       type: String,
     },
     rider: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Rider",
     },
   },

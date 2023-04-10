@@ -16,7 +16,7 @@ const BankDetailsSchema = new mongoose.Schema(
       type: String,
     },
     storeOwner: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },
   },

@@ -5,16 +5,16 @@ const MenuSchema = new mongoose.Schema(
     menuTitle: { type: String, required: [true, "provide menu name"] },
     description: { type: String, required: [true, "provide menu description"] },
     storeOwner: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },
     store: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "StoreDetails",
     },
     food: [
       {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: "SellarFood",
       },
     ],

@@ -22,11 +22,11 @@ const FoodSchema = new mongoose.Schema(
     },
     foodavailable: { type: Boolean, default: false },
     menu: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Menu",
     },
     storeOwner: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },
   },

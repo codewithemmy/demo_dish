@@ -30,7 +30,7 @@ const CustomerAddressSchema = new mongoose.Schema(
       type: Number,
     },
     customer: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Customer",
       required: [true, "Please provide customer"],
     },

@@ -19,7 +19,7 @@ const StoreInfoSchema = new mongoose.Schema(
       required: [true, "provide your day of open after setup"],
     },
     storeOwner: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },
   },

@@ -46,6 +46,10 @@ const RiderSchema = new mongoose.Schema(
     passwordToken: {
       type: String,
     },
+    wallet: {
+      type: Number,
+      default: 0,
+    },
     resetTokenExpirationDate: {
       type: Date,
     },

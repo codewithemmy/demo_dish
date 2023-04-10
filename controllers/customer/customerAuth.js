@@ -47,9 +47,7 @@ const login = async (req, res) => {
   const customer = await Customer.findOne({ email });
 
   if (!customer) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Invalid username or password" });
+    return res.status(404).json({ msg: "cusotmer not found" });
   }
 
   //compare password
@@ -60,16 +58,11 @@ const login = async (req, res) => {
       .json({ msg: "Password is not valid" });
   }
 
-  //compare password
-  let token = customer.createJWT({
-    userId: customer._id,
-    firstName: customer.firstName,
-    surname: customer.surname,
-    email: customer.email,
-  });
+  //create token
+  let token = customer.createJWT();
 
   return res
-    .status(StatusCodes.OK)
+    .status(200)
     .json({ msg: "Login Successful", userId: customer._id, token: token });
 };
 

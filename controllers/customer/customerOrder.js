@@ -98,14 +98,14 @@ const createOrder = async (req, res) => {
     //create order with item description
     if (cartItems) {
       // use stripe calculation
-      const calculateOrderAmount = () => {
-        return totalPrice;
-      };
+      // const calculateOrderAmount = () => {
+      //   return totalPrice;
+      // };
 
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: calculateOrderAmount(),
-        currency: "gbp",
-      });
+      // const paymentIntent = await stripe.paymentIntents.create({
+      //   amount: calculateOrderAmount(),
+      //   currency: "gbp",
+      // });
 
       let serviceCharge = (10 * totalPrice) / 100;
 
@@ -128,28 +128,25 @@ const createOrder = async (req, res) => {
         addNote: req.body.addNote,
         serviceCharge,
         sellarId,
-        clientSecret: "paymentIntent.client_secret",
         readyTime: "",
         remarks: "",
       });
 
       //create transaction for order
-      await Transaction.create({
-        customerId: customer.userId,
-        storeId,
-        orderId: currentOrder._id,
-        amount: totalPrice,
-        ridersFee,
-        transactionId: paymentIntent.id,
-      });
+      // await Transaction.create({
+      //   customerId: customer.userId,
+      //   storeId,
+      //   orderId: currentOrder._id,
+      //   amount: totalPrice,
+      //   ridersFee,
+      //   transactionId: paymentIntent.id,
+      // });
 
       if (currentOrder) {
         profile.orders.push(currentOrder);
         await profile.save();
 
-        return res
-          .status(200)
-          .json({ currentOrder, clientSecret: paymentIntent.client_secret });
+        return res.status(200).json({ currentOrder });
       }
     }
     return res.status(400).json({ msg: "Your cart is empty" });

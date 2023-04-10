@@ -11,21 +11,25 @@ const {
   getCompletedOrders,
   getWaitingOrders,
 } = require("../../controllers/customer/customerOrder");
-const authMiddleware = require("../../customerMiddleware/authentication");
+const auth = require("../../customerMiddleware/authentication");
+const {
+  updateTransaction,
+} = require("../../controllers/customer/customerTransaction");
 
 const router = express.Router();
 
-router.route("/createOrder/:id").post(authMiddleware, createOrder);
-router.route("/deleteOrder/:id").delete(authMiddleware, deleteOrder);
-router.route("/getOrders").get(authMiddleware, getOrders);
-router.route("/getOrderById/:id").get(authMiddleware, getOrderById);
-router.route("/updateOrder/:id").patch(authMiddleware, updateOrder);
-router.route("/confirmDelivery/:id").patch(authMiddleware, confirmDelivery);
+router.route("/createOrder/:id").post(auth, createOrder);
+router.route("/deleteOrder/:id").delete(auth, deleteOrder);
+router.route("/getOrders").get(auth, getOrders);
+router.route("/getOrderById/:id").get(auth, getOrderById);
+router.route("/updateOrder/:id").patch(auth, updateOrder);
+router.route("/confirmDelivery/:id").patch(auth, confirmDelivery);
 
 //getting all customers orders
-router.route("/getCustomerOrders").get(authMiddleware, getCustomerOrders);
-router.route("/getPendingOrders").get(authMiddleware, getPendingOrders);
-router.route("/getCompletedOrders").get(authMiddleware, getCompletedOrders);
-router.route("/getWaitingOrders").get(authMiddleware, getWaitingOrders );
+router.route("/getCustomerOrders").get(auth, getCustomerOrders);
+router.route("/getPendingOrders").get(auth, getPendingOrders);
+router.route("/getCompletedOrders").get(auth, getCompletedOrders);
+router.route("/getWaitingOrders").get(auth, getWaitingOrders);
+router.route("/transaction").post(auth, updateTransaction);
 
 module.exports = router;

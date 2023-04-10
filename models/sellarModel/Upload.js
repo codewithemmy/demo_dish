@@ -9,7 +9,7 @@ const UploadSchema = new mongoose.Schema(
       type: String,
     },
     sellar: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },
   },

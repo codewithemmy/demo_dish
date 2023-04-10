@@ -2,31 +2,34 @@ const mongoose = require("mongoose");
 
 const TransactionSchema = new mongoose.Schema(
   {
-    customerId: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Customer",
-    },
-    storeId: {
-      type: mongoose.Schema.ObjectId,
-      ref: "StoreDetails",
-    },
-    orderId: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Order",
-    },
-    ridersFee: { type: Number },
-    amount: {
-      type: Number,
-      required: true,
-    },
     transactionId: {
       type: String,
+      required: true,
+    },
+    customerId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Customer",
+    },
+    item: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "SellarFood",
+      },
+    ],
+    quantity: { type: Number },
+    currency: { type: String },
+    orderId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Order",
+    },
+    amount: {
+      type: Number,
       required: true,
     },
     TransactionStatus: {
       type: String,
       default: "pending",
-      enum: ["failed", "succeeded", "pending", "canceled"],
+      // enum: ["failed", "succeeded", "pending", "canceled"],
     },
     paymentFor: {
       type: String,

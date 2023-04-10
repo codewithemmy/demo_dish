@@ -59,6 +59,28 @@ const webhookController = async (req, res) => {
   return res.status(200).json({ msg: `event successfully handled` });
 };
 
+//create transaction
+const updateTransaction = async (req, res) => {
+  const order = await Order.findOne({ _id: req.body.orderId });
+
+  if (!order) {
+    return res.status(200).json({ msg: `invalid order Id` });
+  }
+
+  const transaction = await Transaction.create({
+    ...req.body,
+    customerId: req.user.userId,
+  });
+
+  order.transaction = transaction._id;
+  await order.save();
+
+  return res
+    .status(200)
+    .json({ msg: "transaction successfully created/updated" });
+};
+
 module.exports = {
   webhookController,
+  updateTransaction,
 };
