@@ -13,11 +13,14 @@ const TransactionSchema = new mongoose.Schema(
     },
     item: [
       {
-        type: mongoose.Types.ObjectId,
-        ref: "SellarFood",
+        food: {
+          type: mongoose.Types.ObjectId,
+          ref: "SellarFood",
+        },
+        quantity: { type: Number },
       },
     ],
-    quantity: { type: Number },
+
     currency: { type: String },
     orderId: {
       type: mongoose.Types.ObjectId,
