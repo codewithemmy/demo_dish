@@ -61,4 +61,41 @@ const getSingleStoreDetails = async (req, res) => {
   return res.status(400).json({ msg: "unable to get store, food, and menu" });
 };
 
-module.exports = { getStoreMenu, getMenuFood, getSingleStoreDetails };
+//get single Food
+const getSingleFood = async (req, res) => {
+  const foodId = req.params.id;
+
+  if (foodId) {
+    const food = await SellarFood.findOne({ _id: foodId });
+
+    if (!food) {
+      return res.status(400).json({
+        msg: `cannot find foodId: ${foodId}  in params`,
+      });
+    }
+
+    console.log(food.storeOwner);
+    // console.log(food.menu);
+
+    const store = await StoreDetails.findOne({
+      storeOwner: food.storeOwner,
+    }).select({ _id: 1 });
+
+    if (!store) {
+      return res.status(400).json({
+        msg: `cannot find Store`,
+      });
+    }
+
+    return res.status(200).json({ food, store });
+  }
+
+  return res.status(400).json({ msg: "unable to get single food" });
+};
+
+module.exports = {
+  getStoreMenu,
+  getMenuFood,
+  getSingleStoreDetails,
+  getSingleFood,
+};
