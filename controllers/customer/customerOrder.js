@@ -3,8 +3,7 @@ const Customer = require("../../models/customerModel/Customer");
 const StoreDetails = require("../../models/sellarModel/StoreDetails");
 const SellarFood = require("../../models/sellarModel/SellarFood");
 const { StatusCodes } = require("http-status-codes");
-const Transaction = require("../../models/customerModel/Transaction");
-const stripe = require("stripe")(process.env.STRIPE_KEY);
+// const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 // Helper function to convert degrees to radians
 function deg2rad(deg) {

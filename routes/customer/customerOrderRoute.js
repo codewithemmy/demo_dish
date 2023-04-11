@@ -14,6 +14,7 @@ const {
 const auth = require("../../customerMiddleware/authentication");
 const {
   updateTransaction,
+  createPaymentIntent,
 } = require("../../controllers/customer/customerTransaction");
 
 const router = express.Router();
@@ -31,5 +32,6 @@ router.route("/getPendingOrders").get(auth, getPendingOrders);
 router.route("/getCompletedOrders").get(auth, getCompletedOrders);
 router.route("/getWaitingOrders").get(auth, getWaitingOrders);
 router.route("/transaction").post(auth, updateTransaction);
+router.route("/createPaymentIntent").post(auth, createPaymentIntent);
 
 module.exports = router;

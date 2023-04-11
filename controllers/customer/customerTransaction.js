@@ -59,6 +59,24 @@ const webhookController = async (req, res) => {
   return res.status(200).json({ msg: `event successfully handled` });
 };
 
+//const create payment intent
+const createPaymentIntent = async (req, res) => {
+  const { amount, currency } = req.body;
+
+  if (!amount && !currency) {
+    return res.status(200).json({ msg: `fields must not be empty` });
+  }
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount,
+    currency,
+  });
+
+  return res.status(200).json({
+    clientSecret: paymentIntent.client_secret,
+    transactionId: paymentIntent.id,
+  });
+};
+
 //create transaction
 const updateTransaction = async (req, res) => {
   const order = await Order.findOne({ _id: req.body.orderId });
@@ -83,4 +101,5 @@ const updateTransaction = async (req, res) => {
 module.exports = {
   webhookController,
   updateTransaction,
+  createPaymentIntent,
 };

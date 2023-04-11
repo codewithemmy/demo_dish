@@ -5,6 +5,7 @@ const TransactionSchema = new mongoose.Schema(
     transactionId: {
       type: String,
       required: true,
+      unique: true,
     },
     customerId: {
       type: mongoose.Types.ObjectId,
@@ -21,6 +22,7 @@ const TransactionSchema = new mongoose.Schema(
     orderId: {
       type: mongoose.Types.ObjectId,
       ref: "Order",
+      unique: true,
     },
     amount: {
       type: Number,
