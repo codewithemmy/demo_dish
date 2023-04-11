@@ -61,20 +61,24 @@ const webhookController = async (req, res) => {
 
 //const create payment intent
 const createPaymentIntent = async (req, res) => {
-  const { amount, currency } = req.body;
+  try {
+    const { amount, currency } = req.body;
 
-  if (!amount && !currency) {
-    return res.status(200).json({ msg: `fields must not be empty` });
+    if (!amount && !currency) {
+      return res.status(200).json({ msg: `fields must not be empty` });
+    }
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency,
+    });
+
+    return res.status(200).json({
+      clientSecret: paymentIntent.client_secret,
+      transactionId: paymentIntent.id,
+    });
+  } catch (error) {
+    return res.status(200).json(error);
   }
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount,
-    currency,
-  });
-
-  return res.status(200).json({
-    clientSecret: paymentIntent.client_secret,
-    transactionId: paymentIntent.id,
-  });
 };
 
 //create transaction
