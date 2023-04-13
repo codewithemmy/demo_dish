@@ -11,7 +11,7 @@ function deg2rad(deg) {
 }
 
 //create order
-const createOrder = async (req, res) => {
+const createTransactionOrder = async (req, res) => {
   //grab the login customer
   const customer = req.user;
 
@@ -304,7 +304,7 @@ const confirmDelivery = async (req, res) => {
 };
 
 module.exports = {
-  createOrder,
+  createTransactionOrder,
   getOrders,
   getOrderById,
   deleteOrder,

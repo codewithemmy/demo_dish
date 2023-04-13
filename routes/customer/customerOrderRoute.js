@@ -3,22 +3,23 @@ const {
   getOrders,
   getOrderById,
   deleteOrder,
-  createOrder,
   updateOrder,
   confirmDelivery,
   getCustomerOrders,
   getPendingOrders,
   getCompletedOrders,
   getWaitingOrders,
+  createTransactionOrder,
 } = require("../../controllers/customer/customerOrder");
 const auth = require("../../customerMiddleware/authentication");
 const {
-  updateTransaction, createPaymentIntent,
+  updateTransaction,
+  createPaymentIntent,
 } = require("../../controllers/customer/customerTransaction");
 
 const router = express.Router();
 
-router.route("/createOrder/:id").post(auth, createOrder);
+router.route("/transactionOrder/:id").post(auth, createTransactionOrder);
 router.route("/deleteOrder/:id").delete(auth, deleteOrder);
 router.route("/getOrders").get(auth, getOrders);
 router.route("/getOrderById/:id").get(auth, getOrderById);
