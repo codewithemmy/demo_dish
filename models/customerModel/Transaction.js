@@ -17,10 +17,10 @@ const TransactionSchema = new mongoose.Schema(
           type: mongoose.Types.ObjectId,
           ref: "SellarFood",
         },
-        quantity: { type: Number },
+        quantity: { type: Number, required: true },
       },
     ],
-
+    quantity: { type: Number },
     currency: { type: String },
     orderId: {
       type: mongoose.Types.ObjectId,

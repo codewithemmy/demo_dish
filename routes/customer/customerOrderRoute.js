@@ -13,8 +13,7 @@ const {
 } = require("../../controllers/customer/customerOrder");
 const auth = require("../../customerMiddleware/authentication");
 const {
-  updateTransaction,
-  createPaymentIntent,
+  updateTransaction, createPaymentIntent,
 } = require("../../controllers/customer/customerTransaction");
 
 const router = express.Router();
