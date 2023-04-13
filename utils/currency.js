@@ -14,8 +14,7 @@ const currency = async (country) => {
 
     return result;
   } catch (error) {
-    // console.error(error);
-    res.status(500).send("Error getting currency data");
+    console.error(error);
   }
 };
 
