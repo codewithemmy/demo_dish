@@ -24,7 +24,7 @@ const createPaymentIntent = async (req, res) => {
   }
 };
 
-//create transaction
+//create transaction..
 const updateTransaction = async (req, res) => {
   const order = await Order.findOne({ _id: req.body.orderId });
 
