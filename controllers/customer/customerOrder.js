@@ -23,13 +23,16 @@ const createTransactionOrder = async (req, res) => {
     const store = await StoreDetails.findOne({ _id: storeId });
 
     // find the customer coordinates
-    const customerCoordinates = await Customer.findOne({
-      _id: customer.userId,
-    });
+    // const customerCoordinates = await Customer.findOne({
+    //   _id: customer.userId,
+    // });
 
     //create a container for both lng and lat
-    const customerlng = customerCoordinates.location.coordinates[0];
-    const customerlat = customerCoordinates.location.coordinates[1];
+    // const customerlng = customerCoordinates.location.coordinates[0];
+    // const customerlat = customerCoordinates.location.coordinates[1];
+
+    const customerlng = req.body.lng;
+    const customerlat = req.body.lat;
     const storelng = store.location.coordinates[0];
     const storelat = store.location.coordinates[1];
 
@@ -55,7 +58,7 @@ const createTransactionOrder = async (req, res) => {
 
     const kilometers = distance.toFixed(2);
 
-    let ridersFee = kilometers * 2;
+    let ridersFee = kilometers * 1;
 
     //get the store location type and coordinates
     const locationType = store.location.type;
@@ -66,7 +69,7 @@ const createTransactionOrder = async (req, res) => {
 
     const profile = await Customer.findById(customer.userId);
     //grab order items from request [{id: xx, unit: xx}]
-    const cart = req.body; //[{ id: xx, quantity: xx }];
+    const cart = req.body.cartItems; //[{ id: xx, quantity: xx }];
     let cartItems = Array();
     let netAmount = 0.0;
 
@@ -92,23 +95,11 @@ const createTransactionOrder = async (req, res) => {
     const deliveryFee = 2;
     const marketPlace = 3;
 
-    const totalPrice = netAmount + deliveryFee + marketPlace;
+    const totalPrice = netAmount + deliveryFee + marketPlace + ridersFee;
 
     //create order with item description
     if (cartItems) {
-      // use stripe calculation
-      // const calculateOrderAmount = () => {
-      //   return totalPrice;
-      // };
-
-      // const paymentIntent = await stripe.paymentIntents.create({
-      //   amount: calculateOrderAmount(),
-      //   currency: "gbp",
-      // });
-
       let serviceCharge = (10 * totalPrice) / 100;
-
-      // console.log(paymentIntent);
 
       //create order
       const currentOrder = await Order.create({
@@ -119,8 +110,8 @@ const createTransactionOrder = async (req, res) => {
         orderDate: new Date(),
         paymentResponse: "",
         location: {
-          type: locationType,
-          coordinates: locationCoordinates,
+          type: "Point",
+          coordinates: [parseFloat(req.body.lng), parseFloat(req.body.lat)],
         },
         store: storeId,
         ridersFee,
@@ -130,16 +121,6 @@ const createTransactionOrder = async (req, res) => {
         readyTime: "",
         remarks: "",
       });
-
-      //create transaction for order
-      // await Transaction.create({
-      //   customerId: customer.userId,
-      //   storeId,
-      //   orderId: currentOrder._id,
-      //   amount: totalPrice,
-      //   ridersFee,
-      //   transactionId: paymentIntent.id,
-      // });
 
       if (currentOrder) {
         profile.orders.push(currentOrder);

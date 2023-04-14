@@ -19,7 +19,7 @@ const {
 
 const router = express.Router();
 
-router.route("/transactionOrder/:id").post(auth, createTransactionOrder);
+router.route("/createOrder/:id").post(auth, createTransactionOrder);
 router.route("/deleteOrder/:id").delete(auth, deleteOrder);
 router.route("/getOrders").get(auth, getOrders);
 router.route("/getOrderById/:id").get(auth, getOrderById);
