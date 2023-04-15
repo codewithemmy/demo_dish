@@ -11,7 +11,7 @@ const OrderSchema = new mongoose.Schema(
       {
         food: {
           type: mongoose.Types.ObjectId,
-          ref: "Food",
+          ref: "SellarFood",
           required: [true, "provide food ID"],
         },
         quantity: { type: Number, required: true },
