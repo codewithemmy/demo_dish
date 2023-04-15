@@ -65,6 +65,11 @@ const RiderSchema = new mongoose.Schema(
     serviceAvailable: { type: Boolean, default: false },
   },
   {
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.password;
+      },
+    },
     timestamps: true,
   }
 );

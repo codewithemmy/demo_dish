@@ -77,11 +77,7 @@ const SellarSchema = new mongoose.Schema(
   {
     toJSON: {
       transform(doc, ret) {
-        delete ret.password,
-          delete ret.__v,
-          delete ret.createdAt,
-          delete ret.updatedAt;
-        delete ret.verificationToken;
+        delete ret.password;
       },
     },
     timestamps: true,
