@@ -19,7 +19,7 @@ const {
 
 const router = express.Router();
 
-router.route("/createOrder/:id").post(auth, createTransactionOrder);
+router.route("/totalPrice/:id").post(auth, createTransactionOrder);
 router.route("/deleteOrder/:id").delete(auth, deleteOrder);
 router.route("/getOrders").get(auth, getOrders);
 router.route("/getOrderById/:id").get(auth, getOrderById);
@@ -31,7 +31,7 @@ router.route("/getCustomerOrders").get(auth, getCustomerOrders);
 router.route("/getPendingOrders").get(auth, getPendingOrders);
 router.route("/getCompletedOrders").get(auth, getCompletedOrders);
 router.route("/getWaitingOrders").get(auth, getWaitingOrders);
-router.route("/transaction").post(auth, updateTransaction);
+router.route("/placeOrder").post(auth, updateTransaction);
 router.route("/createPaymentIntent").post(auth, createPaymentIntent);
 
 module.exports = router;
