@@ -37,6 +37,7 @@ const updateTransaction = async (req, res) => {
     customerId: req.user.userId,
   });
 
+  //updated order withthe transaction id
   order.transaction = transaction._id;
   await order.save();
 
