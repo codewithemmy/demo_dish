@@ -106,7 +106,7 @@ const createTransactionOrder = async (req, res) => {
         orderID: orderId,
         items: cartItems,
         orderedBy: customer.userId,
-        totalAmount: totalPrice,
+        totalAmount: Math.round(totalPrice),
         orderDate: new Date(),
         paymentResponse: "",
         location: {
