@@ -4,6 +4,7 @@ const Menu = require("../../models/sellarModel/Menu");
 const fs = require("fs");
 const { Readable } = require("stream");
 const sharp = require("sharp");
+const StoreDetails = require("../../models/sellarModel/StoreDetails");
 require("../../utils/cloudinary");
 
 //require cloudinary version 2
@@ -67,13 +68,15 @@ const createFood = async (req, res) => {
   fs.unlinkSync(req.files.image.tempFilePath);
 
   if (sellar) {
+    const store = await StoreDetails.findOne({ menuId: menuId });
+
     const createfood = await SellarFood.create({
       foodImage: uri.secure_url,
       foodName: foodName,
       price: price,
       nutritionalFacts: nutritionalFacts,
       menu: menuId,
-      storeOwner: sellar,
+      storeOwner: store._id,
       shortInfo: shortInfo,
     });
 

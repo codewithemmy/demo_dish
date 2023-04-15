@@ -27,7 +27,7 @@ const SellarFoodSchema = new mongoose.Schema(
     },
     storeOwner: {
       type: mongoose.Types.ObjectId,
-      ref: "Sellar",
+      ref: "StoreDetails",
     },
   },
   { timestamps: true }
