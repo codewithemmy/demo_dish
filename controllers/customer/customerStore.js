@@ -11,7 +11,7 @@ const getStore = async (req, res) => {
 
 //get food
 const getFood = async (req, res) => {
-  const food = await SellarFood.find({});
+  const food = await SellarFood.find({ foodavailable: true });
   return res.status(StatusCodes.CREATED).json(food);
 };
 
