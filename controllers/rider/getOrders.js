@@ -38,7 +38,7 @@ const getCompletedOrders = async (req, res) => {
     const completeOrders = await Order.find({
       assignedRider: user,
       riderStatus: "delivered",
-      orderStatus: "delivered",
+      orderStatus: "completed",
     })
       .populate({ path: "store" })
       .populate({ path: "orderedBy", select: "-orders" })
