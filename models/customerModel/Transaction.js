@@ -31,10 +31,10 @@ const TransactionSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    TransactionStatus: {
+    transactionStatus: {
       type: String,
       default: "pending",
-      // enum: ["failed", "succeeded", "pending", "canceled"],
+      enum: ["failed", "success", "pending", "canceled"],
     },
     paymentFor: {
       type: String,

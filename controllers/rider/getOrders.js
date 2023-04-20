@@ -20,6 +20,7 @@ const getPendingOrders = async (req, res) => {
     {
       $match: {
         riderStatus: "pending",
+        paymentStatus: "paid",
       },
     },
   ]);
@@ -78,10 +79,38 @@ const getPickedOrders = async (req, res) => {
   return res.status(400).json({ msg: `unable to get picked orders` });
 };
 
+// //assign and pick order
+// const pickUpOrder = async (req, res) => {
+//   const orderId = req.params.id;
+//   if (orderId) {
+//     const pickOrder = await Order.findByIdAndUpdate(
+//       { _id: orderId },
+//       { assignedRider: req.user.userId, riderStatus: "picked" },
+//       { new: true, runValidators: true }
+//     );
+
+//     return res
+//       .status(200)
+//       .json({ msg: `Order is now assigned to riderId: ${orderId}`, pickOrder });
+//   }
+
+//   return res.status(400).json({ msg: `unable to update order` });
+// };
+
 //assign and pick order
 const pickUpOrder = async (req, res) => {
   const orderId = req.params.id;
+  const pickUpCode = req.body.pickUpCode;
   if (orderId) {
+    const findCode = await Order.findOne({
+      pickUpCode: pickUpCode,
+      paymentStatus: "paid",
+    });
+
+    if (!findCode) {
+      return res.status(404).json({ msg: `you pickup code is invalid` });
+    }
+
     const pickOrder = await Order.findByIdAndUpdate(
       { _id: orderId },
       { assignedRider: req.user.userId, riderStatus: "picked" },
@@ -93,7 +122,7 @@ const pickUpOrder = async (req, res) => {
       .json({ msg: `Order is now assigned to riderId: ${orderId}`, pickOrder });
   }
 
-  return res.status(400).json({ msg: `unable to update order` });
+  return res.status(400).json({ msg: `unable to pick order` });
 };
 
 const getPendingOrdersNumbers = async (req, res) => {
@@ -115,29 +144,26 @@ const getDeliveredOrdersNumbers = async (req, res) => {
 };
 
 const updateOrderStatus = async (req, res) => {
-  const riderId = req.user.userId;
   const orderId = req.params.id;
-  const { riderStatus } = req.body;
+  const deliveryCode = req.body.deliveryCode;
 
-  if (riderId) {
-    if (!orderId) {
-      return res.status(404).json({ msg: `order params id not found` });
+  if (orderId) {
+    const findCode = await Order.findOne({
+      orderCode: deliveryCode,
+      paymentStatus: "paid",
+    });
+
+    if (!findCode) {
+      return res.status(404).json({ msg: `your delivery is invalid` });
     }
 
-    const orderStatus = await Order.findOne({ _id: orderId });
-    if (!orderStatus) {
-      return res
-        .status(404)
-        .json({ msg: `cannot find order with id ${orderId}` });
-    }
+    await Order.findByIdAndUpdate(
+      { _id: orderId },
+      { riderStatus: "delivered" },
+      { new: true, runValidators: true }
+    );
 
-    orderStatus.riderStatus = riderStatus;
-
-    const result = await orderStatus.save();
-
-    return res
-      .status(200)
-      .json({ msg: `order status update is successful`, result });
+    return res.status(200).json({ msg: `Your delivery is successful` });
   }
 
   return res.status(400).json({ msg: `unable to update status` });

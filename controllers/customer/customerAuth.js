@@ -24,7 +24,7 @@ const register = async (req, res) => {
   //send Mail
   mailTransport.sendMail({
     from: '"Afrilish" <afrilish@afrilish.com>', // sender address
-    to: email, // list of receivers
+    to: req.user.email, // list of receivers
     subject: "AFRILISH REGISTRATION SUCCESSFUL", // Subject line
     html: `Hello, ${fullName}, welcome to the best cuisine delicacies. Your registration with Afrilish is success.</h4>`, // html body
   });

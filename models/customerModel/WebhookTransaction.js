@@ -7,19 +7,16 @@ const WebhookTransactionSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    clientSecret: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     currency: {
       type: String,
     },
-    customer: {
-      type: String,
-      required: true,
+    amount: {
+      type: Number,
     },
-    currency: { type: String },
+    // customer: {
+    //   type: String,
+    //   required: true,
+    // },
     TransactionStatus: {
       type: String,
       default: "pending",

@@ -1,10 +1,11 @@
 const WebhookTransaction = require("../../models/customerModel/WebhookTransaction");
-const Order = require("../../models/customerModel/CustomerOrder");
+// const Order = require("../../models/customerModel/CustomerOrder");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 // Endpoint for Stripe webhooks
 const webhookController = async (req, res) => {
   const sig = req.headers["stripe-signature"];
+  let event;
 
   event = stripe.webhooks.constructEvent(
     request.body,
@@ -12,69 +13,61 @@ const webhookController = async (req, res) => {
     process.env.STRIPE_SECRET
   );
 
-  let event;
-
   // Handle the event
   switch (event.type) {
+
     case "payment_intent.canceled":
       const paymentIntentCanceled = event.data.object;
-      // Then define and call a function to handle the event payment_intent.canceled
 
-      //find order using findOne
-
-      //map order to get transaction id from stripe
-
-      //if order id is true, update transaction to canceled
-
-      await WebhookTransaction.create({
-        transactionId: paymentIntentCanceled.id,
-        clientSecret: paymentIntentCanceled.client_secret,
-        currency: paymentIntentCanceled.currency,
-        customer: customer,
-        TransactionStatus: "canceled",
-      });
+      await WebhookTransaction.findOneAndUpdate(
+        { transactionId: paymentIntentCanceled.id },
+        {
+          currency: paymentIntentCanceled.currency,
+          amount: paymentIntentCanceled.amount,
+          TransactionStatus: "canceled",
+        },
+        { new: True, runValidators: true }
+      );
 
       break;
+
     case "payment_intent.created":
       const paymentIntentCreated = event.data.object;
+
       // Then define and call a function to handle the event payment_intent.created
+      await WebhookTransaction.create({
+        transactionId: paymentIntentCreated.id,
+        currency: paymentIntentCreated.currency,
+        amount: paymentIntentCreated.amount,
+        TransactionStatus: "pending",
+      });
+
       break;
+      
     case "payment_intent.payment_failed":
       const paymentIntentPaymentFailed = event.data.object;
-      // Then define and call a function to handle the event payment_intent.payment_failed
-
-      //find order using findOne
-
-      //map order to get transaction id from stripe
-
-      //if order id is true, update transaction to failed
-      await WebhookTransaction.create({
-        transactionId: paymentIntentCanceled.id,
-        clientSecret: paymentIntentCanceled.client_secret,
-        currency: paymentIntentCanceled.currency,
-        customer: customer,
-        TransactionStatus: "failed",
-      });
+      await WebhookTransaction.findOneAndUpdate(
+        { transactionId: paymentIntentPaymentFailed.id },
+        {
+          currency: paymentIntentPaymentFailed.currency,
+          amount: paymentIntentPaymentFailed.amount,
+          TransactionStatus: "failed",
+        },
+        { new: True, runValidators: true }
+      );
 
       break;
     case "payment_intent.succeeded":
       const paymentIntentSucceeded = event.data.object;
-      // Then define and call a function to handle the event payment_intent.succeeded
-
-      //find order using findOne
-
-      //map order to get transaction id from stripe
-
-      //if order id is true, update transaction to paid or completed
-
-      await WebhookTransaction.create({
-        transactionId: paymentIntentCanceled.id,
-        clientSecret: paymentIntentCanceled.client_secret,
-        currency: paymentIntentCanceled.currency,
-        customer: customer,
-        TransactionStatus: "success",
-      });
-
+      await WebhookTransaction.findOneAndUpdate(
+        { transactionId: paymentIntentSucceeded.id },
+        {
+          currency: paymentIntentSucceeded.currency,
+          amount: paymentIntentSucceeded.amount,
+          TransactionStatus: "success",
+        },
+        { new: True, runValidators: true }
+      );
       break;
     // ... handle other event types
     default:

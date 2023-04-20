@@ -11,6 +11,7 @@ const getPendingOrder = async (req, res) => {
     const orders = await Order.find({
       sellarId: req.user.userId,
       orderStatus: "pending",
+      paymentStatus: "paid",
     })
       .populate({
         path: "orderedBy",

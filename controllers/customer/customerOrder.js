@@ -3,6 +3,7 @@ const Customer = require("../../models/customerModel/Customer");
 const StoreDetails = require("../../models/sellarModel/StoreDetails");
 const SellarFood = require("../../models/sellarModel/SellarFood");
 const { StatusCodes } = require("http-status-codes");
+const { genRandomNumber } = require("../../utils/index");
 // const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 // Helper function to convert degrees to radians
@@ -21,15 +22,6 @@ const createTransactionOrder = async (req, res) => {
 
     //get the store and customer using findOne
     const store = await StoreDetails.findOne({ _id: storeId });
-
-    // find the customer coordinates
-    // const customerCoordinates = await Customer.findOne({
-    //   _id: customer.userId,
-    // });
-
-    //create a container for both lng and lat
-    // const customerlng = customerCoordinates.location.coordinates[0];
-    // const customerlat = customerCoordinates.location.coordinates[1];
 
     const customerlng = req.body.lng;
     const customerlat = req.body.lat;
@@ -50,12 +42,6 @@ const createTransactionOrder = async (req, res) => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
 
-    // console.log(
-    //   `The distance between the two locations is ${distance.toFixed(
-    //     2
-    //   )} kilometers.`
-    // );
-
     const kilometers = distance.toFixed(2);
 
     let ridersFee = kilometers * 1;
@@ -63,9 +49,6 @@ const createTransactionOrder = async (req, res) => {
     //get the store location type and coordinates
     const locationType = store.location.type;
     const locationCoordinates = store.location.coordinates;
-
-    //create an Order Id
-    const orderId = `${Math.floor(Math.random() * 89999) + 1000}`;
 
     const profile = await Customer.findById(customer.userId);
     //grab order items from request [{id: xx, unit: xx}]
@@ -103,7 +86,8 @@ const createTransactionOrder = async (req, res) => {
 
       //create order
       const currentOrder = await Order.create({
-        orderID: orderId,
+        pickUpCode: genRandomNumber(),
+        orderCode: genRandomNumber(),
         items: cartItems,
         orderedBy: customer.userId,
         totalAmount: Math.round(totalPrice),

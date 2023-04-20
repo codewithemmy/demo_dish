@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema(
   {
-    orderID: { type: String, required: true },
+    pickUpCode: { type: Number, required: true },
+    orderCode: { type: Number, required: true },
     assignedRider: {
       type: mongoose.Types.ObjectId,
       ref: "Rider",
@@ -31,6 +32,11 @@ const OrderSchema = new mongoose.Schema(
       ref: "StoreDetails",
     },
     totalAmount: { type: Number },
+    paymentStatus: {
+      type: String,
+      enum: ["paid", "pending"],
+      default: "pending",
+    },
     orderDate: { type: Date },
     paymentResponse: { type: String },
     ridersFee: { type: Number },
@@ -62,9 +68,8 @@ const OrderSchema = new mongoose.Schema(
       default: "pending",
     },
     confirmDelivery: {
-      type: String,
-      enum: ["yes", "no", "waiting"],
-      default: "no",
+      type: Boolean,
+      default: false,
     },
     remarks: { type: String },
     addNote: { type: String },

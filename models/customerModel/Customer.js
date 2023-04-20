@@ -32,7 +32,8 @@ const CustomerSchema = new mongoose.Schema(
       type: String,
     },
     wallet: {
-      balance: Number,
+      type: Number,
+      default: 0,
     },
     address: { type: String },
     image: { type: String },
