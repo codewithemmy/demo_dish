@@ -4,7 +4,6 @@ const {
   getOrderById,
   deleteOrder,
   updateOrder,
-  confirmDelivery,
   getCustomerOrders,
   getPendingOrders,
   getCompletedOrders,
@@ -24,7 +23,6 @@ router.route("/deleteOrder/:id").delete(auth, deleteOrder);
 router.route("/getOrders").get(auth, getOrders);
 router.route("/getOrderById/:id").get(auth, getOrderById);
 router.route("/updateOrder/:id").patch(auth, updateOrder);
-router.route("/confirmDelivery/:id").patch(auth, confirmDelivery);
 
 //getting all customers orders
 router.route("/getCustomerOrders").get(auth, getCustomerOrders);

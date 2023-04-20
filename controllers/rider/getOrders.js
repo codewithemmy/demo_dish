@@ -1,5 +1,9 @@
 const Order = require("../../models/customerModel/CustomerOrder");
+const Transaction = require("../../models/customerModel/Transaction");
+const Rider = require("../../models/riderModel/Rider");
+const Sellar = require("../../models/sellarModel/Sellar");
 const StoreDetails = require("../../models/sellarModel/StoreDetails");
+const { mailTransport } = require("../../utils/sendEmail");
 
 const getPendingOrders = async (req, res) => {
   const longitude = req.body.lng;
@@ -143,6 +147,54 @@ const getDeliveredOrdersNumbers = async (req, res) => {
   return res.status(200).json(getOrders);
 };
 
+//confirm delivery
+const confirmDelivery = async (req, res) => {
+  const deliveryId = req.params.id;
+  const { confirmDelivery } = req.body;
+  const rider = req.user.userId;
+
+  if (rider) {
+    const order = await Order.findById({ _id: deliveryId });
+    if (!order) {
+      return res.status(200).json({ msg: `No order with id : ${deliveryId}` });
+    }
+
+    order.confirmDelivery = confirmDelivery;
+    await order.save();
+
+    const transaction = await Transaction.findOne({
+      orderId: deliveryId,
+    });
+
+    if (transaction.transactionStatus == "success") {
+      //send Mail
+      mailTransport.sendMail({
+        from: '"Afrilish" <afrilish@afrilish.com>', // sender address
+        to: order.customerEmail, // list of receivers
+        subject: "YOUR ORDER CODE", // Subject line
+        html: `Hello, this is you order code: ${order.orderCode} upon delivery. Have a nice meal</h4>`, // html body
+      });
+
+      await Rider.findOneAndUpdate(
+        { _id: order.assignedRider },
+        { $inc: { wallet: order.ridersFee } },
+        { new: true, runValidators: true }
+      );
+
+      await Sellar.findOneAndUpdate(
+        { _id: order.sellarId },
+        { $inc: { wallet: order.netAmount } },
+        { new: true, runValidators: true }
+      );
+    }
+
+    return res
+      .status(200)
+      .json({ msg: `Sucessful, confirm order code from the client` });
+  }
+  return res.status(400).json({ msg: `unable to confirm delivery` });
+};
+
 const updateOrderStatus = async (req, res) => {
   const orderId = req.params.id;
   const deliveryCode = req.body.deliveryCode;
@@ -179,4 +231,5 @@ module.exports = {
   getDeliveredOrdersNumbers,
   pickUpOrder,
   getPickedOrders,
+  confirmDelivery,
 };

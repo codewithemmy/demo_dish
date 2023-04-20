@@ -1,7 +1,8 @@
 const Transaction = require("../../models/customerModel/Transaction");
 const Order = require("../../models/customerModel/CustomerOrder");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
-const { mailTransport } = require("../../utils/sendEmail");
+const Sellar = require("../../models/sellarModel/Sellar");
+const Rider = require("../../models/riderModel/Rider");
 
 //const create payment intent
 const createPaymentIntent = async (req, res) => {
@@ -44,15 +45,6 @@ const updateTransaction = async (req, res) => {
 
   await order.save();
 
-  if (req.body.transactionStatus === "success") {
-    //send Mail
-    mailTransport.sendMail({
-      from: '"Afrilish" <afrilish@afrilish.com>', // sender address
-      to: req.user.email, // list of receivers
-      subject: "YOUR ORDER CODE", // Subject line
-      html: `Hello, this is you order code: ${order.orderCode} upon delivery. Have a nice meal</h4>`, // html body
-    });
-  }
   return res
     .status(200)
     .json({ msg: "transaction successfully created/updated" });

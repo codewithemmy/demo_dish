@@ -56,7 +56,7 @@ const createTransactionOrder = async (req, res) => {
     let cartItems = Array();
     let netAmount = 0.0;
 
-    let sellarId;
+    // let sellarId;
 
     //calculate order amount
     const foods = await SellarFood.find()
@@ -68,7 +68,7 @@ const createTransactionOrder = async (req, res) => {
     foods.map((food) => {
       cart.map(({ _id, quantity }) => {
         if (food._id == _id) {
-          sellarId = food.storeOwner;
+          // sellarId = food.storeOwner;
           netAmount += food.price * quantity;
           cartItems.push({ food, quantity });
         }
@@ -90,6 +90,7 @@ const createTransactionOrder = async (req, res) => {
         orderCode: genRandomNumber(),
         items: cartItems,
         orderedBy: customer.userId,
+        netAmount,
         totalAmount: Math.round(totalPrice),
         orderDate: new Date(),
         paymentResponse: "",
@@ -99,9 +100,10 @@ const createTransactionOrder = async (req, res) => {
         },
         store: storeId,
         ridersFee,
+        customerEmail: req.user.email,
         addNote: req.body.addNote,
         serviceCharge,
-        sellarId,
+        sellarId: store.storeOwner,
         readyTime: "",
         remarks: "",
       });
@@ -258,33 +260,12 @@ const updateOrder = async (req, res) => {
   return res.status(200).json(order);
 };
 
-//confirm delivery
-const confirmDelivery = async (req, res) => {
-  const deliveryId = req.params.id;
-  const { confirmDelivery } = req.body;
-  const customer = req.user.userId;
-
-  if (customer) {
-    const order = await Order.findById({ _id: deliveryId });
-    if (!order) {
-      return res.status(200).json({ msg: `No order with id : ${deliveryId}` });
-    }
-
-    order.confirmDelivery = confirmDelivery;
-    const result = await order.save();
-
-    return res.status(200).json(result);
-  }
-  return res.status(400).json({ msg: `unable to confirm delivery` });
-};
-
 module.exports = {
   createTransactionOrder,
   getOrders,
   getOrderById,
   deleteOrder,
   updateOrder,
-  confirmDelivery,
   getCustomerOrders,
   getPendingOrders,
   getCompletedOrders,

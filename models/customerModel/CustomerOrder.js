@@ -32,6 +32,7 @@ const OrderSchema = new mongoose.Schema(
       ref: "StoreDetails",
     },
     totalAmount: { type: Number },
+    customerEmail: { type: String },
     paymentStatus: {
       type: String,
       enum: ["paid", "pending"],
@@ -40,6 +41,7 @@ const OrderSchema = new mongoose.Schema(
     orderDate: { type: Date },
     paymentResponse: { type: String },
     ridersFee: { type: Number },
+    netAmount: { type: Number },
     marketPlace: { type: Number, default: 2.99 },
     serviceCharge: { type: Number },
     orderStatus: {
@@ -91,4 +93,4 @@ const OrderSchema = new mongoose.Schema(
 
 OrderSchema.index({ location: "2dsphere" });
 
-module.exports = mongoose.model("Order", OrderSchema);
+  module.exports = mongoose.model("Order", OrderSchema);

@@ -9,6 +9,7 @@ const {
   getDeliveredOrdersNumbers,
   pickUpOrder,
   getPickedOrders,
+  confirmDelivery,
 } = require("../../controllers/rider/getOrders");
 
 const { getRiderLocation } = require("../../controllers/rider/riderLocation");
@@ -25,6 +26,7 @@ router.route("/getDeliveredOrders").post(auth, getDeliveredOrders);
 router.route("/updateOrderStatus/:id").post(auth, updateOrderStatus);
 router.route("/pickOrder/:id").post(auth, pickUpOrder);
 router.route("/getPickOrder").get(auth, getPickedOrders);
+router.route("/confirmDelivery/:id").patch(auth, confirmDelivery);
 
 //location for rider routes
 router.route("/location/:id").patch(getRiderLocation);
