@@ -32,37 +32,37 @@ const createStoreDetails = async (req, res) => {
     return res.status(400).json({ msg: `all fields should be filled` });
   }
 
-  let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
-  const buffer = Buffer.from(converts, "base64");
+  // let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
+  // const buffer = Buffer.from(converts, "base64");
 
-  const convert_url = async (req) => {
-    const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
-    //use clodinary as a promise using the uploadStream method
-    return new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: "DEV" },
-        (err, url) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(url);
-          }
-        }
-      );
-      bufferToStream(data).pipe(stream);
-    });
-  };
+  // const convert_url = async (req) => {
+  //   const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
+  //   //use clodinary as a promise using the uploadStream method
+  //   return new Promise((resolve, reject) => {
+  //     const stream = cloudinary.uploader.upload_stream(
+  //       { folder: "DEV" },
+  //       (err, url) => {
+  //         if (err) {
+  //           reject(err);
+  //         } else {
+  //           resolve(url);
+  //         }
+  //       }
+  //     );
+  //     bufferToStream(data).pipe(stream);
+  //   });
+  // };
 
-  const uri = await convert_url(req);
-  // console.log(uri.secure_url);
+  // const uri = await convert_url(req);
+  // // console.log(uri.secure_url);
 
-  fs.unlinkSync(req.files.image.tempFilePath);
+  // fs.unlinkSync(req.files.image.tempFilePath);
 
   if (sellar) {
     const storeDetails = await StoreDetails.create({
       ...req.body,
       rating: 0,
-      storeImage: uri.secure_url,
+      // storeImage: uri.secure_url,
       storeOwner: sellar,
     });
 

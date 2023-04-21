@@ -83,24 +83,6 @@ const getPickedOrders = async (req, res) => {
   return res.status(400).json({ msg: `unable to get picked orders` });
 };
 
-// //assign and pick order
-// const pickUpOrder = async (req, res) => {
-//   const orderId = req.params.id;
-//   if (orderId) {
-//     const pickOrder = await Order.findByIdAndUpdate(
-//       { _id: orderId },
-//       { assignedRider: req.user.userId, riderStatus: "picked" },
-//       { new: true, runValidators: true }
-//     );
-
-//     return res
-//       .status(200)
-//       .json({ msg: `Order is now assigned to riderId: ${orderId}`, pickOrder });
-//   }
-
-//   return res.status(400).json({ msg: `unable to update order` });
-// };
-
 //assign and pick order
 const pickUpOrder = async (req, res) => {
   const orderId = req.params.id;
