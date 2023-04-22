@@ -30,14 +30,11 @@ const createMenu = async (req, res) => {
       storeOwner: req.user.userId,
     });
 
-    
-    console.log(store);
-
     await StoreDetails.findOneAndUpdate(
       {
         storeOwner: req.user.userId,
       },
-      { $push: { menuId: createMenu } },
+      { $push: { menuId: createMenu._id } },
       { new: true, runValidators: true }
     );
 
@@ -136,7 +133,7 @@ const getMenuFood = async (req, res) => {
   const { id: menuId } = req.params;
   const sellar = req.user.userId;
   if (sellar) {
-    const food = await SellarFood.find({ menu: menuId, storeOwner: sellar });
+    const food = await SellarFood.find({ menu: menuId });
     if (!food) {
       return res
         .status(StatusCodes.BAD_REQUEST)
