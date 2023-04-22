@@ -33,7 +33,8 @@ const register = async (req, res) => {
 
   return res.status(200).json({
     msg: "Success! Please check your email to verify account",
-    id: rider._id, token
+    id: rider._id,
+    token,
   });
 };
 
