@@ -17,10 +17,7 @@ const register = async (req, res) => {
   const verificationToken = crypto.randomBytes(2).toString("hex");
   const hastToken = createHash(verificationToken);
   const rider = await Rider.create({
-    fullname,
-    email,
-    phonenumber,
-    password,
+   ...req.body,
     verificationToken: hastToken,
   });
 
@@ -36,7 +33,7 @@ const register = async (req, res) => {
 
   return res.status(200).json({
     msg: "Success! Please check your email to verify account",
-    token,
+    rider: rider._id,
   });
 };
 
@@ -67,14 +64,6 @@ const login = async (req, res) => {
   });
 };
 
-//user logout
-// const logout = async (req, res) => {
-//   res.cookie("token", "logout", {
-//     httpOnly: true,
-//     expires: new Date(Date.now() + 1000),
-//   });
-//   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
-// };
 
 //verify user
 const verifyEmail = async (req, res) => {
