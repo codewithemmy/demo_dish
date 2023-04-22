@@ -17,7 +17,7 @@ const register = async (req, res) => {
   const verificationToken = crypto.randomBytes(2).toString("hex");
   const hastToken = createHash(verificationToken);
   const rider = await Rider.create({
-   ...req.body,
+    ...req.body,
     verificationToken: hastToken,
   });
 
@@ -63,7 +63,6 @@ const login = async (req, res) => {
     token: token,
   });
 };
-
 
 //verify user
 const verifyEmail = async (req, res) => {
