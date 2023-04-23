@@ -53,7 +53,7 @@ const getSingleStoreDetails = async (req, res) => {
         .execPopulate();
     }
 
-    const food = await SellarFood.find({ storeOwner: storeDetails.storeOwner });
+    const food = await SellarFood.find({ storeOwner: storeDetails._id });
 
     return res.status(200).json({ storeDetails, food });
   }
@@ -74,11 +74,8 @@ const getSingleFood = async (req, res) => {
       });
     }
 
-    console.log(food.storeOwner);
-    // console.log(food.menu);
-
     const store = await StoreDetails.findOne({
-      storeOwner: food.storeOwner,
+      _id: food.storeOwner,
     }).select({ _id: 1 });
 
     if (!store) {

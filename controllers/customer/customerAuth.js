@@ -11,9 +11,7 @@ const register = async (req, res) => {
 
   const emailAlreadyExists = await Customer.findOne({ email });
   if (emailAlreadyExists) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Email already exist" });
+    return res.status(400).json({ msg: "Email already exist" });
   }
 
   const customer = await Customer.create({
@@ -24,7 +22,7 @@ const register = async (req, res) => {
   //send Mail
   mailTransport.sendMail({
     from: '"Afrilish" <afrilish@afrilish.com>', // sender address
-    to: req.user.email, // list of receivers
+    to: email, // list of receivers
     subject: "AFRILISH REGISTRATION SUCCESSFUL", // Subject line
     html: `Hello, ${fullName}, welcome to the best cuisine delicacies. Your registration with Afrilish is success.</h4>`, // html body
   });
@@ -70,9 +68,7 @@ const login = async (req, res) => {
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Please provide valid email" });
+    return res.status(400).json({ msg: "Please provide valid email" });
   }
 
   const customer = await Customer.findOne({ email });
@@ -92,7 +88,7 @@ const forgotPassword = async (req, res) => {
     const tenMinutes = 1000 * 60 * 10;
     const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
 
-    customer.passwordToken = createHash(passwordToken);
+    customer.passwordToken = passwordToken;
     customer.passwordTokenExpirationDate = passwordTokenExpirationDate;
     await customer.save();
   }
@@ -106,9 +102,7 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   const { token, email, newPassword } = req.body;
   if (!token || !email || !newPassword) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Please provide all values" });
+    return res.status(400).json({ msg: "Please provide all values" });
   }
   const customer = await Customer.findOne({ email });
 
@@ -116,18 +110,20 @@ const resetPassword = async (req, res) => {
     const currentDate = new Date();
 
     if (
-      customer.passwordToken === createHash(token) &&
+      customer.passwordToken === token &&
       customer.passwordTokenExpirationDate > currentDate
     ) {
       customer.password = newPassword;
-      customer.passwordToken = null;
-      customer.passwordTokenExpirationDate = null;
+      customer.passwordToken = "";
+      customer.passwordTokenExpirationDate = "";
       await customer.save();
+
+      return res
+        .status(200)
+        .json({ msg: "your password is sucessfully reset" });
     }
+    return res.status(400).json({ msg: "unable to reset password" });
   }
-  return res
-    .status(StatusCodes.OK)
-    .json({ msg: "your password is sucessfully reset" });
 };
 
 //change Password

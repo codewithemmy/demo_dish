@@ -130,7 +130,7 @@ const getOrders = async (req, res) => {
     if (!customerOrders) {
       return res.status(404).json({ msg: `customer order not found` });
     }
-    return res.status(200).json(customerOrders.orders);
+    return res.status(200).json({ "Current Orders": customerOrders.orders });
   }
   return res.status(400).json({ msg: `error getting customer orders` });
 };

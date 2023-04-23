@@ -31,10 +31,6 @@ const CustomerSchema = new mongoose.Schema(
     passwordToken: {
       type: String,
     },
-    wallet: {
-      type: Number,
-      default: 0,
-    },
     address: { type: String },
     image: { type: String },
     location: {

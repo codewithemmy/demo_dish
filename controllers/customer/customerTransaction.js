@@ -18,8 +18,8 @@ const createPaymentIntent = async (req, res) => {
     });
 
     return res.status(200).json({
-      // clientSecret: paymentIntent.client_secret,
-      // transactionId: paymentIntent.id,
+      clientSecret: paymentIntent.client_secret,
+      transactionId: paymentIntent.id,
     });
   } catch (error) {
     return res.status(200).json(error);
