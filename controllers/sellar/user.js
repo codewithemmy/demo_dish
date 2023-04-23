@@ -20,9 +20,16 @@ const bufferToStream = (buffer) => {
 
 //get Sellar profile
 const getSellarProfile = async (req, res) => {
-  const sellar = await Sellar.find({ _id: req.user.userId }).select(
-    "-password"
-  );
+  const sellar = await Sellar.find({ _id: req.user.userId }).select({
+    isVerified: 1,
+    cuisineType: 1,
+    wallet: 1,
+    store: 1,
+    firstName: 1,
+    surname: 1,
+    email: 1,
+    phonenumber: 1,
+  });
 
   res.status(200).json({ profile: sellar });
 };
@@ -63,7 +70,7 @@ const updateSellarProfile = async (req, res) => {
     );
     return res
       .status(200)
-      .json({ msg: `profile update successful`, iage_url: uri.secure_url });
+      .json({ msg: `profile update successful`, image_url: uri.secure_url });
   }
   return res.status(400).json({ msg: `unable to update profile` });
 };
