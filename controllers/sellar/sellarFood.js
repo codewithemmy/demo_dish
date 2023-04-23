@@ -77,6 +77,7 @@ const createFood = async (req, res) => {
       nutritionalFacts: nutritionalFacts,
       menu: menuId,
       storeOwner: store._id,
+      sellar: req.user.userId,
       shortInfo: shortInfo,
     });
 
@@ -186,8 +187,9 @@ const deleteFood = async (req, res) => {
 const getFood = async (req, res) => {
   const sellar = req.user.userId;
   if (sellar) {
-    const food = await SellarFood.find({ storeOwner: sellar }).populate({
+    const food = await SellarFood.find({ sellar: sellar }).populate({
       path: "menu",
+      select: "menuTitle",
     });
 
     return res.status(StatusCodes.CREATED).json(food);

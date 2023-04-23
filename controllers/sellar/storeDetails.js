@@ -21,52 +21,21 @@ const bufferToStream = (buffer) => {
 
 //create store details
 const createStoreDetails = async (req, res) => {
-  const {
-    storeName,
-    cuisineType,
-    openHours,
-  } = req.body;
+  const { storeName, cuisineType, openHours } = req.body;
 
   const sellar = req.user.userId;
   if (!storeName || !cuisineType || !openHours) {
     return res.status(400).json({ msg: `all fields should be filled` });
   }
 
-  // let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
-  // const buffer = Buffer.from(converts, "base64");
-
-  // const convert_url = async (req) => {
-  //   const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
-  //   //use clodinary as a promise using the uploadStream method
-  //   return new Promise((resolve, reject) => {
-  //     const stream = cloudinary.uploader.upload_stream(
-  //       { folder: "DEV" },
-  //       (err, url) => {
-  //         if (err) {
-  //           reject(err);
-  //         } else {
-  //           resolve(url);
-  //         }
-  //       }
-  //     );
-  //     bufferToStream(data).pipe(stream);
-  //   });
-  // };
-
-  // const uri = await convert_url(req);
-  // // console.log(uri.secure_url);
-
-  // fs.unlinkSync(req.files.image.tempFilePath);
-
   if (sellar) {
     const storeDetails = await StoreDetails.create({
       ...req.body,
       rating: 0,
-      // storeImage: uri.secure_url,
+
       storeOwner: sellar,
     });
 
-    //storeName, cuisineType, openHours
     return res
       .status(StatusCodes.CREATED)
       .json({ msg: "store details created successfully", storeDetails });
@@ -89,7 +58,7 @@ const editStoreDetails = async (req, res) => {
     //use clodinary as a promise using the uploadStream method
     return new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: "DEV" },
+        { folder: "SellarStore" },
         (err, url) => {
           if (err) {
             reject(err);
@@ -116,6 +85,7 @@ const editStoreDetails = async (req, res) => {
       deliveryFee,
       minimumOrder,
       description,
+      email,
     } = req.body;
 
     const editedStore = await StoreDetails.findById(storeDetailsId);
@@ -124,6 +94,7 @@ const editStoreDetails = async (req, res) => {
     editedStore.location = location;
     editedStore.cuisineType = cuisineType;
     editedStore.minimumOrder = minimumOrder;
+    editedStore.email = email;
     editedStore.deliveryFee = deliveryFee;
     editedStore.description = description;
     editedStore.serviceAvalaible = false;

@@ -28,10 +28,11 @@ const compRegCert = async (req, res) => {
 
   const convert_url = async (req) => {
     const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
+
     //use clodinary as a promise using the uploadStream method
     return new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: "DEV" },
+        { folder: "DocumentsRequired" },
         (err, url) => {
           if (err) {
             reject(err);
@@ -45,7 +46,6 @@ const compRegCert = async (req, res) => {
   };
 
   const uri = await convert_url(req);
-  console.log(uri.secure_url);
 
   fs.unlinkSync(req.files.image.tempFilePath);
 
@@ -53,7 +53,7 @@ const compRegCert = async (req, res) => {
     compRegCert: uri.secure_url,
     passportId: "",
     taxDocument: "",
-    storeOwner: req.user.userId,
+    sellar: req.params.id,
   });
 
   res.status(StatusCodes.CREATED).json({ msg: documentRequired });
@@ -68,7 +68,7 @@ const passportId = async (req, res) => {
     //use clodinary as a promise using the uploadStream method
     return new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: "DEV" },
+        { folder: "DocumentsRequired" },
         (err, url) => {
           if (err) {
             reject(err);
@@ -90,7 +90,7 @@ const passportId = async (req, res) => {
     compRegCert: "",
     passportId: uri.secure_url,
     taxDocument: "",
-    storeOwner: req.user.userId,
+    sellar: req.params.id,
   });
 
   res.status(StatusCodes.CREATED).json({ msg: documentRequired });
@@ -105,7 +105,7 @@ const taxDocument = async (req, res) => {
     //use clodinary as a promise using the uploadStream method
     return new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: "DEV" },
+        { folder: "DocumentsRequired" },
         (err, url) => {
           if (err) {
             reject(err);
@@ -119,7 +119,6 @@ const taxDocument = async (req, res) => {
   };
 
   const uri = await convert_url(req);
-  console.log(uri.secure_url);
 
   fs.unlinkSync(req.files.image.tempFilePath);
 
@@ -127,7 +126,7 @@ const taxDocument = async (req, res) => {
     compRegCert: "",
     passportId: "",
     taxDocument: uri.secure_url,
-    storeOwner: req.user.userId,
+    sellar: req.params.id,
   });
 
   res.status(StatusCodes.CREATED).json({ msg: documentRequired });

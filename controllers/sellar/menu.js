@@ -105,7 +105,7 @@ const deleteMenu = async (req, res) => {
 const getMenu = async (req, res) => {
   const sellar = req.user.userId;
   if (sellar) {
-    const menu = await Menu.find({ storeOwner: sellar });
+    const menu = await Menu.find({ storeOwner: sellar }).populate("food");
 
     return res.status(StatusCodes.CREATED).json(menu);
   }
@@ -119,7 +119,9 @@ const getSingleMenu = async (req, res) => {
   const sellar = req.user.userId;
   const { id: menuId } = req.params;
   if (sellar) {
-    const menu = await Menu.find({ storeOwner: sellar, _id: menuId });
+    const menu = await Menu.find({ storeOwner: sellar, _id: menuId }).populate(
+      "food"
+    );
 
     return res.status(StatusCodes.CREATED).json(menu);
   }

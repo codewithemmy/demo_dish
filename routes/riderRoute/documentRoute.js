@@ -6,9 +6,6 @@ const auth = require("../../riderMiddleware/authentication");
 
 const router = express.Router();
 
-// router.route("/compRegCert").post(auth, compRegCert);
-// router.route("/passportId").post(auth, passportId);
-// router.route("/taxDocument").post(auth, taxDocument);
 router.route("/document").post(multipleDoc);
 router.route("/registration").post(auth, createReg);
 router.route("/upload").post(insertDoc);

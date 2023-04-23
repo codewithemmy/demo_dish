@@ -9,7 +9,7 @@ const RequiredDocumentsSchema = new mongoose.Schema(
       type: String,
     },
     taxDocument: { type: String },
-    storeOwner: {
+    sellar: {
       type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },

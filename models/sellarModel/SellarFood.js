@@ -29,6 +29,10 @@ const SellarFoodSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "StoreDetails",
     },
+    sellar: {
+      type: mongoose.Types.ObjectId,
+      ref: "Sellar",
+    },
   },
   { timestamps: true }
 );
