@@ -26,13 +26,10 @@ const createMenu = async (req, res) => {
       store: storeId,
     });
 
-    // const store = await StoreDetails.findOne({
-    //   storeOwner: req.user.userId,
-    // });
-
     await StoreDetails.findOneAndUpdate(
       {
         storeOwner: req.user.userId,
+        _id: storeId,
       },
       { $push: { menuId: createMenu._id } },
       { new: true, runValidators: true }
