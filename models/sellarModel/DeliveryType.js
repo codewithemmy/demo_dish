@@ -9,7 +9,7 @@ const DeliveryTypeSchema = new mongoose.Schema(
     type: {
       type: Boolean,
     },
-    storeOwner: {
+    sellar: {
       type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },

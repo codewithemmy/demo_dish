@@ -25,7 +25,7 @@ const InvoiceInfoSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide the Company Reg Number"],
     },
-    storeOwner: {
+    sellar: {
       type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },

@@ -15,7 +15,10 @@ const BankDetailsSchema = new mongoose.Schema(
     sortcode: {
       type: String,
     },
-    storeOwner: {
+    accountname: { type: String },
+    accounttype: { type: String },
+    routingnumber: { type: String },
+    sellar: {
       type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },

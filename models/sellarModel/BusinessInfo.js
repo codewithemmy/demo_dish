@@ -22,7 +22,7 @@ const BusinessInfoSchema = new mongoose.Schema(
       type: String,
       required: [true, "provide your account number"],
     },
-    storeOwner: {
+    sellar: {
       type: mongoose.Types.ObjectId,
       ref: "Sellar",
     },
