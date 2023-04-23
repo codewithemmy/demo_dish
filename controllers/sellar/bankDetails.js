@@ -9,7 +9,7 @@ const createBankDetails = async (req, res) => {
   if (sellar) {
     const businessBank = await BankDetails.create({
       ...req.body,
-      storeOwner: sellar,
+      sellar: sellar,
     });
 
     return res.status(201).json({

@@ -4,13 +4,13 @@ const Partner = require("../../models/sellarModel/Partner");
 //create partnership
 const createPartner = async (req, res) => {
   const { delivery } = req.body;
-  const store = req.user.userId;
+  const sellar = req.user.userId;
   console.log(req.user);
 
   if (store) {
     const partner = await Partner.create({
       delivery: delivery,
-      storeOwner: store,
+      sellar: sellar,
     });
 
     return res

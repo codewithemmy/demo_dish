@@ -13,7 +13,7 @@ const createStoreInfo = async (req, res) => {
       foodCuisineOffer,
       pickUpInstruction,
       dayOfOpen,
-      storeOwner: sellar,
+      sellar: sellar,
     });
 
     return res

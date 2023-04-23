@@ -26,9 +26,9 @@ const createMenu = async (req, res) => {
       store: storeId,
     });
 
-    const store = await StoreDetails.findOne({
-      storeOwner: req.user.userId,
-    });
+    // const store = await StoreDetails.findOne({
+    //   storeOwner: req.user.userId,
+    // });
 
     await StoreDetails.findOneAndUpdate(
       {

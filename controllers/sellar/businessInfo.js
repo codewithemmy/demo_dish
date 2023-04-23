@@ -31,7 +31,7 @@ const createBusiness = async (req, res) => {
       bankName: bankName,
       bankAcountName: bankAcountName,
       bankAccountNumber: bankAccountNumber,
-      storeOwner: sellar,
+      sellar: sellar,
     });
 
     return res

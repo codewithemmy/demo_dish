@@ -32,7 +32,7 @@ const createInvoiceInfo = async (req, res) => {
       postCode,
       vatRegNo,
       companyRegNumber,
-      storeOwner: sellar,
+      sellar: sellar,
     });
 
     return res.status(StatusCodes.CREATED).json({

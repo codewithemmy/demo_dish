@@ -10,7 +10,7 @@ const deliveryType = async (req, res) => {
     const delivery = await DeliveryType.create({
       deliveryType,
       type,
-      storeOwner: sellar,
+      sellar: sellar,
     });
 
     return res
