@@ -1,5 +1,4 @@
 const Sellar = require("../../models/sellarModel/Sellar");
-const { StatusCodes } = require("http-status-codes");
 const crypto = require("crypto");
 const createHash = require("../../utils/createHash");
 const { mailTransport } = require("../../utils/sendEmail");
@@ -36,7 +35,7 @@ const register = async (req, res) => {
 
   let token = sellar.createJWT();
 
-  return res.status(StatusCodes.CREATED).json({
+  return res.status(201).json({
     msg: "Success! Please check your email to verify account",
     sellar,
     token,
@@ -50,21 +49,17 @@ const verifyEmail = async (req, res) => {
   const sellar = await Sellar.findOne({ _id: id });
 
   if (!verificationToken) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .json({ msg: "Kindly input your token" });
+    return res.status(404).json({ msg: "Kindly input your token" });
   }
 
   if (!sellar) {
-    return res.status(StatusCodes.NOT_FOUND).json({ msg: "Sellar not found" });
+    return res.status(404).json({ msg: "Sellar not found" });
   }
 
   const hastToken = createHash(verificationToken);
 
   if (sellar.verificationToken !== hastToken) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Verification Failed" });
+    return res.status(400).json({ msg: "Verification Failed" });
   }
 
   (sellar.isVerified = true), (sellar.verified = Date.now());
@@ -80,7 +75,7 @@ const verifyEmail = async (req, res) => {
     html: `<h4> Hello, ${sellar.firstName}</h4> <h2>Congrats</h2> you are now verified,you can login now`, // html body
   });
 
-  return res.status(StatusCodes.OK).json({ msg: "Email Verified" });
+  return res.status(200).json({ msg: "Email Verified" });
 };
 
 //user login
@@ -88,56 +83,37 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .json({ msg: "Please provide username or password" });
+    return res.status(404).json({ msg: "Please provide username or password" });
   }
   const sellar = await Sellar.findOne({ email });
 
   if (!sellar) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Sellar not found" });
+    return res.status(400).json({ msg: "Sellar not found" });
   }
 
   const isPasswordCorrect = await sellar.comparePassword(password);
   if (!isPasswordCorrect) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Password is not valid" });
+    return res.status(400).json({ msg: "Password is not valid" });
   }
 
   if (!sellar.isVerified) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "please verify your account" });
+    return res.status(400).json({ msg: "please verify your account" });
   }
 
   let token = sellar.createJWT();
 
-  return res.status(StatusCodes.OK).json({
+  return res.status(200).json({
     msg: "Login Successful",
     userId: sellar._id,
     token: token,
   });
 };
 
-//user logout
-// const logout = async (req, res) => {
-//   res.cookie("token", "logout", {
-//     httpOnly: true,
-//     expires: new Date(Date.now() + 1000),
-//   });
-//   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
-// };
-
 //forget password
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Please provide valid email" });
+    return res.status(400).json({ msg: "Please provide valid email" });
   }
 
   const sellar = await Sellar.findOne({ email });
@@ -149,19 +125,19 @@ const forgotPassword = async (req, res) => {
     mailTransport.sendMail({
       from: '"Afrilish" <afrilish@afrilish.com>', // sender address
       to: email,
-      subject: "Reset you account",
+      subject: "RESET YOUR PASSWORD",
       html: `Hi, kindly reset your password with this token: <h4>${passwordToken}</h4>`,
     });
 
     const tenMinutes = 1000 * 60 * 10;
     const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
 
-    sellar.passwordToken = createHash(passwordToken);
+    sellar.passwordToken = passwordToken;
     sellar.passwordTokenExpirationDate = passwordTokenExpirationDate;
     await sellar.save();
   }
 
-  return res.status(StatusCodes.OK).json({
+  return res.status(200).json({
     msg: "Please check your email to reset password",
   });
 };
@@ -170,9 +146,7 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   const { token, email, newPassword } = req.body;
   if (!token || !email || !newPassword) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "Please provide all values" });
+    return res.status(400).json({ msg: "Please provide all values" });
   }
   const sellar = await Sellar.findOne({ email });
 
@@ -180,18 +154,20 @@ const resetPassword = async (req, res) => {
     const currentDate = new Date();
 
     if (
-      sellar.passwordToken === createHash(token) &&
+      sellar.passwordToken === token &&
       sellar.passwordTokenExpirationDate > currentDate
     ) {
       sellar.password = newPassword;
-      sellar.passwordToken = null;
-      sellar.passwordTokenExpirationDate = null;
+      sellar.passwordToken = "";
+      sellar.passwordTokenExpirationDate = "";
       await sellar.save();
+
+      return res
+        .status(200)
+        .json({ msg: "your password is sucessfully reset" });
     }
+    return res.status(400).json({ msg: "unable to reset password" });
   }
-  return res
-    .status(StatusCodes.OK)
-    .json({ msg: "your password is sucessfully reset" });
 };
 
 //change Password
@@ -205,7 +181,7 @@ const changePassword = async (req, res) => {
     }
 
     //compare password
-    const isPasswordCorrect = await customer.comparePassword(oldPassword);
+    const isPasswordCorrect = await sellar.comparePassword(oldPassword);
     if (!isPasswordCorrect) {
       return res
         .status(401)
@@ -226,7 +202,6 @@ const changePassword = async (req, res) => {
 module.exports = {
   register,
   login,
-  // logout,
   verifyEmail,
   forgotPassword,
   resetPassword,
