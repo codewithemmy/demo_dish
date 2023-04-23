@@ -7,9 +7,10 @@ const bcrypt = require("bcryptjs");
 
 //register Rider
 const register = async (req, res) => {
-  const { fullname, email, phonenumber, password } = req.body;
+  const { fullname, email } = req.body;
 
   const emailAlreadyExists = await Rider.findOne({ email });
+
   if (emailAlreadyExists) {
     return res.status(400).json({ msg: "Email already exist" });
   }
@@ -23,7 +24,7 @@ const register = async (req, res) => {
 
   //send Mail
   mailTransport.sendMail({
-    from: '"Aflilish" <afrilish@afrilish.com>', // sender address
+    from: '"Afrilish" <afrilish@afrilish.com>', // sender address
     to: email, // list of receivers
     subject: "VERIFY YOUR EMAIL ACCOUNT", // Subject line
     html: `Hello, ${fullname}, kindly verify your account with this otp:<h4>${verificationToken}</h4>`, // html body
@@ -95,7 +96,7 @@ const verifyEmail = async (req, res) => {
     from: '"Afrilish" <afrilish@afrilish.com>', // sender address
     to: rider.email, // list of receivers
     subject: "MAIL IS VERIFIED", // Subject line
-    html: `<h4> Hello, ${rider.fullname}</h4> <h2>Congrats</h2> you are now verified,you can login now`, // html body
+    html: `<h4> Hello, ${rider.fullname}</h4> <h2>Congrats</h2> you are now verified, you can login now`, // html body
   });
 
   return res.status(200).json({ msg: "Email Verified" });
@@ -115,16 +116,17 @@ const forgotPassword = async (req, res) => {
 
     // send email
     mailTransport.sendMail({
-      from: '"Afrilish" <Afrilish@gmail.com>', // sender address
+      from: '"Afrilish" <afrilish@afrilish.com>', // sender address
       to: email,
-      subject: "Reset Your Account",
+      subject: "RESET YOUR PASSWORD",
       html: `Hi, kindly reset your password with this token: <h4>${passwordToken}</h4>`,
     });
 
+    //set otp timeout to 60 ten minutes
     const tenMinutes = 1000 * 60 * 10;
     const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
 
-    rider.passwordToken = createHash(passwordToken);
+    rider.passwordToken = passwordToken;
     rider.passwordTokenExpirationDate = passwordTokenExpirationDate;
     await rider.save();
   }
@@ -138,7 +140,7 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   const { token, email, newPassword } = req.body;
   if (!token || !email || !newPassword) {
-    return res.status(200).json({ msg: "Please provide all values" });
+    return res.status(400).json({ msg: "Please provide all values" });
   }
   const rider = await Rider.findOne({ email });
 
@@ -146,16 +148,20 @@ const resetPassword = async (req, res) => {
     const currentDate = new Date();
 
     if (
-      rider.passwordToken === createHash(token) &&
+      rider.passwordToken === token &&
       rider.passwordTokenExpirationDate > currentDate
     ) {
       rider.password = newPassword;
-      rider.passwordToken = null;
-      rider.passwordTokenExpirationDate = null;
+      rider.passwordToken = "";
+      rider.passwordTokenExpirationDate = "";
       await rider.save();
+
+      return res
+        .status(200)
+        .json({ msg: "your password is sucessfully reset" });
     }
+    return res.status(400).json({ msg: "unable to reset password" });
   }
-  return res.status(200).json({ msg: "your password is sucessfully reset" });
 };
 
 const riderAvailable = async (req, res) => {
@@ -188,7 +194,7 @@ const changePassword = async (req, res) => {
     }
 
     //compare password
-    const isPasswordCorrect = await customer.comparePassword(oldPassword);
+    const isPasswordCorrect = await rider.comparePassword(oldPassword);
     if (!isPasswordCorrect) {
       return res
         .status(401)
