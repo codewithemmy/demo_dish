@@ -37,7 +37,7 @@ const register = async (req, res) => {
 
   return res.status(201).json({
     msg: "Success! Please check your email to verify account",
-    sellar,
+    sellarId: sellar._id,
     token,
   });
 };
@@ -88,7 +88,7 @@ const login = async (req, res) => {
   const sellar = await Sellar.findOne({ email });
 
   if (!sellar) {
-    return res.status(400).json({ msg: "Sellar not found" });
+    return res.status(404).json({ msg: "Sellar not found" });
   }
 
   const isPasswordCorrect = await sellar.comparePassword(password);

@@ -45,7 +45,9 @@ const login = async (req, res) => {
   const customer = await Customer.findOne({ email });
 
   if (!customer) {
-    return res.status(404).json({ msg: "cusotmer not found" });
+    return res
+      .status(404)
+      .json({ msg: "Cusotmer not found. Register to login" });
   }
 
   //compare password
