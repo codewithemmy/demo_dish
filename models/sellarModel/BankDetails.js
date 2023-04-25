@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const BankDetailsSchema = new mongoose.Schema(
   {
-    fullname: {
+    accountname: {
       type: String,
       required: [true, "provide your fullname"],
     },
@@ -15,7 +15,6 @@ const BankDetailsSchema = new mongoose.Schema(
     sortcode: {
       type: String,
     },
-    accountname: { type: String },
     accounttype: { type: String },
     routingnumber: { type: String },
     sellar: {
