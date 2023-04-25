@@ -34,34 +34,42 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   const riderId = req.params.id;
   if (riderId) {
-    let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
-    const buffer = Buffer.from(converts, "base64");
+    if (req.files) {
+      let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
+      const buffer = Buffer.from(converts, "base64");
 
-    const convert_url = async (req) => {
-      const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
-      //use clodinary as a promise using the uploadStream method
-      return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: "DEV" },
-          (err, url) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(url);
+      const convert_url = async (req) => {
+        const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
+        //use clodinary as a promise using the uploadStream method
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "DEV" },
+            (err, url) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(url);
+              }
             }
-          }
-        );
-        bufferToStream(data).pipe(stream);
-      });
-    };
+          );
+          bufferToStream(data).pipe(stream);
+        });
+      };
 
-    const uri = await convert_url(req);
+      const uri = await convert_url(req);
 
-    fs.unlinkSync(req.files.image.tempFilePath);
+      fs.unlinkSync(req.files.image.tempFilePath);
 
-    const profile = await Rider.findByIdAndUpdate(
+      await Rider.findByIdAndUpdate(
+        { _id: riderId },
+        { image: uri.secure_url, ...req.body },
+        { new: true, runValidators: true }
+      );
+      return res.status(200).json({ msg: `profile update successful` });
+    }
+    await Rider.findByIdAndUpdate(
       { _id: riderId },
-      { image: uri.secure_url, ...req.body },
+      { ...req.body },
       { new: true, runValidators: true }
     );
     return res.status(200).json({ msg: `profile update successful` });
