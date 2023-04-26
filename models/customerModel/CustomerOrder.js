@@ -35,7 +35,7 @@ const OrderSchema = new mongoose.Schema(
     customerEmail: { type: String },
     paymentStatus: {
       type: String,
-      enum: ["paid", "pending"],
+      enum: ["paid", "pending", "failed"],
       default: "pending",
     },
     orderDate: { type: Date },
@@ -93,4 +93,4 @@ const OrderSchema = new mongoose.Schema(
 
 OrderSchema.index({ location: "2dsphere" });
 
-  module.exports = mongoose.model("Order", OrderSchema);
+module.exports = mongoose.model("Order", OrderSchema);

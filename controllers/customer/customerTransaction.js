@@ -39,15 +39,26 @@ const updateTransaction = async (req, res) => {
     customerId: req.user.userId,
   });
 
-  //update order with the transaction id
-  order.transaction = transaction._id;
-  order.paymentStatus = "paid";
+  if (req.body.transactionStatus === "Succeeded") {
+    //update order with the transaction id
+    order.transaction = transaction._id;
+    order.paymentStatus = "paid";
 
-  await order.save();
+    await order.save();
+    return res
+      .status(200)
+      .json({ msg: "transaction successfully created/updated" });
+  } else {
+    //update order with the transaction id
+    order.transaction = transaction._id;
+    order.paymentStatus = "failed";
 
-  return res
-    .status(200)
-    .json({ msg: "transaction successfully created/updated" });
+    await order.save();
+
+    return res
+      .status(200)
+      .json({ msg: "transaction successfully created/updated" });
+  }
 };
 
 module.exports = {
