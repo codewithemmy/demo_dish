@@ -47,7 +47,7 @@ const login = async (req, res) => {
   if (!customer) {
     return res
       .status(404)
-      .json({ msg: "Cusotmer not found. Register to login" });
+      .json({ msg: "User not found. Register to login" });
   }
 
   //compare password

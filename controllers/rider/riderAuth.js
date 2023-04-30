@@ -1,4 +1,5 @@
 const Rider = require("../../models/riderModel/Rider");
+const RiderTemp = require("../../models/riderModel/Rider");
 const crypto = require("crypto");
 const createHash = require("../../utils/createHash");
 const { mailTransport } = require("../../utils/sendEmail");
@@ -12,7 +13,9 @@ const register = async (req, res) => {
   const emailAlreadyExists = await Rider.findOne({ email });
 
   if (emailAlreadyExists) {
-    return res.status(400).json({ msg: "Email already exist" });
+    return res
+      .status(400)
+      .json({ msg: "Email already exist, you can login as a user" });
   }
 
   const verificationToken = crypto.randomBytes(2).toString("hex");
@@ -39,6 +42,39 @@ const register = async (req, res) => {
   });
 };
 
+//send verify mail
+const sendVerifyMail = async (req, res) => {
+  const riderId = req.params.id;
+
+  if (riderId) {
+    const rider = await Rider.findOne({ _id: riderId });
+
+    if (!rider) {
+      return res.status(400).json({ msg: `rider params id not found` });
+    }
+
+    const verificationToken = crypto.randomBytes(2).toString("hex");
+    const hastToken = createHash(verificationToken);
+    rider.verificationToken = hastToken;
+    await rider.save();
+    //send Mail
+    mailTransport.sendMail({
+      from: '"Afrilish" <afrilish@afrilish.com>', // sender address
+      to: rider.email, // list of receivers
+      subject: "VERIFY YOUR EMAIL ACCOUNT", // Subject line
+      html: `Hello, ${rider.fullname}, kindly verify your account with this otp:<h4>${verificationToken}</h4>`, // html body
+    });
+
+    return res.status(200).json({
+      msg: "Success! Please check your email to verify account",
+    });
+  }
+
+  return res.status(400).json({
+    msg: "unable to send otp for verification",
+  });
+};
+
 //login Rider
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -54,7 +90,9 @@ const login = async (req, res) => {
   }
 
   if (!rider.isVerified) {
-    return res.status(400).json({ msg: "please verify your account" });
+    return res
+      .status(400)
+      .json({ msg: "you are not a verified rider. To login, Get verified." });
   }
 
   let token = rider.createJWT();
@@ -84,7 +122,6 @@ const verifyEmail = async (req, res) => {
 
   if (rider.verificationToken !== hastToken) {
     return res.status(400).json({ msg: "Verification Failed" });
-    
   }
 
   (rider.isVerified = true), (rider.verified = Date.now());
@@ -216,7 +253,7 @@ const changePassword = async (req, res) => {
 module.exports = {
   register,
   login,
-  // logout,
+  sendVerifyMail,
   verifyEmail,
   forgotPassword,
   resetPassword,

@@ -14,7 +14,9 @@ const register = async (req, res) => {
   const emailAlreadyExists = await Sellar.findOne({ email });
 
   if (emailAlreadyExists) {
-    return res.status(400).json({ msg: "Email already exist" });
+    return res
+      .status(400)
+      .json({ msg: "Email already exist, you can login as a user" });
   }
 
   const verificationToken = crypto.randomBytes(2).toString("hex");
@@ -97,7 +99,9 @@ const login = async (req, res) => {
   }
 
   if (!sellar.isVerified) {
-    return res.status(400).json({ msg: "please verify your account" });
+    return res
+      .status(400)
+      .json({ msg: "You are not verified. To login, get verified" });
   }
 
   let token = sellar.createJWT();
