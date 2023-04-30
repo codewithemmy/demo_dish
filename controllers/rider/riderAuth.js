@@ -84,6 +84,7 @@ const verifyEmail = async (req, res) => {
 
   if (rider.verificationToken !== hastToken) {
     return res.status(400).json({ msg: "Verification Failed" });
+    
   }
 
   (rider.isVerified = true), (rider.verified = Date.now());
