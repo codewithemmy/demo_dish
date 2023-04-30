@@ -1,4 +1,3 @@
-const { StatusCodes } = require("http-status-codes");
 const BankDetails = require("../../models/sellarModel/BankDetails");
 
 //create business bank information
@@ -18,10 +17,9 @@ const createBankDetails = async (req, res) => {
     });
   }
   return res
-    .status(StatusCodes.BAD_REQUEST)
+    .status(400)
     .json({ msg: "error in creating business  bank information" });
 };
-
 
 //update business bank information
 const updateBusinessBankInfo = async (req, res) => {
@@ -44,7 +42,7 @@ const updateBusinessBankInfo = async (req, res) => {
     });
   }
   return res
-    .status(StatusCodes.BAD_REQUEST)
+    .status(400)
     .json({ msg: "error in updating business bank information" });
 };
 
