@@ -44,6 +44,40 @@ const register = async (req, res) => {
   });
 };
 
+//send verify mail
+const sendVerifyMail = async (req, res) => {
+  const sellarId = req.params.id;
+
+  if (sellarId) {
+    const sellar = await Sellar.findOne({ _id: sellarId });
+
+    if (!sellar) {
+      return res.status(400).json({ msg: `seller params id not found` });
+    }
+
+    const verificationToken = crypto.randomBytes(2).toString("hex");
+    const hastToken = createHash(verificationToken);
+    sellar.verificationToken = hastToken;
+    await sellar.save();
+
+    //send Mail
+    mailTransport.sendMail({
+      from: '"Afrilish" <afrilish@afrilish.com>', // sender address
+      to: sellar.email, // list of receivers
+      subject: "VERIFY YOUR EMAIL ACCOUNT", // Subject line
+      html: `Hello, ${sellar.fullname}, kindly verify your account with this otp:<h4>${verificationToken}</h4>`, // html body
+    });
+
+    return res.status(200).json({
+      msg: "Success! Please check your email to verify account",
+    });
+  }
+
+  return res.status(400).json({
+    msg: "unable to send otp for verification",
+  });
+};
+
 //verify user
 const verifyEmail = async (req, res) => {
   const { id } = req.params;
@@ -211,4 +245,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   changePassword,
+  sendVerifyMail,
 };
