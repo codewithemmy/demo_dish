@@ -9,7 +9,7 @@ const { currency } = require("../../utils/currency");
 //register sellar
 const register = async (req, res) => {
   const { country, email, firstName } = req.body;
-  let symbol = await currency(country);
+  // let symbol = await currency(country);
 
   const emailAlreadyExists = await Sellar.findOne({ email });
 
@@ -23,7 +23,6 @@ const register = async (req, res) => {
   const hastToken = createHash(verificationToken);
   const sellar = await Sellar.create({
     ...req.body,
-    currency: symbol,
     verificationToken: hastToken,
   });
 
