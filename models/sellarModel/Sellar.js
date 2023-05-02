@@ -7,7 +7,6 @@ const SellarSchema = new mongoose.Schema(
   {
     store: {
       type: String,
-      required: [true, "kindly provide store/restaurant name"],
     },
     floor: { type: String },
     firstName: {
