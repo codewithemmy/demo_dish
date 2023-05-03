@@ -33,6 +33,7 @@ const OrderSchema = new mongoose.Schema(
     },
     totalAmount: { type: Number },
     customerEmail: { type: String },
+    customerName: { type: String },
     paymentStatus: {
       type: String,
       enum: ["paid", "pending", "failed"],

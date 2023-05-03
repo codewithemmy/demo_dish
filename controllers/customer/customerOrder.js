@@ -101,6 +101,7 @@ const createTransactionOrder = async (req, res) => {
         store: storeId,
         ridersFee,
         customerEmail: req.user.email,
+        customerName: req.user.fullName,
         addNote: req.body.addNote,
         serviceCharge,
         sellarId: store.storeOwner,
