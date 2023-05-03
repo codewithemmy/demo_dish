@@ -148,7 +148,7 @@ const confirmDelivery = async (req, res) => {
       orderId: deliveryId,
     });
 
-    if (transaction.transactionStatus == "success") {
+    if (transaction.transactionStatus === "Succeeded") {
       //send Mail
       mailTransport.sendMail({
         from: '"Afrilish" <afrilish@afrilish.com>', // sender address
