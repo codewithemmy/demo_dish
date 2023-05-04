@@ -37,6 +37,14 @@ const StoreDetailsSchema = new mongoose.Schema(
       type: String,
     },
     rating: { type: Number },
+    endDay: {
+      type: String,
+      trim: true,
+    },
+    openHour: {
+      type: String,
+      trim: true,
+    },
     openHours: {
       type: String,
       trim: true,

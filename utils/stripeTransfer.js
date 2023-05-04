@@ -11,13 +11,13 @@ const stripeTransfer = async (
 ) => {
   const paymentIntent = await stripe.paymentIntents.create({
     amount: walletAmount,
-    currency,
+    currency: currency,
   });
 
   // create a transfer to the rider's bank account
   const transfer = await stripe.transfers.create({
     amount: walletAmount,
-    currency,
+    currency: currency,
     source_transaction: paymentIntent.id,
     transfer_group: paymentIntent.id,
     destination: {
