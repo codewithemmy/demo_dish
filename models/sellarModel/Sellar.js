@@ -5,9 +5,6 @@ const validator = require("validator");
 
 const SellarSchema = new mongoose.Schema(
   {
-    store: {
-      type: String,
-    },
     floor: { type: String },
     firstName: {
       type: String,
@@ -52,9 +49,6 @@ const SellarSchema = new mongoose.Schema(
       type: String,
     },
     storeType: {
-      type: String,
-    },
-    cuisineType: {
       type: String,
     },
     numberOfLocation: {
