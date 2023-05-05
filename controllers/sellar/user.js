@@ -38,39 +38,50 @@ const getSellarProfile = async (req, res) => {
 const updateSellarProfile = async (req, res) => {
   const sellarId = req.params.id;
   if (sellarId) {
-    let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
-    const buffer = Buffer.from(converts, "base64");
+    if (req.files) {
+      let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
+      const buffer = Buffer.from(converts, "base64");
 
-    const convert_url = async (req) => {
-      const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
-      //use clodinary as a promise using the uploadStream method
-      return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: "Sellar Image Profile" },
-          (err, url) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(url);
+      const convert_url = async (req) => {
+        const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
+        //use clodinary as a promise using the uploadStream method
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "Sellar Image Profile" },
+            (err, url) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(url);
+              }
             }
-          }
-        );
-        bufferToStream(data).pipe(stream);
-      });
-    };
+          );
+          bufferToStream(data).pipe(stream);
+        });
+      };
 
-    const uri = await convert_url(req);
+      const uri = await convert_url(req);
 
-    fs.unlinkSync(req.files.image.tempFilePath);
+      fs.unlinkSync(req.files.image.tempFilePath);
 
-    await Sellar.findByIdAndUpdate(
-      { _id: sellarId },
-      { image: uri.secure_url, ...req.body },
-      { new: true, runValidators: true }
-    );
-    return res
-      .status(200)
-      .json({ msg: `profile update successful`, image_url: uri.secure_url });
+      await Sellar.findByIdAndUpdate(
+        { _id: sellarId },
+        { image: uri.secure_url, ...req.body },
+        { new: true, runValidators: true }
+      );
+      return res
+        .status(200)
+        .json({ msg: `profile update successful`, image_url: uri.secure_url });
+    }
+     await Sellar.findByIdAndUpdate(
+        { _id: sellarId },
+        { ...req.body },
+        { new: true, runValidators: true }
+      );
+      return res
+        .status(200)
+        .json({ msg: `profile update successful`, image_url: uri.secure_url });
+    }
   }
   return res.status(400).json({ msg: `unable to update profile` });
 };
