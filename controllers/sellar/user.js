@@ -73,15 +73,14 @@ const updateSellarProfile = async (req, res) => {
         .status(200)
         .json({ msg: `profile update successful`, image_url: uri.secure_url });
     }
-     await Sellar.findByIdAndUpdate(
-        { _id: sellarId },
-        { ...req.body },
-        { new: true, runValidators: true }
-      );
-      return res
-        .status(200)
-        .json({ msg: `profile update successful`, image_url: uri.secure_url });
-    }
+    await Sellar.findByIdAndUpdate(
+      { _id: sellarId },
+      { ...req.body },
+      { new: true, runValidators: true }
+    );
+    return res
+      .status(200)
+      .json({ msg: `profile update successful`, image_url: uri.secure_url });
   }
   return res.status(400).json({ msg: `unable to update profile` });
 };
