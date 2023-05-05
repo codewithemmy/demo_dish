@@ -21,18 +21,19 @@ const bufferToStream = (buffer) => {
 
 //create store details
 const createStoreDetails = async (req, res) => {
-  const { storeName, cuisineType, openHours } = req.body;
+  const { storeName, cuisineType } = req.body;
 
   const sellar = req.user.userId;
-  if (!storeName || !cuisineType || !openHours) {
-    return res.status(400).json({ msg: `all fields should be filled` });
+  if (!storeName || !cuisineType) {
+    return res
+      .status(400)
+      .json({ msg: `storeName field & cuisine type field should be filled` });
   }
 
   if (sellar) {
     const storeDetails = await StoreDetails.create({
       ...req.body,
       rating: 0,
-
       storeOwner: sellar,
     });
 
@@ -50,62 +51,58 @@ const editStoreDetails = async (req, res) => {
   const { id: storeDetailsId } = req.params;
   const sellar = req.user.userId;
 
-  let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
-  const buffer = Buffer.from(converts, "base64");
-
-  const convert_url = async (req) => {
-    const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
-    //use clodinary as a promise using the uploadStream method
-    return new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: "SellarStore" },
-        (err, url) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(url);
-          }
-        }
-      );
-      bufferToStream(data).pipe(stream);
-    });
-  };
-
-  const uri = await convert_url(req);
-  // console.log(uri.secure_url);
-
-  fs.unlinkSync(req.files.image.tempFilePath);
-
   if (sellar) {
-    const {
-      storeName,
-      cuisineType,
-      location,
-      openHours,
-      deliveryFee,
-      minimumOrder,
-      description,
-      email,
-    } = req.body;
+    if (req.files) {
+      let converts = fs.readFileSync(req.files.image.tempFilePath, "base64");
+      const buffer = Buffer.from(converts, "base64");
 
-    const editedStore = await StoreDetails.findById(storeDetailsId);
+      const convert_url = async (req) => {
+        const data = await sharp(buffer).webp({ quality: 20 }).toBuffer();
+        //use clodinary as a promise using the uploadStream method
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "SellarStore" },
+            (err, url) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(url);
+              }
+            }
+          );
+          bufferToStream(data).pipe(stream);
+        });
+      };
 
-    editedStore.storeName = storeName;
-    editedStore.location = location;
-    editedStore.cuisineType = cuisineType;
-    editedStore.minimumOrder = minimumOrder;
-    editedStore.email = email;
-    editedStore.deliveryFee = deliveryFee;
-    editedStore.description = description;
-    editedStore.serviceAvalaible = false;
-    editedStore.openHours = openHours;
-    editedStore.storeImage = uri.secure_url;
+      const uri = await convert_url(req);
+      // console.log(uri.secure_url);
 
-    const result = await editedStore.save();
+      fs.unlinkSync(req.files.image.tempFilePath);
+
+      const editStoreDetails = await StoreDetails.findByIdAndUpdate(
+        {
+          _id: storeDetailsId,
+        },
+        { ...req.body, storeImage: uri.secure_url },
+        { new: true, runValidators: true }
+      );
+
+      return res.status(StatusCodes.CREATED).json({
+        msg: "Store has been updated successfully",
+        editStoreDetails,
+      });
+    }
+    const editStoreDetails = await StoreDetails.findByIdAndUpdate(
+      {
+        _id: storeDetailsId,
+      },
+      { ...req.body },
+      { new: true, runValidators: true }
+    );
 
     return res.status(StatusCodes.CREATED).json({
       msg: "Store has been updated successfully",
-      result,
+      editStoreDetails,
     });
   }
   return res.status(StatusCodes.BAD_REQUEST).json({ msg: "unable to update" });
@@ -117,7 +114,7 @@ const deleteStoreDetails = async (req, res) => {
   const sellar = req.user.userId;
 
   if (sellar) {
-    const store = await StoreDetails.findByIdAndRemove({
+    await StoreDetails.findByIdAndRemove({
       _id: storeId,
     });
 

@@ -1,5 +1,6 @@
 const Order = require("../../models/customerModel/CustomerOrder");
 const Transaction = require("../../models/customerModel/Transaction");
+const Bank = require("../../models/riderModel/Bank");
 const Rider = require("../../models/riderModel/Rider");
 const Sellar = require("../../models/sellarModel/Sellar");
 const StoreDetails = require("../../models/sellarModel/StoreDetails");
@@ -201,6 +202,10 @@ const updateOrderStatus = async (req, res) => {
   }
 
   return res.status(400).json({ msg: `unable to update status` });
+};
+
+const withdrawFunds = async (req, res) => {
+  const { fundDetails } = await Bank.findOne({ riderId: req.user.id });
 };
 
 module.exports = {
