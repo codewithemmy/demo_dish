@@ -24,7 +24,7 @@ const getPendingOrders = async (req, res) => {
     },
     {
       $sort: {
-        distance: -1, // sort by distance in descending order
+        createdAt: 1,
       },
     },
     {
@@ -40,7 +40,7 @@ const getPendingOrders = async (req, res) => {
     { path: "orderedBy" },
   ]);
 
-  return res.status(200).send(result)
+  return res.status(200).send(result);
 };
 
 const getCompletedOrders = async (req, res) => {
