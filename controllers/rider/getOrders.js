@@ -23,6 +23,11 @@ const getPendingOrders = async (req, res) => {
       },
     },
     {
+      $sort: {
+        distance: -1, // sort by distance in descending order
+      },
+    },
+    {
       $match: {
         riderStatus: "pending",
         paymentStatus: "paid",
@@ -35,7 +40,7 @@ const getPendingOrders = async (req, res) => {
     { path: "orderedBy" },
   ]);
 
-  return res.status(200).send(result);
+  return res.status(200).send(result)
 };
 
 const getCompletedOrders = async (req, res) => {
@@ -78,7 +83,10 @@ const getPickedOrders = async (req, res) => {
     })
       .populate({ path: "store" })
       .populate({ path: "orderedBy", select: "-orders" })
-      .populate({ path: "items.food" });
+      .populate({ path: "items.food" })
+      .sort({ createdAt: "desc" })
+      .exec();
+
     return res.status(200).json(completeOrders);
   }
   return res.status(400).json({ msg: `unable to get picked orders` });
@@ -125,7 +133,9 @@ const getComPletedOrdersNumbers = async (req, res) => {
 };
 
 const getDeliveredOrdersNumbers = async (req, res) => {
-  const getOrders = await Order.countDocuments({ riderStatus: "delivered" });
+  const getOrders = await Order.countDocuments({ riderStatus: "delivered" })
+    .sort({ createdAt: "desc" })
+    .exec();
 
   return res.status(200).json(getOrders);
 };

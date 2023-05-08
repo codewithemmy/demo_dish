@@ -17,7 +17,9 @@ const getPendingOrder = async (req, res) => {
         path: "orderedBy",
         select: "firstName surname _id",
       })
-      .populate("items.food");
+      .populate("items.food")
+      .sort({ createdAt: "desc" })
+      .exec();
     if (orders != null) {
       return res.status(StatusCodes.OK).json(orders);
     }
@@ -79,7 +81,9 @@ const getCompletedOrder = async (req, res) => {
         path: "orderedBy",
         select: "firstName surname _id",
       })
-      .populate("items.food");
+      .populate("items.food")
+      .sort({ createdAt: "desc" })
+      .exec();
     if (orders != null) {
       return res.status(StatusCodes.OK).json(orders);
     }
@@ -94,7 +98,11 @@ const getCompletedOrder = async (req, res) => {
 const getOrderDetails = async (req, res) => {
   const orderId = req.params.id;
 
-  const order = await Order.findById(orderId).populate("items.food");
+  const order = await Order.findById(orderId)
+    .populate("items.food")
+    .sort({ createdAt: "desc" })
+    .exec();
+    
   if (order) {
     return res.status(StatusCodes.OK).json({ order });
   }

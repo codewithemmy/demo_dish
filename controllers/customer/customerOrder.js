@@ -140,9 +140,10 @@ const getOrders = async (req, res) => {
 const getCustomerOrders = async (req, res) => {
   const customer = req.user.userId;
   if (customer) {
-    const customerOrders = await Order.find({ orderedBy: customer }).populate(
-      "items.food"
-    );
+    const customerOrders = await Order.find({ orderedBy: customer })
+      .populate("items.food")
+      .sort({ createdAt: "desc" })
+      .exec();
     if (!customerOrders) {
       return res.status(404).json({ msg: `order not available` });
     }
@@ -160,7 +161,9 @@ const getCompletedOrders = async (req, res) => {
       orderStatus: "completed",
     })
       .populate("items.food")
-      .populate("store", { storeName: 1, storeImage: 1 });
+      .populate("store", { storeName: 1, storeImage: 1 })
+      .sort({ createdAt: "desc" })
+      .exec();
     if (!customerOrders) {
       return res.status(404).json({ msg: `order not available` });
     }
@@ -178,7 +181,9 @@ const getPendingOrders = async (req, res) => {
       orderStatus: "pending",
     })
       .populate("items.food")
-      .populate("store", { storeName: 1, storeImage: 1 });
+      .populate("store", { storeName: 1, storeImage: 1 })
+      .sort({ createdAt: "desc" })
+      .exec();
 
     if (!customerOrders) {
       return res.status(404).json({ msg: `order not available` });
@@ -197,7 +202,9 @@ const getWaitingOrders = async (req, res) => {
       orderStatus: "waiting",
     })
       .populate("items.food")
-      .populate("store", { storeName: 1, storeImage: 1 });
+      .populate("store", { storeName: 1, storeImage: 1 })
+      .sort({ createdAt: "desc" })
+      .exec();
     if (!customerOrders) {
       return res.status(404).json({ msg: `order not available` });
     }

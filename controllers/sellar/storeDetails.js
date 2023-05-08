@@ -130,7 +130,9 @@ const deleteStoreDetails = async (req, res) => {
 const getStoreDetails = async (req, res) => {
   const sellar = req.user.userId;
   if (sellar) {
-    const getStore = await StoreDetails.find({ storeOwner: sellar });
+    const getStore = await StoreDetails.find({ storeOwner: sellar })
+      .sort({ createdAt: "desc" })
+      .exec();
     return res.status(StatusCodes.OK).json(getStore);
   }
   return res

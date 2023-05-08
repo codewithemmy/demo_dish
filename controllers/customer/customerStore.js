@@ -5,13 +5,15 @@ const SellarFood = require("../../models/sellarModel/SellarFood");
 
 //get store
 const getStore = async (req, res) => {
-  const store = await StoreDetails.find();
+  const store = await StoreDetails.find().sort({ createdAt: "desc" }).exec();
   return res.status(StatusCodes.OK).json(store);
 };
 
 //get food
 const getFood = async (req, res) => {
-  const food = await SellarFood.find({ foodavailable: true });
+  const food = await SellarFood.find({ foodavailable: true })
+    .sort({ createdAt: "desc" })
+    .exec();
   return res.status(StatusCodes.CREATED).json(food);
 };
 
