@@ -26,7 +26,7 @@ const stripeTransfer = async (
       account_holder_type: `${accountType}`,
       bank_name: `${bankName}`,
       routing_number: `${routingNumber}`,
-      default_for_currency: true,
+      // default_for_currency: true,
     },
   });
 

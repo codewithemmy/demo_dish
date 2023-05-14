@@ -221,7 +221,7 @@ const getWallet = async (req, res) => {
   if (rider) {
     const riderWallet = await Rider.findOne({ _id: rider });
 
-    return res.status(200).json(riderWallet.wallet);
+    return res.status(200).json({ walletBalance: riderWallet.wallet });
   }
   return res.status(404).json({ msg: `unable to get wallet` });
 };
@@ -232,7 +232,7 @@ const riderWithdrawal = async (req, res) => {
     const { amount } = req.body;
 
     const transaction = await RiderTransaction.create({
-      amount: amountInCents,
+      amount: amount,
       rider: req.user.userId,
     });
 
