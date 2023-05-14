@@ -21,25 +21,18 @@ const stripeTransfer = async (
     source_transaction: paymentIntent.id,
     transfer_group: paymentIntent.id,
     destination: {
-      type: "bank_account",
-      account: {
-        account_number: accountNumber,
-        routing_number: routingNumber, // Replace with the routing number of the bank
-        account_holder_name: recipient,
-        account_holder_type: accountType,
-        // set the bank name as metadata
-        metadata: {
-          bank_name: bankName,
-        },
-      },
+      account: `${accountNumber}`,
+      account_holder_name: `${recipient}`,
+      account_holder_type: `${accountType}`,
+      bank_name: `${bankName}`,
+      routing_number: `${routingNumber}`,
+      default_for_currency: true,
     },
   });
 
   res.json({ clientSecret: paymentIntent.client_secret });
 
   return transfer;
-
-  // TODO: update rider's balance in your database
 };
 
 module.exports = { stripeTransfer };

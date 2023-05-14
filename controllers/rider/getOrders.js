@@ -2,9 +2,11 @@ const Order = require("../../models/customerModel/CustomerOrder");
 const Transaction = require("../../models/customerModel/Transaction");
 const Bank = require("../../models/riderModel/Bank");
 const Rider = require("../../models/riderModel/Rider");
+const RiderTransaction = require("../../models/riderModel/RiderTransaction");
 const Sellar = require("../../models/sellarModel/Sellar");
 const StoreDetails = require("../../models/sellarModel/StoreDetails");
 const { mailTransport } = require("../../utils/sendEmail");
+const { stripeTransfer } = require("../../utils/stripeTransfer");
 
 const getPendingOrders = async (req, res) => {
   const longitude = req.body.lng;
@@ -214,8 +216,49 @@ const updateOrderStatus = async (req, res) => {
   return res.status(400).json({ msg: `unable to update status` });
 };
 
-const withdrawFunds = async (req, res) => {
-  const { fundDetails } = await Bank.findOne({ riderId: req.user.id });
+const getWallet = async (req, res) => {
+  const rider = req.user.userId;
+  if (rider) {
+    const riderWallet = await Rider.findOne({ _id: rider });
+
+    return res.status(200).json(riderWallet.wallet);
+  }
+  return res.status(404).json({ msg: `unable to get wallet` });
+};
+
+const riderWithdrawal = async (req, res) => {
+  const rider = req.user.userId;
+  if (rider) {
+    const { amount } = req.body;
+
+    const transaction = await RiderTransaction.create({
+      amount: amountInCents,
+      rider: req.user.userId,
+    });
+
+    const bank = await Bank.findOne({ riderId: rider });
+
+    await stripeTransfer(
+      bank.bankname,
+      bank.accountnumber,
+      bank.accountname,
+      bank.sortcode,
+      amount,
+      bank.accounttype
+    );
+
+    return res.status(200).json({ msg: `Successful`, transaction });
+  }
+  return res.status(400).json({ msg: `unable to withdraw` });
+};
+
+const riderTransaction = async (req, res) => {
+  const riderId = req.user.userId;
+  if (riderId) {
+    const history = await RiderTransaction.find({ rider: riderId });
+    return res.status(200).json({ msg: `successful`, history });
+  }
+  return res.status(400).json({ msg: `unable to get history` });
 };
 
 module.exports = {
@@ -229,4 +272,7 @@ module.exports = {
   pickUpOrder,
   getPickedOrders,
   confirmDelivery,
+  getWallet,
+  riderWithdrawal,
+  riderTransaction,
 };

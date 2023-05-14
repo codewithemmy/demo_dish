@@ -10,6 +10,9 @@ const {
   pickUpOrder,
   getPickedOrders,
   confirmDelivery,
+  getWallet,
+  riderWithdrawal,
+  riderTransaction,
 } = require("../../controllers/rider/getOrders");
 
 const { getRiderLocation } = require("../../controllers/rider/riderLocation");
@@ -27,14 +30,11 @@ router.route("/updateOrderStatus/:id").post(auth, updateOrderStatus);
 router.route("/pickOrder/:id").post(auth, pickUpOrder);
 router.route("/getPickOrder").get(auth, getPickedOrders);
 router.route("/confirmDelivery/:id").patch(auth, confirmDelivery);
+router.route("/wallet").get(auth, getWallet);
+router.route("/withdraw").post(auth, riderWithdrawal);
+router.route("/riderTransaction").get(auth, riderTransaction);
 
 //location for rider routes
 router.route("/location/:id").patch(getRiderLocation);
-
-// router.route("/verifyEmail/:id").post(verifyEmail);
-// router.route("/login").post(login);
-// // router.route("/logout").delete(logout);
-// router.route("/forgot-password").post(forgotPassword);
-// router.route("/reset-password").post(resetPassword);
 
 module.exports = router;
