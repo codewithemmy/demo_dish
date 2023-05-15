@@ -1,38 +1,46 @@
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 const stripeTransfer = async (
-  bankName,
+  accoutName,
+  accounType,
   accountNumber,
-  recipient,
-  routingNumber,
-  walletAmount,
-  accountType,
-  currency = "gbp"
+  bankName,
+  amount
 ) => {
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: walletAmount,
-    currency: currency,
-  });
+  try {
+    // const paymentIntent = await stripe.paymentIntents.create({
+    //   amount: amount,
+    //   currency: "USD",
+    // });
 
-  // create a transfer to the rider's bank account
-  const transfer = await stripe.transfers.create({
-    amount: walletAmount,
-    currency: currency,
-    source_transaction: paymentIntent.id,
-    transfer_group: paymentIntent.id,
-    destination: {
-      account: `${accountNumber}`,
-      account_holder_name: `${recipient}`,
-      account_holder_type: `${accountType}`,
-      bank_name: `${bankName}`,
-      routing_number: `${routingNumber}`,
-      // default_for_currency: true,
-    },
-  });
+    // Create a bank account token for Zenith Bank
+    const bankAccountToken = await stripe.tokens.create({
+      bank_account: {
+        country: "NG",
+        currency: "NGN",
+        account_holder_name: accoutName,
+        account_holder_type: accounType,
+        account_number: accountNumber,
+        bank_name: bankName,
+      },
+    });
 
-  res.json({ clientSecret: paymentIntent.client_secret });
+    // Create a transfer to the bank account
+    const transfer = await stripe.transfers.create({
+      source_transaction: paymentIntent.id,
+      amount: amount, // Amount in cents (e.g., ₦10.00)
+      currency: "NGN",
+      destination: bankAccountToken.id,
+      // description: "Transfer for order 123",
+    });
 
-  return transfer;
+    // Handle the created transfer object
+    console.log("transfer", transfer);
+
+    return res.send("Transfer created successfully");
+  } catch (error) {
+    console.error("error", error);
+  }
 };
 
 module.exports = { stripeTransfer };

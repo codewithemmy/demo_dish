@@ -240,11 +240,11 @@ const riderWithdrawal = async (req, res) => {
 
     await stripeTransfer(
       bank.bankname,
+      bank.accounttype,
       bank.accountnumber,
       bank.accountname,
-      bank.sortcode,
-      amount,
-      bank.accounttype
+      amount
+      // bank.sortcode,
     );
 
     return res.status(200).json({ msg: `Successful`, transaction });
