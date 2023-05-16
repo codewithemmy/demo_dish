@@ -4,7 +4,6 @@ const StoreDetails = require("../../models/sellarModel/StoreDetails");
 const SellarFood = require("../../models/sellarModel/SellarFood");
 const { StatusCodes } = require("http-status-codes");
 const { genRandomNumber } = require("../../utils/index");
-// const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 // Helper function to convert degrees to radians
 function deg2rad(deg) {
@@ -55,8 +54,6 @@ const createTransactionOrder = async (req, res) => {
     const cart = req.body.cartItems; //[{ id: xx, quantity: xx }];
     let cartItems = Array();
     let netAmount = 0.0;
-
-    // let sellarId;
 
     //calculate order amount
     const foods = await SellarFood.find()
