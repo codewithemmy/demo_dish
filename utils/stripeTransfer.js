@@ -8,11 +8,6 @@ const stripeTransfer = async (
   amount
 ) => {
   try {
-    // const paymentIntent = await stripe.paymentIntents.create({
-    //   amount: amount,
-    //   currency: "USD",
-    // });
-
     // Create a bank account token for Zenith Bank
     const bankAccountToken = await stripe.tokens.create({
       bank_account: {

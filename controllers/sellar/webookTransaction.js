@@ -1,5 +1,4 @@
 const WebhookTransaction = require("../../models/customerModel/WebhookTransaction");
-// const Order = require("../../models/customerModel/CustomerOrder");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 // Endpoint for Stripe webhooks
@@ -10,12 +9,11 @@ const webhookController = async (req, res) => {
   event = stripe.webhooks.constructEvent(
     request.body,
     sig,
-    process.env.STRIPE_SECRET
+    process.env.WEBHOOK_SECRET
   );
 
   // Handle the event
   switch (event.type) {
-
     case "payment_intent.canceled":
       const paymentIntentCanceled = event.data.object;
 
@@ -43,7 +41,7 @@ const webhookController = async (req, res) => {
       });
 
       break;
-      
+
     case "payment_intent.payment_failed":
       const paymentIntentPaymentFailed = event.data.object;
       await WebhookTransaction.findOneAndUpdate(

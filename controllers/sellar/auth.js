@@ -1,15 +1,12 @@
 const Sellar = require("../../models/sellarModel/Sellar");
-const crypto = require("crypto");
 const createHash = require("../../utils/createHash");
 const { mailTransport } = require("../../utils/sendEmail");
 const bcrypt = require("bcryptjs");
-
-const { currency } = require("../../utils/currency");
+const otpGenerator = require("../../utils/random");
 
 //register sellar
 const register = async (req, res) => {
-  const { country, email, firstName } = req.body;
-  // let symbol = await currency(country);
+  const { email, firstName } = req.body;
 
   const emailAlreadyExists = await Sellar.findOne({ email });
 
@@ -19,7 +16,7 @@ const register = async (req, res) => {
       .json({ msg: "Email already exist, you can login as a user" });
   }
 
-  const verificationToken = crypto.randomBytes(2).toString("hex");
+  const verificationToken = otpGenerator();
   const hastToken = createHash(verificationToken);
   const sellar = await Sellar.create({
     ...req.body,
@@ -54,7 +51,7 @@ const sendVerifyMail = async (req, res) => {
       return res.status(400).json({ msg: `seller params id not found` });
     }
 
-    const verificationToken = crypto.randomBytes(2).toString("hex");
+    const verificationToken = otpGenerator();
     const hastToken = createHash(verificationToken);
     sellar.verificationToken = hastToken;
     await sellar.save();
@@ -156,7 +153,7 @@ const forgotPassword = async (req, res) => {
   const sellar = await Sellar.findOne({ email });
 
   if (sellar) {
-    const passwordToken = crypto.randomBytes(2).toString("hex");
+    const passwordToken = otpGenerator();
 
     // send email
     mailTransport.sendMail({

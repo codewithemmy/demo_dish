@@ -23,7 +23,6 @@ app.use(passport.session());
 const cors = require("cors");
 // const xss = require('xss-clean');
 // const rateLimiter = require('express-rate-limit');
-app.use(fileUpload({ useTempFiles: true }));
 
 const connectDB = require("./db/connect");
 const authenticateUser = require("./middleware/authentication");

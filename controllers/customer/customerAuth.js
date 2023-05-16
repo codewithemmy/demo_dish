@@ -1,7 +1,6 @@
 const Customer = require("../../models/customerModel/Customer");
 const { StatusCodes } = require("http-status-codes");
-const crypto = require("crypto");
-const createHash = require("../../utils/createHash");
+// const createHash = require("../../utils/createHash");
 const { mailTransport } = require("../../utils/sendEmail");
 const bcrypt = require("bcryptjs");
 
@@ -45,9 +44,7 @@ const login = async (req, res) => {
   const customer = await Customer.findOne({ email });
 
   if (!customer) {
-    return res
-      .status(404)
-      .json({ msg: "User not found. Register to login" });
+    return res.status(404).json({ msg: "User not found. Register to login" });
   }
 
   //compare password
@@ -76,7 +73,7 @@ const forgotPassword = async (req, res) => {
   const customer = await Customer.findOne({ email });
 
   if (customer) {
-    const passwordToken = crypto.randomBytes(2).toString("hex");
+    const passwordToken = otpGenerator();
 
     // send email
     mailTransport.sendMail({

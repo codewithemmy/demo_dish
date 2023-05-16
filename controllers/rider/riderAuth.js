@@ -1,10 +1,8 @@
 const Rider = require("../../models/riderModel/Rider");
-const RiderTemp = require("../../models/riderModel/Rider");
-const crypto = require("crypto");
 const createHash = require("../../utils/createHash");
 const { mailTransport } = require("../../utils/sendEmail");
 const bcrypt = require("bcryptjs");
-// const { randomNumberGenerator } = require("../../utils/random");
+const otpGenerator = require("../../utils/random");
 
 //register Rider
 const register = async (req, res) => {
@@ -18,7 +16,7 @@ const register = async (req, res) => {
       .json({ msg: "Email already exist, you can login as a user" });
   }
 
-  const verificationToken = crypto.randomBytes(2).toString("hex");
+  const verificationToken = otpGenerator();
   const hastToken = createHash(verificationToken);
   const rider = await Rider.create({
     ...req.body,
@@ -53,7 +51,7 @@ const sendVerifyMail = async (req, res) => {
       return res.status(400).json({ msg: `rider params id not found` });
     }
 
-    const verificationToken = crypto.randomBytes(2).toString("hex");
+    const verificationToken = otpGenerator();
     const hastToken = createHash(verificationToken);
     rider.verificationToken = hastToken;
     await rider.save();
@@ -150,7 +148,7 @@ const forgotPassword = async (req, res) => {
   const rider = await Rider.findOne({ email });
 
   if (rider) {
-    const passwordToken = crypto.randomBytes(2).toString("hex");
+    const passwordToken = otpGenerator();
 
     // send email
     mailTransport.sendMail({
