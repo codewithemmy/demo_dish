@@ -78,7 +78,7 @@ const createTransactionOrder = async (req, res) => {
     const deliveryFee = 2;
     const marketPlace = 3;
 
-    const totalPrice = netAmount + deliveryFee + marketPlace + ridersFee;
+    let totalPrice = netAmount + deliveryFee + marketPlace + ridersFee;
 
     //create order with item description
     if (cartItems) {
