@@ -3,6 +3,7 @@ const createHash = require("../../utils/createHash");
 const { mailTransport } = require("../../utils/sendEmail");
 const bcrypt = require("bcryptjs");
 const otpGenerator = require("../../utils/random");
+const compiledTemplate = require("../../utils/email");
 
 //register sellar
 const register = async (req, res) => {
@@ -17,6 +18,16 @@ const register = async (req, res) => {
   }
 
   const verificationToken = otpGenerator();
+
+  const templateData = {
+    welcome: `We are delighted to have you on board`,
+    welcome2: `Please use the following One Time Password`,
+    name: firstName,
+    verificationToken: `(OTP): ${verificationToken}`,
+    imageUrl:
+      "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+  };
+
   const hastToken = createHash(verificationToken);
   const sellar = await Sellar.create({
     ...req.body,
@@ -28,7 +39,7 @@ const register = async (req, res) => {
     from: '"Afrilish" <afrilish@afrilish.com>', // sender address
     to: email, // list of receivers
     subject: "VERIFY YOUR EMAIL ACCOUNT", // Subject line
-    html: `Hello, ${firstName}, kindly verify your account with this token:<h4>${verificationToken}</h4>`, // html body
+    html: compiledTemplate(templateData),
   });
 
   let token = sellar.createJWT();
@@ -52,6 +63,16 @@ const sendVerifyMail = async (req, res) => {
     }
 
     const verificationToken = otpGenerator();
+
+    const templateData = {
+      // welcome: `We are delighted to have you on board`,
+      welcome2: `Please use the following One Time Password`,
+      name: sellar.fullname,
+      verificationToken: `(OTP): ${verificationToken}`,
+      imageUrl:
+        "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+    };
+
     const hastToken = createHash(verificationToken);
     sellar.verificationToken = hastToken;
     await sellar.save();
@@ -61,7 +82,7 @@ const sendVerifyMail = async (req, res) => {
       from: '"Afrilish" <afrilish@afrilish.com>', // sender address
       to: sellar.email, // list of receivers
       subject: "VERIFY YOUR EMAIL ACCOUNT", // Subject line
-      html: `Hello, ${sellar.fullname}, kindly verify your account with this otp:<h4>${verificationToken}</h4>`, // html body
+      html: compiledTemplate(templateData),
     });
 
     return res.status(200).json({
@@ -99,12 +120,21 @@ const verifyEmail = async (req, res) => {
 
   await sellar.save();
 
+  const templateData = {
+    welcome: `Congrats!! you are now verified,you can login now`,
+    // welcome2: `Please use the following One Time Password`,
+    name: sellar.fullname,
+    // verificationToken: `(OTP): ${verificationToken}`,
+    imageUrl:
+      "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+  };
+
   //send Mail
   mailTransport.sendMail({
     from: '"Afrilish" <afrilish@afrilish.com>', // sender address
     to: sellar.email, // list of receivers
     subject: "MAIL IS VERIFIED", // Subject line
-    html: `<h4> Hello, ${sellar.firstName}</h4> <h2>Congrats</h2> you are now verified,you can login now`, // html body
+    html: compiledTemplate(templateData),
   });
 
   return res.status(200).json({ msg: "Email Verified" });
@@ -155,12 +185,21 @@ const forgotPassword = async (req, res) => {
   if (sellar) {
     const passwordToken = otpGenerator();
 
+    const templateData = {
+      // welcome: `Congrats!! you are now verified,you can login now`,
+      welcome2: `Please use the following One Time Password`,
+      // name: sellar.fullname,
+      verificationToken: `(OTP): ${passwordToken}`,
+      imageUrl:
+        "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+    };
+
     // send email
     mailTransport.sendMail({
       from: '"Afrilish" <afrilish@afrilish.com>', // sender address
       to: email,
       subject: "RESET YOUR PASSWORD",
-      html: `Hi, kindly reset your password with this token: <h4>${passwordToken}</h4>`,
+      html: compiledTemplate(templateData),
     });
 
     //set otp timeout to 60 ten minutes

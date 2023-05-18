@@ -4,6 +4,8 @@ const { StatusCodes } = require("http-status-codes");
 const { mailTransport } = require("../../utils/sendEmail");
 const bcrypt = require("bcryptjs");
 
+const compiledTemplate = require("../../utils/email");
+
 //register sellar
 const register = async (req, res) => {
   const { fullName, email } = req.body;
@@ -18,12 +20,21 @@ const register = async (req, res) => {
     orders: [],
   });
 
+  const templateData = {
+    welcome: `We are delighted to have you on board, enjoy your meal`,
+    // welcome2: `Please use the following One Time Password`,
+    name: fullName,
+    // verificationToken: verificationToken,
+    imageUrl:
+      "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+  };
+
   //send Mail
   mailTransport.sendMail({
     from: '"Afrilish" <afrilish@afrilish.com>', // sender address
     to: email, // list of receivers
     subject: "AFRILISH REGISTRATION SUCCESSFUL", // Subject line
-    html: `Hello, ${fullName}, welcome to the best cuisine delicacies. Your registration with Afrilish is success.</h4>`, // html body
+    html: compiledTemplate(templateData), // html body
   });
 
   return res.status(StatusCodes.CREATED).json({
@@ -75,12 +86,21 @@ const forgotPassword = async (req, res) => {
   if (customer) {
     const passwordToken = otpGenerator();
 
+    const templateData = {
+      //  welcome: `We are delighted to have you on board, enjoy your meal`,
+      welcome2: `Please use the following One Time Password`,
+      //  name: fullName,
+      verificationToken: `(OTP): ${passwordToken}`,
+      imageUrl:
+        "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+    };
+
     // send email
     mailTransport.sendMail({
       from: '"Afrilish" <afrilish@afrilish.com>', // sender address
       to: email,
       subject: "AFRILISH: Reset you account",
-      html: `Hi, kindly reset your password with this token: <h4>${passwordToken}</h4>`,
+      html: compiledTemplate(templateData),
     });
 
     //set otp timeout to 60 ten minutes

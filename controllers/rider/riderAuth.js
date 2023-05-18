@@ -21,10 +21,10 @@ const register = async (req, res) => {
   const verificationToken = otpGenerator();
 
   const templateData = {
-    welcome: `We are delighed to have you on board`,
+    welcome: `We are delighted to have you on board`,
     welcome2: `Please use the following One Time Password`,
     name: fullname,
-    verificationToken: verificationToken,
+    verificationToken: `(OTP): ${verificationToken}`,
     imageUrl:
       "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
   };
@@ -66,10 +66,10 @@ const sendVerifyMail = async (req, res) => {
     const verificationToken = otpGenerator();
 
     const templateData = {
-      welcome: `We are delighed to have you on board`,
+      welcome: `We are delighted to have you on board`,
       welcome2: `Please use the following One Time Password`,
       name: rider.fullname,
-      verificationToken: verificationToken,
+      verificationToken: `(OTP): ${verificationToken}`,
       imageUrl:
         "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
     };
@@ -188,7 +188,7 @@ const forgotPassword = async (req, res) => {
     const templateData = {
       welcome2: `Please use the following One Time Password`,
       name: rider.fullname,
-      verificationToken: passwordToken,
+      verificationToken: `(OTP): ${passwordToken}`,
       imageUrl:
         "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
     };
