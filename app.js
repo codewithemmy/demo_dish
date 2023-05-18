@@ -17,6 +17,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(fileUpload({ useTempFiles: true }));
 
 // extra security packages
 // const helmet = require('helmet');

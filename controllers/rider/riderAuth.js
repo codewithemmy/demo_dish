@@ -4,6 +4,8 @@ const { mailTransport } = require("../../utils/sendEmail");
 const bcrypt = require("bcryptjs");
 const otpGenerator = require("../../utils/random");
 
+const compiledTemplate = require("../../utils/email");
+
 //register Rider
 const register = async (req, res) => {
   const { fullname, email } = req.body;
@@ -17,6 +19,16 @@ const register = async (req, res) => {
   }
 
   const verificationToken = otpGenerator();
+
+  const templateData = {
+    welcome: `We are delighed to have you on board`,
+    welcome2: `Please use the following One Time Password`,
+    name: fullname,
+    verificationToken: verificationToken,
+    imageUrl:
+      "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+  };
+
   const hastToken = createHash(verificationToken);
   const rider = await Rider.create({
     ...req.body,
@@ -28,7 +40,7 @@ const register = async (req, res) => {
     from: '"Afrilish" <afrilish@afrilish.com>', // sender address
     to: email, // list of receivers
     subject: "VERIFY YOUR EMAIL ACCOUNT", // Subject line
-    html: `Hello, ${fullname}, kindly verify your account with this otp:<h4>${verificationToken}</h4>`, // html body
+    html: compiledTemplate(templateData),
   });
 
   let token = rider.createJWT();
@@ -52,6 +64,16 @@ const sendVerifyMail = async (req, res) => {
     }
 
     const verificationToken = otpGenerator();
+
+    const templateData = {
+      welcome: `We are delighed to have you on board`,
+      welcome2: `Please use the following One Time Password`,
+      name: rider.fullname,
+      verificationToken: verificationToken,
+      imageUrl:
+        "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+    };
+
     const hastToken = createHash(verificationToken);
     rider.verificationToken = hastToken;
     await rider.save();
@@ -60,7 +82,7 @@ const sendVerifyMail = async (req, res) => {
       from: '"Afrilish" <afrilish@afrilish.com>', // sender address
       to: rider.email, // list of receivers
       subject: "VERIFY YOUR EMAIL ACCOUNT", // Subject line
-      html: `Hello, ${rider.fullname}, kindly verify your account with this otp:<h4>${verificationToken}</h4>`, // html body
+      html: compiledTemplate(templateData), // html body
     });
 
     return res.status(200).json({
@@ -81,6 +103,10 @@ const login = async (req, res) => {
   }
 
   const rider = await Rider.findOne({ email });
+
+  if (!rider) {
+    return res.status(404).json({ msg: "Rider not found" });
+  }
 
   const isPasswordCorrect = await rider.comparePassword(password);
   if (!isPasswordCorrect) {
@@ -127,12 +153,21 @@ const verifyEmail = async (req, res) => {
 
   await rider.save();
 
+  const templateData = {
+    welcome: ` Congrats!!! you are now verified, you can login now`,
+    // welcome2: `Please use the following One Time Password`,
+    name: rider.fullname,
+    // verificationToken: verificationToken,
+    imageUrl:
+      "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+  };
+
   //send Mail
   mailTransport.sendMail({
     from: '"Afrilish" <afrilish@afrilish.com>', // sender address
     to: rider.email, // list of receivers
     subject: "MAIL IS VERIFIED", // Subject line
-    html: `<h4> Hello, ${rider.fullname}</h4> <h2>Congrats</h2> you are now verified, you can login now`, // html body
+    html: compiledTemplate(templateData),
   });
 
   return res.status(200).json({ msg: "Email Verified" });
@@ -150,12 +185,20 @@ const forgotPassword = async (req, res) => {
   if (rider) {
     const passwordToken = otpGenerator();
 
+    const templateData = {
+      welcome2: `Please use the following One Time Password`,
+      name: rider.fullname,
+      verificationToken: passwordToken,
+      imageUrl:
+        "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+    };
+
     // send email
     mailTransport.sendMail({
       from: '"Afrilish" <afrilish@afrilish.com>', // sender address
       to: email,
       subject: "RESET YOUR PASSWORD",
-      html: `Hi, kindly reset your password with this token: <h4>${passwordToken}</h4>`,
+      html: compiledTemplate(templateData),
     });
 
     //set otp timeout to 60 ten minutes
