@@ -145,7 +145,9 @@ const isAvailable = async (req, res) => {
   if (sellar) {
     const verifySellar = await StoreDetails.findOne({
       storeOwner: sellar,
+      _id: req.params.id,
     });
+
     if (!verifySellar) {
       return res
         .status(StatusCodes.BAD_REQUEST)
