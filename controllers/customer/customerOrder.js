@@ -76,6 +76,7 @@ const createTransactionOrder = async (req, res) => {
     const marketPlace = 3;
 
     let totalPrice = netAmount + deliveryFee + marketPlace + ridersFee;
+    let roundTotalPrice = Math.ceil(totalPrice);
 
     //create order with item description
     if (cartItems) {
@@ -88,7 +89,7 @@ const createTransactionOrder = async (req, res) => {
         items: cartItems,
         orderedBy: customer.userId,
         netAmount,
-        totalAmount: Math.ceil(totalPrice),
+        totalAmount: roundTotalPrice,
         orderDate: new Date(),
         paymentResponse: "",
         location: {
