@@ -170,15 +170,15 @@ const confirmDelivery = async (req, res) => {
         html: `Hello, this is you order code: ${order.orderCode} upon delivery. Have a nice meal</h4>`, // html body
       });
 
-      await Rider.findOneAndUpdate(
+      let riderFee = await Rider.findOneAndUpdate(
         { _id: order.assignedRider },
-        { $inc: { wallet: order.ridersFee } },
+        { $inc: { wallet: order.riderFee.toFixed(2) } },
         { new: true, runValidators: true }
       );
 
       await Sellar.findOneAndUpdate(
         { _id: order.sellarId },
-        { $inc: { wallet: order.netAmount } },
+        { $inc: { wallet: order.netAmount.toFixed(2) } },
         { new: true, runValidators: true }
       );
     }
